@@ -6,13 +6,17 @@ The examples here are part of a SAS Communities article series called #CustomTas
 Descriptions of each task are located below, beginning with the most recent. Clicking the titles will lead you to the blog post on that task which will have step-by-step instructions on creating the task yourself. 
 Tasks in this series include easy examples as well as more complex ones, so you'll be able to find something on your level whether you are just getting started or already know what you're doing. 
 
-Additional Resources for writing SAS Studio Custom Tasks can be found here:
+### Additional Resources for writing SAS Studio Custom Tasks can be found here:
 * [SAS Studio 3.5: Developers Guide to Writing Custom Tasks](https://support.sas.com/documentation/cdl/en/webeditordg/68829/PDF/default/webeditordg.pdf)
 * [SAS Tech Talk: SAS Studio Demonstration](https://www.youtube.com/watch?v=xa6CGmbwPic)
 * [SAS Studio 3.5: User's Guide](http://support.sas.com/documentation/cdl/en/webeditorug/68828/PDF/default/webeditorug.pdf)
 * [Teach Them to Fish- How to Use Tasks in SAS Studio to Enable Coworkers to Run Your Reports Themselves](http://support.sas.com/resources/papers/proceedings15/SAS1831-2015.pdf)
 
+## Task Tuesday Example List
+
 ### [Improvements on the Point Estimate Calculator Task](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Improving-a-Basic-Task/ta-p/340494)
+![alt tag](https://kntur85557.i.lithium.com/t5/image/serverpage/image-id/7689i94061B86B80DB93E/image-size/original?v=1.0&px=-1)
+
 The Point Estimate Calculator 2.0 will allow the user to be able to select 2 variables for which to calculate estimates. The user will also be able to round their estimates to their desired decimal place, as well as be able to specify a where clause to subset their data.
 
 ### [Point Estimate Calculator Task](https://communities.sas.com/t5/SAS-Communities-Library/SAS-Studio-Custom-Task-Tuesday-Point-Estimate-Calculator/ta-p/336254)
