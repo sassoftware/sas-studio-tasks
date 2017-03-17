@@ -15,8 +15,6 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 ## Task Tuesday Example List
 
 ### [Improvements on the Point Estimate Calculator Task](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Improving-a-Basic-Task/ta-p/340494)
-![alt tag](https://kntur85557.i.lithium.com/t5/image/serverpage/image-id/7689i94061B86B80DB93E/image-size/original?v=1.0&px=-1)
-
 The Point Estimate Calculator 2.0 will allow the user to be able to select 2 variables for which to calculate estimates. The user will also be able to round their estimates to their desired decimal place, as well as be able to specify a where clause to subset their data.
 
 ### [Point Estimate Calculator Task](https://communities.sas.com/t5/SAS-Communities-Library/SAS-Studio-Custom-Task-Tuesday-Point-Estimate-Calculator/ta-p/336254)
