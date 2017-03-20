@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Number Range Prompt</Name>
+	<Description>Numeric Range Prompt</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+		<Option inputType="string" name="labelNUMBERTEXT">Enter a numeric range:</Option>
+			<Option defaultValue="1.0" inputType="numbertext" invalidMessage="Invalid value. Enter a number between 1 and 10000." maxValue="10000" minValue="1" missingMessage="Enter a number between 1 and 10000." name="NumRange_Min" promptMessage="Enter a number between 1 and 10000." rangeMessage="This number is out of range.  Enter a number between 1 and 10000.">From:</Option>
+			<Option defaultValue="10000.0" inputType="numbertext" invalidMessage="Invalid value. Enter a number between 1 and 10000." maxValue="10000" minValue="1" missingMessage="Enter a number between 1 and 10000." name="NumRange_Max" promptMessage="Enter a number between 1 and 10000." rangeMessage="This number is out of range.  Enter a number between 1 and 10000.">To:</Option>
+
+		</Options>
+		
+		
+	</Metadata>
+	
+	<UI>
+	
+		<OptionItem option="labelNUMBERTEXT"/>
+		<OptionItem option="NumRange_Min"/>
+		<OptionItem option="NumRange_Max"/>
+
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+		
+#if ($NumRange_Max<$NumRange_Min)
+/* Minumum value must be less than maximum value. */
+#else
+
+%global NumRange_Min;
+%let NumRange_Min=$NumRange_Min;
+
+
+%global NumRange_Max;
+%let NumRange_Max=$NumRange_Max;
+#end
+
+		]]>
+	</CodeTemplate>
+
+</Task>

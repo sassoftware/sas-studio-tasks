@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Timestamp Selector</Name>
+	<Description>Timestamp Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="currentHour" inputType="combobox" name="timestampSelector">Select a time:</Option>
+			<Option inputType="string" name="specify">Specify timestamp</Option>
+			<Option inputType="string" name="currentDateTime">Current date and time</Option>
+			<Option inputType="string" name="currentDateTimePrevYear">Current date and time previous year</Option>
+			<Option inputType="string" name="currentDateTimeNextYear">Current date and time next year</Option>
+			<Option inputType="string" name="currentHour">Current hour</Option>
+			<Option inputType="string" name="prevHour">Previous hour</Option>
+			<Option inputType="string" name="nextHour">Next hour</Option>		
+			<Option inputType="string" name="currMin">Current minute</Option>		
+			<Option inputType="string" name="prevMin">Previous minute</Option>		
+			<Option inputType="string" name="nextMin">Next minute</Option>		
+			<Option inputType="string" name="nHoursAgo">N hours ago</Option>		
+			<Option inputType="string" name="nHoursFromNow">N hours from now</Option>		
+			<Option inputType="string" name="nMinsAgo">N minutes ago</Option>		
+			<Option inputType="string" name="nMinsFromNow">N minutes from now</Option>		
+			<Option inputType="inputtext" name="timeInput" promptMessage="Example: 14Feb2017 01:23:45 PM"/>
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of minutes" name="numMinutes" promptMessage="Enter number of minutes" rangeMessage="This number is out of range.  Enter a positive number.">Number of minutes:
+			</Option>
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of hours" name="numHours" promptMessage="Enter number of hours" rangeMessage="This number is out of range.  Enter a positive number.">Number of hours:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="timestampSelector">
+			<OptionItem option="specify"/>			
+			<OptionItem option="currentDateTime"/>
+			<OptionItem option="currentDateTimePrevYear"/>
+			<OptionItem option="currentDateTimeNextYear"/>
+			<OptionItem option="currentHour"/>
+			<OptionItem option="prevHour"/>
+			<OptionItem option="nextHour"/>
+			<OptionItem option="currMin"/>
+			<OptionItem option="prevMin"/>
+			<OptionItem option="nextMin"/>
+			<OptionItem option="nHoursAgo"/>
+			<OptionItem option="nHoursFromNow"/>
+			<OptionItem option="nMinsAgo"/>
+			<OptionItem option="nMinsFromNow"/>
+		</OptionChoice>
+
+		<OptionItem option="timeInput"/>
+		<OptionItem option="numMinutes"/>
+		<OptionItem option="numHours"/>
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($timestampSelector == 'specify')">    
+         <Target action="hide" conditionResult="false" option="timeInput"/>
+         <Target action="show" conditionResult="true" option="timeInput"/>
+     </Dependency>
+	 <Dependency condition="(($timestampSelector == 'nMinsAgo') || ($timestampSelector == 'nMinsFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numMinutes"/>
+         <Target action="show" conditionResult="true" option="numMinutes"/>
+     </Dependency>
+	 <Dependency condition="(($timestampSelector == 'nHoursAgo') || ($timestampSelector == 'nHoursFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numHours"/>
+         <Target action="show" conditionResult="true" option="numHours"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+
+%global timestamp;
+%global timestamp_rel;
+%global timestamp_label;
+
+#if ($timestampSelector == 'specify')
+   %let timestamp = $timeInput;
+   %let timestamp_label = $timeInput;  /* Format this as you see fit */
+   %symdel timestamp_rel;
+#else
+
+#if ($timestampSelector == 'currentDateTime')
+   %let timestamp = %sysfunc(datetime(), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Current date and time;   
+   %let timestamp_rel = T0m;
+#else
+
+#if ($timestampSelector == 'currentDateTimePrevYear')
+   %global year;
+   %global datetime;
+   %let datetime = %sysfunc(datetime());
+   %let datetime = %sysfunc(intnx(dtyear, &datetime, -1), DATETIME20.);
+   %let year = %substr(&datetime, 6,4);
+
+   %let datetime = %sysfunc(datetime(), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str(), %substr(&datetime, 1, 5), &year));
+   %let timestamp = %sysfunc(catx(%str( ), &timestamp, %substr(&datetime, 11, 8)));
+   %symdel year;
+   %symdel datetime;   
+   
+   %let timestamp_label = Current date and time previous year;   
+   %let timestamp_rel = T-1Y;
+#else
+
+#if ($timestampSelector == 'currentDateTimeNextYear')
+   %global year;
+   %global datetime;
+   %let datetime = %sysfunc(datetime());
+   %let datetime = %sysfunc(intnx(dtyear, &datetime, 1), DATETIME20.);
+   %let year = %substr(&datetime, 6,4);
+
+   %let datetime = %sysfunc(datetime(), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str(), %substr(&datetime, 1, 5), &year));
+   %let timestamp = %sysfunc(catx(%str( ), &timestamp, %substr(&datetime, 11, 8)));
+   %symdel year;
+   %symdel datetime;      %let time_label = Current date and time next year;   
+   %let timestamp_rel = T1Y;
+#else
+
+#if ($timestampSelector == 'currentHour')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(hour, &timestamp, 0, b), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Current hour;
+   %let timestamp_rel = H0H;
+#else
+
+#if ($timestampSelector == 'currMin')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(minute, &timestamp, 0, b), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Current minute;
+   %let timestamp_rel = mom;
+#else
+
+#if ($timestampSelector == 'prevHour')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dthour, &timestamp, -1), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Previous hour;
+   %let timestamp_rel = H-1H;
+#end
+
+#if ($timestampSelector == 'nextHour')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dthour, &timestamp, 1), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Next hour;
+   %let timestamp_rel = H1H;
+#end
+
+#if ($timestampSelector == 'prevMin')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dtminute, &timestamp, -1), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Previous minute;
+   %let timestamp_rel = m-1m;
+#end
+
+#if ($timestampSelector == 'nextMin')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dtminute, &timestamp, 1), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = Next minute;
+   %let timestamp_rel = m1m;
+#end
+
+#if ($timestampSelector == 'nHoursAgo')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dtsecond, &timestamp, -${numHours}*3600), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = $numHours hours ago;
+   %let timestamp_rel = T-${numHours}H;
+#end
+
+#if ($timestampSelector == 'nHoursFromNow')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dtsecond, &timestamp, ${numHours}*3600), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = $numHours hours from now; 
+   %let timestamp_rel = T${numHours}H;
+#end
+
+#if ($timestampSelector == 'nMinsAgo')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dtsecond, &timestamp, -${numMinutes}*60), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = $numMinutes minutes ago;
+   %let timestamp_rel = T-${numMinutes}m;
+#end
+
+#if ($timestampSelector == 'nMinsFromNow')
+   %let timestamp = %sysfunc(datetime()); 
+   %let timestamp = %sysfunc(intnx(dtsecond, &timestamp, ${numMinutes}*60), DATETIME20.);
+   %let timestamp = %sysfunc(catx(%str( ), %substr(&timestamp,1,9), %substr(&timestamp,11,8)));
+   %let timestamp_label = $numMinutes minutes from now; 
+   %let timestamp_rel = T${numMinutes}m;
+#end
+
+#end
+#end
+#end
+#end
+#end
+#end
+
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

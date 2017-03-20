@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+<Registration>
+	<Name>Color Selector</Name>
+	<Description>Color selection</Description>
+	<GUID/>
+	<Procedures>TBD</Procedures>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+</Registration>	
+<Metadata>		
+	<DataSources>	
+	</DataSources>
+	<Options>
+		<Option inputType="string" name="labelCOLOR">Select a color</Option>
+		<Option defaultValue="cx00ffff" inputType="color" name="color">Choose a color</Option>
+	</Options>		
+	</Metadata>	
+	<UI>
+		<OptionItem option="labelCOLOR"/>
+		<OptionItem option="color"/>
+	</UI>	
+  	<CodeTemplate>
+		<![CDATA[
+		
+%global color;
+%let color=$color;
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+</Task>

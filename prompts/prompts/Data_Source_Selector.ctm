@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+		<Name>Data Source Selector</Name>
+		<Description>Data Source Selector</Description>
+		<GUID/>
+		<Procedures/>
+		<Version>3.6</Version>
+		<Links>
+		</Links>
+	</Registration>
+
+	<Metadata>
+
+		<DataSources>
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role maxVars="1" minVars="1" name="VAR" order="true" type="A">Required variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="DATAGROUP">DATA</Option>
+		</Options>
+	</Metadata>
+
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+				<RoleItem role="VAR"/>
+			</Group>
+		</Container>
+
+	</UI>
+
+	<CodeTemplate>
+		<![CDATA[
+		
+%global DATASET;
+%global SASLIBRARY;
+%put DATASET=$DATASOURCE;
+%put SASLIBRARY=$DATASOURCE.getLibrary();
+%put SASTABLE=$DATASOURCE.getTable(); 
+#if( $VAR.size() > 0 )%put VAR=#foreach( $item in $VAR )$item #end;#end
+
+
+		]]>
+	</CodeTemplate>
+
+</Task>

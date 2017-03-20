@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Hyperlink Prompt</Name>
+	<Description>Hyperlink Prompt</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links/>
+	</Registration>
+	
+	<Metadata>		
+		<DataSources>	
+		</DataSources>
+
+		<Options>			
+			<Option inputType="string" name="labelDescription">Specify a hyperlink</Option>
+            <Option defaultValue="This is a link to the SAS" inputType="inputtext" name="Hyperlink">Link text:</Option>	
+            <Option defaultValue="http://www.sas.com" inputType="inputtext" name="Hyperlink_Path">Link address (URL):</Option>											
+		</Options>		
+	</Metadata>
+	
+	<UI>		
+		<OptionItem option="labelDescription"/>
+		<OptionItem option="Hyperlink"/>
+		<OptionItem option="Hyperlink_Path"/>		   
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global Hyperlink;
+%global Hyperlink_Path;
+%let Hyperlink=$Hyperlink;
+%let Hyperlink_Path=$Hyperlink_Path;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Date Week Selector</Name>
+	<Description>Date Week Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="select" inputType="combobox" name="dateSelector">Choose a week:</Option>
+			<Option inputType="string" name="select">Select week</Option>
+			<Option inputType="string" name="currentWeek">Current Week</Option>
+			<Option inputType="string" name="previousWeek">Previous Week</Option>
+			<Option inputType="string" name="nextWeek">Next Week</Option>
+			<Option inputType="string" name="currWeekLastYear">Current week of previous year</Option>		
+			<Option inputType="string" name="currWeekNextYear">Current week of next year</Option>		
+			<Option inputType="string" name="nWeeksAgo">N weeks ago</Option>		
+			<Option inputType="string" name="nWeeksFromNow">N weeks from now</Option>	
+			
+			<Option defaultValue="1" inputType="numbertext" invalidMessage="Invalid value. Enter a week." maxValue="53" minValue="1" missingMessage="Enter a week" name="week" promptMessage="Enter week number between 1 and 53" rangeMessage="This number is out of range.  Enter a positive number.">
+			        Week:
+			</Option>
+			<Option defaultValue="2017" inputType="inputtext" missingMessage="Enter a year" name="year">
+			        Year:
+			</Option>
+		
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of weeks" name="numWeeks" promptMessage="Enter number of weeks" rangeMessage="This number is out of range.  Enter a positive number.">
+			        Number of weeks:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="dateSelector">
+			<OptionItem option="select"/>			
+			<OptionItem option="currentWeek"/>
+			<OptionItem option="previousWeek"/>
+			<OptionItem option="nextWeek"/>
+			<OptionItem option="currWeekLastYear"/>
+			<OptionItem option="currWeekNextYear"/>
+			<OptionItem option="nWeeksAgo"/>
+			<OptionItem option="nWeeksFromNow"/>
+		</OptionChoice>
+
+		<OptionItem option="week"/>
+		<OptionItem option="year"/>
+		<OptionItem option="numWeeks"/>
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($dateSelector == 'select')">    
+         <Target action="hide" conditionResult="false" option="week"/>
+         <Target action="show" conditionResult="true" option="week"/>
+         <Target action="hide" conditionResult="false" option="year"/>
+         <Target action="show" conditionResult="true" option="year"/>
+     </Dependency>
+	 <Dependency condition="(($dateSelector == 'nWeeksAgo') || ($dateSelector == 'nWeeksFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numWeeks"/>
+         <Target action="show" conditionResult="true" option="numWeeks"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global week;
+%global week_end;
+%global week_rel;
+%global week_label;
+
+#if ($dateSelector == 'select')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b)), $week, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b)), $week, e), DATE9.);
+%let week_label = Week $week $year;
+%symdel week_rel;
+#end
+
+#if ($dateSelector == 'currentWeek')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(date()), 0, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(date()), 0, e), DATE9.);
+%let week_label = Current Week;
+%let week_rel = W0W;
+#end
+
+#if ($dateSelector == 'nextWeek')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(date()), 1, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(date()), 1, e), DATE9.);
+%let week_label = Next Week;
+%let week_rel = W1W;
+#end
+
+#if ($dateSelector == 'previousWeek')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(date()), -1, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(date()), -1, e), DATE9.);
+%let week_label = Previous Week;
+%let week_rel = W-1W;
+#end
+
+#if ($dateSelector == 'currWeekLastYear')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(intnx(Year, %sysfunc(date()), -1, s)), 0, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(intnx(Year, %sysfunc(date()), -1, s)), 0, e), DATE9.);
+%let week_label = Current week of last year;
+%let week_rel = W0W-1Y;
+#end
+
+#if ($dateSelector == 'currWeekNextYear')
+%let week_label = Current week of next year;
+%let week = %sysfunc(intnx(Week.2, %sysfunc(intnx(Year, %sysfunc(date()), 1, s)), 0, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(intnx(Year, %sysfunc(date()), 1, s)), 0, e), DATE9.);
+%let week_rel = W0W1Y;
+#end
+
+#if ($dateSelector == 'nWeeksAgo')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(date()), -$numWeeks, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(date()), -$numWeeks, e), DATE9.);
+%let week_label = $numWeeks weeks ago;
+%let week_rel = W-${numWeeks}W;
+#end
+
+#if ($dateSelector == 'nWeeksFromNow')
+%let week = %sysfunc(intnx(Week.2, %sysfunc(date()), $numWeeks, b), DATE9.);
+%let week_end = %sysfunc(intnx(Week.2, %sysfunc(date()), $numWeeks, e), DATE9.);
+%let week_label = $numWeeks weeks from now; 
+%let week_rel = W${numWeeks}W;
+#end
+
+
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

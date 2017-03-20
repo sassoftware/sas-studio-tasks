@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Date Quarter Selector</Name>
+	<Description>Date Quarter Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="select" inputType="combobox" name="dateSelector">Choose a quarter:</Option>
+			<Option inputType="string" name="select">Select quarter</Option>
+			<Option inputType="string" name="currentQuarter">Current Quarter</Option>
+			<Option inputType="string" name="previousQuarter">Previous Quarter</Option>
+			<Option inputType="string" name="nextQuarter">Next Quarter</Option>
+			<Option inputType="string" name="currQuarterLastYear">Current quarter of previous year</Option>		
+			<Option inputType="string" name="currQuarterNextYear">Current quarter of next year</Option>		
+			<Option inputType="string" name="nQuartersAgo">N quarters ago</Option>		
+			<Option inputType="string" name="nQuartersFromNow">N quarters from now</Option>	
+			
+			<Option defaultValue="1" inputType="combobox" name="quarter">
+			        Quarter:
+			</Option>
+			<Option name="0" inputType="string">Q1</Option>
+			<Option name="1" inputType="string">Q2</Option>
+			<Option name="2" inputType="string">Q3</Option>
+			<Option name="3" inputType="string">Q4</Option>
+			<Option defaultValue="2017" inputType="inputtext" missingMessage="Enter a year" name="year">
+			        Year:
+			</Option>
+		
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of quarters" name="numQuarters" promptMessage="Enter number of quarters" rangeMessage="This number is out of range.  Enter a positive number.">
+			        Number of quarters:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="dateSelector">
+			<OptionItem option="select"/>			
+			<OptionItem option="currentQuarter"/>
+			<OptionItem option="previousQuarter"/>
+			<OptionItem option="nextQuarter"/>
+			<OptionItem option="currQuarterLastYear"/>
+			<OptionItem option="currQuarterNextYear"/>
+			<OptionItem option="nQuartersAgo"/>
+			<OptionItem option="nQuartersFromNow"/>
+		</OptionChoice>
+
+		<OptionChoice option="quarter">
+		    <OptionItem option="0"/>
+		    <OptionItem option="1"/>
+		    <OptionItem option="2"/>
+		    <OptionItem option="3"/>
+		</OptionChoice>
+		<OptionItem option="year"/>
+		<OptionItem option="numQuarters"/>
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($dateSelector == 'select')">    
+         <Target action="hide" conditionResult="false" option="quarter"/>
+         <Target action="show" conditionResult="true" option="quarter"/>
+         <Target action="hide" conditionResult="false" option="year"/>
+         <Target action="show" conditionResult="true" option="year"/>
+     </Dependency>
+	 <Dependency condition="(($dateSelector == 'nQuartersAgo') || ($dateSelector == 'nQuartersFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numQuarters"/>
+         <Target action="show" conditionResult="true" option="numQuarters"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global quarter;
+%global quarter_end;
+%global quarter_rel;
+%global quarter_label;
+
+#if ($dateSelector == 'select')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b)), $quarter, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b)), $quarter, e), DATE9.);
+#if ($quarter == '0')
+%let quarter_label = 1st quarter $year;
+#end#if ($quarter == '1')
+%let quarter_label = 2nd quarter $year;
+#end#if ($quarter == '2')
+%let quarter_label = 3rd quarter $year;
+#end#if ($quarter == '3')
+%let quarter_label = 4th quarter $year;
+#end
+%symdel quarter_rel;
+#end
+
+#if ($dateSelector == 'currentQuarter')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(date()), 0, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(date()), 0, e), DATE9.);
+%let quarter_label = Current Quarter;
+%let quarter_rel = Q0Q;
+#end
+
+#if ($dateSelector == 'nextQuarter')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(date()), 1, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(date()), 1, e), DATE9.);
+%let quarter_label = Next Quarter;
+%let quarter_rel = Q1Q;
+#end
+
+#if ($dateSelector == 'previousQuarter')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(date()), -1, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(date()), -1, e), DATE9.);
+%let quarter_label = Previous Quarter;
+%let quarter_rel = Q-1Q;
+#end
+
+#if ($dateSelector == 'currQuarterLastYear')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(intnx(Year, %sysfunc(date()), -1, s)), 0, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(intnx(Year, %sysfunc(date()), -1, s)), 0, e), DATE9.);
+%let quarter_label = Current quarter of last year;
+%let quarter_rel = Q0Q-1Y;
+#end
+
+#if ($dateSelector == 'currQuarterNextYear')
+%let quarter_label = Current quarter of next year;
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(intnx(Year, %sysfunc(date()), 1, s)), 0, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(intnx(Year, %sysfunc(date()), 1, s)), 0, e), DATE9.);
+%let quarter_rel = Q0Q1Y;
+#end
+
+#if ($dateSelector == 'nQuartersAgo')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(date()), -$numQuarters, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(date()), -$numQuarters, e), DATE9.);
+%let quarter_label = $numQuarters quarters ago;
+%let quarter_rel = Q-${numQuarters}Q;
+#end
+
+#if ($dateSelector == 'nQuartersFromNow')
+%let quarter = %sysfunc(intnx(Quarter, %sysfunc(date()), $numQuarters, b), DATE9.);
+%let quarter_end = %sysfunc(intnx(Quarter, %sysfunc(date()), $numQuarters, e), DATE9.);
+%let quarter_label = $numQuarters quarters from now; 
+%let quarter_rel = Q${numQuarters}Q;
+#end
+
+
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

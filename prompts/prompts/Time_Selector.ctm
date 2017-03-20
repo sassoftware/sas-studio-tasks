@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Time Selector</Name>
+	<Description>Time Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="currentTime" inputType="combobox" name="timeSelector">Select a time:</Option>
+			<Option inputType="string" name="specify">Specify time</Option>
+			<Option inputType="string" name="currentTime">Current time</Option>
+			<Option inputType="string" name="currentHour">Current hour</Option>
+			<Option inputType="string" name="prevHour">Previous hour</Option>
+			<Option inputType="string" name="nextHour">Next hour</Option>		
+			<Option inputType="string" name="currMin">Current minute</Option>		
+			<Option inputType="string" name="prevMin">Previous minute</Option>		
+			<Option inputType="string" name="nextMin">Next minute</Option>		
+			<Option inputType="string" name="nHoursAgo">N hours ago</Option>		
+			<Option inputType="string" name="nHoursFromNow">N hours from now</Option>		
+			<Option inputType="string" name="nMinsAgo">N minutes ago</Option>		
+			<Option inputType="string" name="nMinsFromNow">N minutes from now</Option>		
+			<Option inputType="inputtext" name="timeInput" promptMessage="Example: 01:23:45 PM"/>
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of minutes" name="numMinutes" promptMessage="Enter number of minutes" rangeMessage="This number is out of range.  Enter a positive number.">Number of minutes:
+			</Option>
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of hours" name="numHours" promptMessage="Enter number of hours" rangeMessage="This number is out of range.  Enter a positive number.">Number of hours:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="timeSelector">
+			<OptionItem option="specify"/>			
+			<OptionItem option="currentTime"/>
+			<OptionItem option="currentHour"/>
+			<OptionItem option="prevHour"/>
+			<OptionItem option="nextHour"/>
+			<OptionItem option="currMin"/>
+			<OptionItem option="prevMin"/>
+			<OptionItem option="nextMin"/>
+			<OptionItem option="nHoursAgo"/>
+			<OptionItem option="nHoursFromNow"/>
+			<OptionItem option="nMinsAgo"/>
+			<OptionItem option="nMinsFromNow"/>
+		</OptionChoice>
+
+		<OptionItem option="timeInput"/>
+		<OptionItem option="numMinutes"/>
+		<OptionItem option="numHours"/>
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($timeSelector == 'specify')">    
+         <Target action="hide" conditionResult="false" option="timeInput"/>
+         <Target action="show" conditionResult="true" option="timeInput"/>
+     </Dependency>
+	 <Dependency condition="(($timeSelector == 'nMinsAgo') || ($timeSelector == 'nMinsFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numMinutes"/>
+         <Target action="show" conditionResult="true" option="numMinutes"/>
+     </Dependency>
+	 <Dependency condition="(($timeSelector == 'nHoursAgo') || ($timeSelector == 'nHoursFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numHours"/>
+         <Target action="show" conditionResult="true" option="numHours"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+
+%global time;
+%global time_rel;
+%global time_label;
+
+#if ($timeSelector == 'specify')
+   %let time = $timeInput;
+   %let time = %sysfunc(inputn(&time, TIME10.),TOD);
+   %let time_label = $timeInput;
+   %symdel time_rel;
+#else
+
+#if ($timeSelector == 'currentTime')
+   %let time = %sysfunc(time(),time8.0); 
+   %let time_label = Current time;   
+   %let time_rel = t0m;
+#else
+
+#if ($timeSelector == 'currentHour')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(intnx(hour, &time, 0, b), time8.0);
+   %let time_label = Current hour;
+   %let time_rel = H0H;
+#else
+
+#if ($timeSelector == 'currMin')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(intnx(minute, &time, 0, b), time8.0);
+   %let time_label = Current minute;
+   %let time_rel = mom;
+#else
+
+#if ($timeSelector == 'prevHour')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dthour, &time, -1))), time8.0);
+   %let time_label = Previous hour;
+   %let time_rel = H-1H;
+#end
+
+#if ($timeSelector == 'nextHour')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dthour, &time, 1))), time8.0);
+   %let time_label = Next hour;
+   %let time_rel = H1H;
+#end
+
+#if ($timeSelector == 'prevMin')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dtminute, &time, -1))), time8.0);
+   %let time_label = Previous minute;
+   %let time_rel = m-1m;
+#end
+
+#if ($timeSelector == 'nextMin')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dtminute, &time, 1))), time8.0);
+   %let time_label = Next minute;
+   %let time_rel = m1m;
+#end
+
+#if ($timeSelector == 'nHoursAgo')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dtsecond, &time, -${numHours}*3600))), time8.0);
+   %let time_label = $numHours hours ago;
+   %let time_rel = t-${numHours}H;
+#end
+
+#if ($timeSelector == 'nHoursFromNow')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dtsecond, &time, ${numHours}*3600))), time8.0);
+   %let time_label = $numHours hours from now; 
+   %let time_rel = t${numHours}H;
+#end
+
+#if ($timeSelector == 'nMinsAgo')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dtsecond, &time, -${numMinutes}*60))), time8.0);
+   %let time_label = $numMinutes minutes ago;
+   %let time_rel = t-${numMinutes}m;
+#end
+
+#if ($timeSelector == 'nMinsFromNow')
+   %let time = %sysfunc(time()); 
+   %let time = %sysfunc(timepart(%sysfunc(intnx(dtsecond, &time, ${numMinutes}*60))), time8.0);
+   %let time_label = $numMinutes minutes from now; 
+   %let time_rel = t${numMinutes}m;
+#end
+
+#end
+#end
+#end
+#end
+
+		]]>
+	</CodeTemplate>
+
+</Task>

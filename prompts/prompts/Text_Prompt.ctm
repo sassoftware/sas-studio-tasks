@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.1" runNLS="never">
+	<Registration>
+	<Name>Text Prompt</Name>
+	<Description>Text Prompt</Description>
+	<GUID></GUID>
+	<Procedures></Procedures>
+	<Version>3.6</Version>
+	<Links></Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+
+			<Option name="text" 
+			    defaultValue="Default value" 
+			    inputType="validationtext"
+				regExp="^.{0,20}$"
+				invalidMessage="The input string is limited 20 characters."
+				promptMessage="This is the hint"
+				missingMessage="Missing text.">Enter text:
+			</Option>					
+			
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionItem option="text"/>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global text;
+%let text=$text;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

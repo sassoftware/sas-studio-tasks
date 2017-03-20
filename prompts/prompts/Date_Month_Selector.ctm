@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Date Month Selector</Name>
+	<Description>Date Month Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="select" inputType="combobox" name="dateSelector">Choose a month:</Option>
+			<Option inputType="string" name="select">Select month</Option>
+			<Option inputType="string" name="currentMonth">Current Month</Option>
+			<Option inputType="string" name="previousMonth">Previous Month</Option>
+			<Option inputType="string" name="nextMonth">Next Month</Option>
+			<Option inputType="string" name="currMonthLastYear">Current month of previous year</Option>		
+			<Option inputType="string" name="currMonthNextYear">Current month of next year</Option>		
+			<Option inputType="string" name="nMonthsAgo">N months ago</Option>		
+			<Option inputType="string" name="nMonthsFromNow">N months from now</Option>	
+			
+			<Option defaultValue="1" inputType="combobox" name="month">
+			        Month:
+			</Option>
+			<Option name="0" inputType="string">January</Option>
+			<Option name="1" inputType="string">February</Option>
+			<Option name="2" inputType="string">March</Option>
+			<Option name="3" inputType="string">April</Option>
+			<Option name="4" inputType="string">May</Option>
+			<Option name="5" inputType="string">June</Option>
+			<Option name="6" inputType="string">July</Option>
+			<Option name="7" inputType="string">August</Option>
+			<Option name="8" inputType="string">September</Option>
+			<Option name="9" inputType="string">October</Option>
+			<Option name="10" inputType="string">November</Option>
+			<Option name="11" inputType="string">December</Option>
+			
+	    	<Option defaultValue="2017" inputType="inputtext" missingMessage="Enter a year" name="year">
+			        Year:
+			</Option>
+		
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of months" name="numMonths" promptMessage="Enter number of months" rangeMessage="This number is out of range.  Enter a positive number.">
+			        Number of months:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="dateSelector">
+			<OptionItem option="select"/>			
+			<OptionItem option="currentMonth"/>
+			<OptionItem option="previousMonth"/>
+			<OptionItem option="nextMonth"/>
+			<OptionItem option="currMonthLastYear"/>
+			<OptionItem option="currMonthNextYear"/>
+			<OptionItem option="nMonthsAgo"/>
+			<OptionItem option="nMonthsFromNow"/>
+		</OptionChoice>
+
+		<OptionChoice option="month">
+		    <OptionItem option="0"/>
+		    <OptionItem option="1"/>
+		    <OptionItem option="2"/>
+		    <OptionItem option="3"/>
+		    <OptionItem option="4"/>
+		    <OptionItem option="5"/>
+		    <OptionItem option="6"/>
+		    <OptionItem option="7"/>
+		    <OptionItem option="8"/>
+		    <OptionItem option="9"/>
+		    <OptionItem option="10"/>
+		    <OptionItem option="11"/>
+		    <OptionItem option="12"/>
+		</OptionChoice>
+		
+		<OptionItem option="year"/>
+		<OptionItem option="numMonths"/>
+		
+
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($dateSelector == 'select')">    
+         <Target action="hide" conditionResult="false" option="month"/>
+         <Target action="show" conditionResult="true" option="month"/>
+         <Target action="hide" conditionResult="false" option="year"/>
+         <Target action="show" conditionResult="true" option="year"/>
+     </Dependency>
+	 <Dependency condition="(($dateSelector == 'nMonthsAgo') || ($dateSelector == 'nMonthsFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numMonths"/>
+         <Target action="show" conditionResult="true" option="numMonths"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+
+%global month;
+%global month_end;
+%global month_rel;
+%global month_label;
+
+#if ($dateSelector == 'select')
+%let month = %sysfunc(intnx(Month, %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b)), $month, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b)), $month, e), DATE9.);
+
+#if ($month == '0')
+%let month_label = January $year;
+#end
+#if ($month == '1')
+%let month_label = February $year;
+#end
+#if ($month == '2')
+%let month_label = March $year;
+#end
+#if ($month == '3')
+%let month_label = April $year;
+#end
+#if ($month == '4')
+%let month_label = May $year;
+#end
+#if ($month == '5')
+%let month_label = June $year;
+#end
+#if ($month == '6')
+%let month_label = July $year;
+#end
+#if ($month == '7')
+%let month_label = August $year;
+#end
+#if ($month == '8')
+%let month_label = September $year;
+#end
+#if ($month == '9')
+%let month_label = October $year;
+#end
+#if ($month == '10')
+%let month_label = November $year;
+#end
+#if ($month == '11')
+%let month_label = December $year;
+#end
+
+%symdel month_rel;
+#end
+
+#if ($dateSelector == 'currentMonth')
+%let month = %sysfunc(intnx(Month, %sysfunc(date()), 0, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(date()), 0, e), DATE9.);
+%let month_label = Current Month;
+%let month_rel = M0M;
+#end
+
+#if ($dateSelector == 'nextMonth')
+%let month = %sysfunc(intnx(Month, %sysfunc(date()), 1, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(date()), 1, e), DATE9.);
+%let month_label = Next Month;
+%let month_rel = M1M;
+#end
+
+#if ($dateSelector == 'previousMonth')
+%let month = %sysfunc(intnx(Month, %sysfunc(date()), -1, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(date()), -1, e), DATE9.);
+%let month_label = Previous Month;
+%let month_rel = M-1M;
+#end
+
+#if ($dateSelector == 'currMonthLastYear')
+%let month = %sysfunc(intnx(Month, %sysfunc(intnx(Year, %sysfunc(date()), -1, s)), 0, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(intnx(Year, %sysfunc(date()), -1, s)), 0, e), DATE9.);
+%let month_label = Current month of last year;
+%let month_rel = M0M-1Y;
+#end
+
+#if ($dateSelector == 'currMonthNextYear')
+%let month_label = Current month of next year;
+%let month = %sysfunc(intnx(Month, %sysfunc(intnx(Year, %sysfunc(date()), 1, s)), 0, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(intnx(Year, %sysfunc(date()), 1, s)), 0, e), DATE9.);
+%let month_rel = M0M1Y;
+#end
+
+#if ($dateSelector == 'nMonthsAgo')
+%let month = %sysfunc(intnx(Month, %sysfunc(date()), -$numMonths, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(date()), -$numMonths, e), DATE9.);
+%let month_label = $numMonths months ago;
+%let month_rel = M-${numMonths}M;
+#end
+
+#if ($dateSelector == 'nMonthsFromNow')
+%let month = %sysfunc(intnx(Month, %sysfunc(date()), $numMonths, b), DATE9.);
+%let month_end = %sysfunc(intnx(Month, %sysfunc(date()), $numMonths, e), DATE9.);
+%let month_label = $numMonths months from now; 
+%let month_rel = M${numMonths}M;
+#end
+
+
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

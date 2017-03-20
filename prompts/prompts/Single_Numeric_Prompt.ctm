@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Single Numeric Prompt</Name>
+	<Description>Single Numeric Prompt</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="50" inputType="numbertext" invalidMessage="Invalid value. Enter a number between 1 and 100." maxValue="100" minValue="1" missingMessage="Enter a number between 1 and 100." name="Numeric" promptMessage="Enter a number between 1 and 100." rangeMessage="This number is out of range.  Enter a number between 1 and 100.">Enter a numeric value:</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionItem option="Numeric"/>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global Numeric;
+%let Numeric=$Numeric;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

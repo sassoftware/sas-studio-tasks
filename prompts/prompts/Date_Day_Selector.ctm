@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Date Day Selector</Name>
+	<Description>Date Day Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="select" inputType="combobox" name="dateSelector">Choose a day:</Option>
+			<Option inputType="string" name="select">Select date</Option>
+			<Option inputType="string" name="today">Today</Option>
+			<Option inputType="string" name="yesterday">Yesterday</Option>
+			<Option inputType="string" name="tomorrow">Tomorrow</Option>
+			<Option inputType="string" name="currDayLastYear">Current day of last year</Option>		
+			<Option inputType="string" name="currDayNextYear">Current day of next year</Option>		
+			<Option inputType="string" name="currDayLastMonth">Current day of last month</Option>		
+			<Option inputType="string" name="currDayNextMonth">Current day of next month</Option>		
+			<Option inputType="string" name="nDaysAgo">N days ago</Option>		
+			<Option inputType="string" name="nDaysFromNow">N days from now</Option>		
+			<Option format="date9." inputType="datepicker" name="datePicker"/>
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of days" name="numDays" promptMessage="Enter number of days" rangeMessage="This number is out of range.  Enter a positive number.">Number of days:</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="dateSelector">
+			<OptionItem option="select"/>			
+			<OptionItem option="today"/>
+			<OptionItem option="yesterday"/>
+			<OptionItem option="tomorrow"/>
+			<OptionItem option="currDayLastYear"/>
+			<OptionItem option="currDayNextYear"/>
+			<OptionItem option="currDayLastMonth"/>
+			<OptionItem option="currDayNextMonth"/>
+			<OptionItem option="nDaysAgo"/>
+			<OptionItem option="nDaysFromNow"/>
+		</OptionChoice>
+
+		<OptionItem option="datePicker"/>
+		<OptionItem option="numDays"/>
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($dateSelector == 'select')">    
+         <Target action="hide" conditionResult="false" option="datePicker"/>
+         <Target action="show" conditionResult="true" option="datePicker"/>
+     </Dependency>
+	 <Dependency condition="(($dateSelector == 'nDaysAgo') || ($dateSelector == 'nDaysFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numDays"/>
+         <Target action="show" conditionResult="true" option="numDays"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+
+
+%global dateday;
+%global dateday_rel;
+%global dateday_label;
+
+#if ($dateSelector == 'select')
+%let dateday = $datePicker;
+%let dateday_label = %sysfunc(inputn(&dateday, date9.), WORDDATE20.);
+%symdel dateday_rel;
+#end
+
+#if ($dateSelector == 'today')
+%let dateday = %sysfunc(intnx(Day,%sysfunc(date()),0), DATE9.);
+%let dateday_label = Today;
+%let dateday_rel = D0D;
+#end
+
+#if ($dateSelector == 'tomorrow')
+%let dateday = %sysfunc(intnx(Day,%sysfunc(date()),+1), DATE9.);
+%let dateday_label = Tomorrow;
+%let dateday_rel = D1D;
+#end
+
+#if ($dateSelector == 'yesterday')
+%let dateday = %sysfunc(intnx(Day,%sysfunc(date()),-1), DATE9.);
+%let dateday_label = Yesterday;
+%let dateday_rel = D-1D;
+#end
+
+#if ($dateSelector == 'currDayLastYear')
+%let dateday = %sysfunc(intnx(Year,%sysfunc(date()),-1,s), DATE9.);
+%let dateday_label = Current day of last year;
+%let dateday_rel = D-1Y;
+#end
+
+#if ($dateSelector == 'currDayNextYear')
+%let dateday = %sysfunc(intnx(Year,%sysfunc(date()),+1,s), DATE9.);
+%let dateday_label = Current day of next year;
+%let dateday_rel = D1Y;
+#end
+
+#if ($dateSelector == 'currDayLastMonth')
+%let dateday = %sysfunc(intnx(Month,%sysfunc(date()),-1,s), DATE9.);
+%let dateday_label = Current day of last month;
+%let dateday_rel = D-1M;
+#end
+
+#if ($dateSelector == 'currDayNextMonth')
+%let dateday = %sysfunc(intnx(Month,%sysfunc(date()),+1,s), DATE9.);
+%let dateday_label = Current day of next month;
+%let dateday_rel = D1M;
+#end
+
+#if ($dateSelector == 'nDaysAgo')
+%let dateday = %sysfunc(intnx(Day,%sysfunc(date()),-$numDays,s), DATE9.);
+%let dateday_label = $numDays days ago;
+%let dateday_rel = D-${numDays}D;
+#end
+
+#if ($dateSelector == 'nDaysFromNow')
+%let dateday = %sysfunc(intnx(Day,%sysfunc(date()),+$numDays,s), DATE9.);
+%let dateday_label = $numDays days from now; 
+%let dateday_rel = D${numDays}D;
+#end
+
+
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+
+<TemplateValues version="3.7">
+<![CDATA[
+{"sasVersion":"9.41","datePicker":"","dateSelector":"select","tomorrow":"Tomorrow","select":"Select date","yesterday":"Yesterday","today":"Today","label":"Enter a date between a year ago and a year from now","currDayLastMonth":"Current day of last month","currDayLastYear":"Current day of last year","nDaysFromNow":"N days from now","currDayNextYear":"Current day of next year","currDayNextMonth":"Current day of next month","nDaysAgo":"N days ago","numDays":"N","sasOS":"X64_7PRO WIN"}
+]]>
+</TemplateValues>
+</Task>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Date Year Selector</Name>
+	<Description>Date Year Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option defaultValue="select" inputType="combobox" name="dateSelector">Choose a year:</Option>
+			<Option inputType="string" name="select">Specify year</Option>
+			<Option inputType="string" name="currentYear">Current Year</Option>
+			<Option inputType="string" name="previousYear">Previous Year</Option>
+			<Option inputType="string" name="nextYear">Next Year</Option>
+			<Option inputType="string" name="nYearsAgo">N years ago</Option>		
+			<Option inputType="string" name="nYearsFromNow">N years from now</Option>	
+			
+			
+			<Option defaultValue="2017" inputType="inputtext" missingMessage="Enter a year" name="year">
+			        Year:
+			</Option>
+		
+			<Option defaultValue="N" inputType="numbertext" invalidMessage="Invalid value. Enter a positive integer." minValue="0" missingMessage="Enter number of years" name="numYears" promptMessage="Enter number of years" rangeMessage="This number is out of range.  Enter a positive number.">
+			        Number of years:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionChoice option="dateSelector">
+			<OptionItem option="select"/>			
+			<OptionItem option="currentYear"/>
+			<OptionItem option="previousYear"/>
+			<OptionItem option="nextYear"/>
+			<OptionItem option="nYearsAgo"/>
+			<OptionItem option="nYearsFromNow"/>
+		</OptionChoice>
+
+		<OptionItem option="year"/>
+		<OptionItem option="numYears"/>
+	</UI>
+	 <Dependencies>
+	 <Dependency condition="($dateSelector == 'select')">    
+         <Target action="hide" conditionResult="false" option="year"/>
+         <Target action="show" conditionResult="true" option="year"/>
+ \     </Dependency>
+	 <Dependency condition="(($dateSelector == 'nYearsAgo') || ($dateSelector == 'nYearsFromNow'))">    
+         <Target action="hide" conditionResult="false" option="numYears"/>
+         <Target action="show" conditionResult="true" option="numYears"/>
+     </Dependency>
+     </Dependencies>
+
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global year;
+%global year_end;
+%global year_rel;
+%global year_label;
+
+#if ($dateSelector == 'select')
+%let year = %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, b), DATE9.);
+%let year_end = %sysfunc(intnx(Year, %sysfunc(MDY(1,1,$year)), 0, e), DATE9.);
+%let year_label = $year;
+%symdel year_rel;
+#end
+
+#if ($dateSelector == 'currentYear')
+%let year = %sysfunc(intnx(Year, %sysfunc(date()), 0, b), DATE9.);
+%let year_end = %sysfunc(intnx(Year, %sysfunc(date()), 0, e), DATE9.);
+%let year_label = Current Year;
+%let year_rel = Y0Y;
+#end
+
+#if ($dateSelector == 'nextYear')
+%let year = %sysfunc(intnx(Year, %sysfunc(date()), 1, b), DATE9.);
+%let year_end = %sysfunc(intnx(Year, %sysfunc(date()), 1, e), DATE9.);
+%let year_label = Next Year;
+%let year_rel = Y1Y;
+#end
+
+#if ($dateSelector == 'previousYear')
+%let year = %sysfunc(intnx(Year, %sysfunc(date()), -1, b), DATE9.);
+%let year_end = %sysfunc(intnx(Year, %sysfunc(date()), -1, e), DATE9.);
+%let year_label = Previous Year;
+%let year_rel = Y-1Y;
+#end
+
+
+#if ($dateSelector == 'nYearsAgo')
+%let year = %sysfunc(intnx(Year, %sysfunc(date()), -$numYears, b), DATE9.);
+%let year_end = %sysfunc(intnx(Year, %sysfunc(date()), -$numYears, e), DATE9.);
+%let year_label = $numYears years ago;
+%let year_rel = Y-${numYears}Y;
+#end
+
+#if ($dateSelector == 'nYearsFromNow')
+%let year = %sysfunc(intnx(Year, %sysfunc(date()), $numYears, b), DATE9.);
+%let year_end = %sysfunc(intnx(Year, %sysfunc(date()), $numYears, e), DATE9.);
+%let year_label = $numYears years from now; 
+%let year_rel = Y${numYears}Y;
+#end
+
+
+%put _GLOBAL_;
+
+		]]>
+	</CodeTemplate>
+
+</Task>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Folder Selector</Name>
+	<Description>Folder Selector</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option inputType="sasserverpath" name="FolderPrompt" pathType="folder" promptMessage="Select a folder">
+				Select a folder:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionItem option="FolderPrompt"/>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+		
+%global Folder_Server;
+%let Folder_Server="Local";
+
+%global Folder;
+%let Folder=${FolderPrompt.path};
+
+
+		]]>
+	</CodeTemplate>
+
+</Task>

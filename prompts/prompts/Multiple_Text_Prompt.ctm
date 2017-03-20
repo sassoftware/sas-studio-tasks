@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Multiple Text Prompt</Name>
+	<Description>Multiple Text Prompt</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links/>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+
+			<Option inputType="multientry" name="multientry">Specify mulitple text values:</Option>
+			<Option inputType="string" name="one">one</Option>
+			<Option inputType="string" name="two">two</Option>
+			<Option inputType="string" name="three">three</Option>			
+
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		
+        <OptionChoice option="multientry">
+			<OptionItem option="one"/>
+			<OptionItem option="two"/>
+			<OptionItem option="three"/>
+		</OptionChoice>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global multientry;
+%let multientry=$multientry;
+
+#if ($multientry.size()>0)
+
+%global textselector_count;
+%let textselector_count=$multientry.size();
+
+%global textselector0;
+%let textselector0=$multientry.size();
+
+%global textselector;
+%let textselector=$multientry[0];
+
+#set($counter = 1)
+#foreach ($id in $multientry)
+   %global textselector$counter;
+   %let textselector$counter=$id;
+   #set($counter = $counter + 1)
+#end
+#end
+
+		]]>
+	</CodeTemplate>
+
+</Task>

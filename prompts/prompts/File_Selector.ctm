@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.1" runNLS="never">
+	<Registration>
+	<Name>File Selector</Name>
+	<Description>File Selector</Description>
+	<GUID></GUID>
+	<Procedures></Procedures>
+	<Version>3.6</Version>
+	<Links>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option name="FilePrompt" inputType="sasserverpath"	
+			        promptMessage="Select a file" defaultExtension=".sas">
+				Select a file:
+			</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionItem option="FilePrompt"/>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+		
+%global File_Server;
+%let File_Server="Local";
+
+%global File;
+%let File=${FilePrompt.fullPath};
+
+		]]>
+	</CodeTemplate>
+
+</Task>

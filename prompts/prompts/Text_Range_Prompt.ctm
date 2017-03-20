@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.1">
+	<Registration>
+	<Name>Text Range Prompt</Name>
+	<Description>Text Range Prompt</Description>
+	<GUID/>
+	<Procedures/>
+	<Version>3.6</Version>
+	<Links/>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			
+            <Option defaultValue="a" inputType="validationtext" invalidMessage="The input string is limited to 1 to 100 characters." missingMessage="Missing text." name="textrange_min" promptMessage="This is the hint" regExp="^.{0,100}$">From:</Option>	
+            <Option defaultValue="z" inputType="validationtext" invalidMessage="The input string is limited to 1 to 100 characters." missingMessage="Missing text." name="textrange_max" promptMessage="This is the hint" regExp="^.{0,100}$">to:</Option>	
+				
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<OptionItem option="textrange_min"/>
+		<OptionItem option="textrange_max"/>
+		
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%global textrange_min;
+%global textrange_max;
+%let textrange_min=$textrange_min;
+%let textrange_max=$textrange_max;
+
+		]]>
+	</CodeTemplate>
+</Task>
