@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tasks>
+<Task>
+<Name label="Color Selector"/>
+<Template uri="./Color_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Data Source Selector"/>
+<Template uri="./Data_Source_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Date Day Selector"/>
+<Template uri="./Date_Day_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Date Month Selector"/>
+<Template uri="./Date_Month_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Date Quarter Selector"/>
+<Template uri="./Date_Quarter_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Date Week Selector"/>
+<Template uri="./Date_Week_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Date Year Selector"/>
+<Template uri="./Date_Year_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="File Selector"/>
+<Template uri="./File_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Folder Selector"/>
+<Template uri="./Folder_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Hyperlink Prompt"/>
+<Template uri="./Hyperlink_Prompt.ctm"/>
+</Task>
+<Task>
+<Name label="Multiple Text Prompt"/>
+<Template uri="./Multiple_Text_Prompt.ctm"/>
+</Task>
+<Task>
+<Name label="Number Range Prompt"/>
+<Template uri="./Number_Range_Prompt.ctm"/>
+</Task>
+<Task>
+<Name label="Single Numeric Prompt"/>
+<Template uri="./Single_Numeric_Prompt.ctm"/>
+</Task>
+<Task>
+<Name label="Text Prompt"/>
+<Template uri="./Text_Prompt.ctm"/>
+</Task>
+<Task>
+<Name label="Text Range Prompt"/>
+<Template uri="./Text_Range_Prompt.ctm"/>
+</Task>
+<Task>
+<Name label="Time Selector"/>
+<Template uri="./Time_Selector.ctm"/>
+</Task>
+<Task>
+<Name label="Timestamp Selector"/>
+<Template uri="./Timestamp_Selector.ctm"/>
+</Task>
+
+</Tasks>
