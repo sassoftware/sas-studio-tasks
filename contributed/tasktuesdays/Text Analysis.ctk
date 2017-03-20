@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="4.0">
+    <Registration>
+        <Name>Text Analysis</Name>
+        <Description>Performs basic statistics on text from Project Gutenberg.</Description>
+        <Procedures>SORT, FREQ</Procedures>
+        <Version>3.5</Version>
+        <Links>
+           	<Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+			<Link href="https://communities.sas.com/t5/SAS-Communities-Library/Always-looking-for-a-shortcut-Custom-Task-Tuesday-is-for-you/ta-p/320053">Task Tuesday Introduction Post</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <Options>
+            <Option inputType="string" name="DATATAB">DATA</Option>
+            <Option inputType="string" name="DATAGROUP">DATA</Option>
+            <Option name="GROUPdatasets" inputType="string">INFORMATION</Option>
+			<Option name="labeldatasets" inputType="string">The following datasets are created in the WORK library as a result of running this task with all options checked:</Option>
+			<Option name="labeldatasets1" inputType="string">TEXT_ORIGINAL</Option>
+			<Option name="labeldatasets2" inputType="string">FREQ_ORIGINAL</Option>
+			<Option name="labeldatasets3" inputType="string">TEXT_NO_COMMON_WORDS</Option>
+			<Option name="labeldatasets4" inputType="string">FREQ_NO_COMMON_WORDS</Option>
+            <Option inputType="string" name="GROUPCHECK">REQUESTED OUTPUT</Option>
+            <Option inputType="string" name="labelCHECK">Select the types of output you would like based on your selected text.</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chk1">List of all Proper Case Words in Descending Frequency Order</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chk2">List of all Capitalized Words in Descending Frequency Order, Not Including 100 Most Common Words</Option>
+            <Option inputType="string" name="GROUPCOMBO">TEXT CHOICE</Option>
+			<Option inputType="string" name="labelCOMBO">Choose from an example text below, or provide your own Project Gutenberg TEXT URL.</Option>
+			<Option defaultValue="http://www.gutenberg.org/cache/epub/35688/pg35688.txt" inputType="combobox" name="bookCHOICE">Examples:</Option>
+			<Option inputType="string" name="http://www.gutenberg.org/cache/epub/35688/pg35688.txt">Alice in Wonderland</Option>
+            <Option inputType="string" name="http://www.gutenberg.org/cache/epub/84/pg84.txt">Frankenstein</Option>
+            <Option inputType="string" name="http://www.gutenberg.org/cache/epub/5200/pg5200.txt">Metamorphosis</Option>
+            <Option inputType="string" name="http://www.gutenberg.org/cache/epub/768/pg768.txt">Wuthering Heights</Option>
+            <Option inputType="string" name="labelTEXT">Enter a valid "Plain Text" Project Gutenburg URL.</Option>
+            <Option inputType="string" name="labelTEXT2">Here is an example of a valid URL:</Option>
+            <Option inputType="string" name="labelTEXT3">http://www.gutenberg.org/cache/epub/35688/pg35688.txt</Option>
+            <Option defaultValue="" indent="1" inputType="inputtext" missingMessage="Missing url." name="textURL" promptMessage="Enter a project gutenburg url.">Input Project Gutenburg URL:</Option>
+        </Options>
+    </Metadata>
+    <UI>
+        <Container option="DATATAB">
+        	<Group option="GROUPdatasets" open="true">
+				<OptionItem option="labeldatasets"/>
+				<OptionItem option="labeldatasets1"/>
+				<OptionItem option="labeldatasets2"/>
+				<OptionItem option="labeldatasets3"/>
+				<OptionItem option="labeldatasets4"/>
+			</Group>
+        	<Group open="true" option="GROUPCOMBO">
+				<OptionItem option="labelCOMBO"/>
+				<OptionChoice option="bookCHOICE">
+					<OptionItem option="http://www.gutenberg.org/cache/epub/35688/pg35688.txt"/>
+					<OptionItem option="http://www.gutenberg.org/cache/epub/84/pg84.txt"/>
+					<OptionItem option="http://www.gutenberg.org/cache/epub/5200/pg5200.txt"/>
+					<OptionItem option="http://www.gutenberg.org/cache/epub/768/pg768.txt"/>
+				</OptionChoice>
+                <OptionItem option="labelTEXT"/>
+                <OptionItem option="labelTEXT2"/>
+                <OptionItem option="labelTEXT3"/>
+                <OptionItem option="textURL"/>
+            </Group>
+            <Group open="true" option="GROUPCHECK">
+                <OptionItem option="labelCHECK"/>
+                <OptionItem option="chk1"/>
+                <OptionItem option="chk2"/>
+            </Group>
+ 		</Container>
+    </UI>
+    <CodeTemplate><![CDATA[
+ods noproctitle;
+title;
+%let exampletext = "$bookCHOICE";
+%let textURL = "$textURL";
+%let chk1	 = $chk1; *Value of checkbox 1;
+%let chk2	 = $chk2; *Value of checkbox 2;
+
+data _null_;
+	textURL = &textURL;
+	if textURL = "" then call symput('text', &exampletext);
+	else if textURL ^= "" then call symput('text', &textURL);
+run;
+
+filename ibiblio url "&text" proxy = 'http://www.gutenberg.org/'; 
+
+data TEXT_ORIGINAL;
+	Infile ibiblio DLM=' ';
+	Input Original: $32. @@;
+		Word=compress(Original, ".,!?""[]");
+		Word_Upcase=upcase(Word);
+		Order=_N_;
+		Capital=anyupper(Word);
+		Punctuation=index(Original,'.');
+run;
+
+data TEXT_ORIGINAL;
+	set TEXT_ORIGINAL;
+	where Word not in ("Project" "Gutenberg" "PROJECT" "GUTENBERG" "Gutenberg-tm");
+run;
+
+%macro freq1;
+ods noproctitle;
+title "List of Most Frequent Proper Case Words";
+proc freq data=TEXT_ORIGINAL order=freq;
+	table Word_Upcase/ out= FREQ_ORIGINAL;
+	where Capital > 0;
+run;
+proc sort data=FREQ_ORIGINAL;
+	by descending count;
+run;
+%mend freq1;
+
+%macro freq2;
+data TEXT_NO_COMMON_WORDS;
+	set TEXT_ORIGINAL;
+	where Word not in ("The" "Be" "To" "Of" "And" "A" "In" "That" "Have" "I" "It" "For" "Not" "On" "With" "He" "As" "You" "Do" "At" 
+		"This" "But" "His" "By" "From" "They" "We" "Say" "Her" "She" "Or" "An" "Will" "My" "One" "All" "Would" "There" "Their" "What" "So" "Up" "Out" 
+		"If" "About" "Who" "Get" "Which" "Go" "Me" "When" "Make" "Can" "Like" "Time" "No" "Just" "Him" "Know" "Take" "People" "Into" "Year" "Your" "Good" 
+		"Some" "Could" "Them" "See" "Other" "Than" "Then" "Now" "Look" "Only" "Come" "Its" "Over" "Think" "Also" "Back" "After" "Use" "Two" "How" "Our" 
+		"Work" "First" "Well" "Way" "Even" "New" "Want" "Because" "Any" "These" "Give" "Day" "Most" "Us");
+run;
+
+title "List of Most Frequent Proper Case Words not in 100 Most Common Words";
+proc freq data=TEXT_NO_COMMON_WORDS order=freq;
+	table Word_Upcase/ out=FREQ_NO_COMMON_WORDS;
+	where Capital > 0;
+run;
+proc sort data=FREQ_NO_COMMON_WORDS;
+	by descending count;
+run;
+%mend freq2;
+
+data _null_;
+	if &chk1 = 1 then call execute ('%freq1');
+	if &chk2 = 1 then call execute ('%freq2');
+run;
+
+
+		]]></CodeTemplate>
+
+<TemplateValues version="3.5">
+<![CDATA[
+{"labelCOMBO":"Choose from an example text below, or provide your own Project Gutenberg TEXT URL.","labeldatasets":"The following datasets are created in the WORK library as a result of running this task with all options checked:","http://www.gutenberg.org/cache/epub/5200/pg5200.txt":"Metamorphosis","labelTEXT2":"Here is an example of a valid URL:","labelTEXT3":"http://www.gutenberg.org/cache/epub/35688/pg35688.txt","labeldatasets3":"TEXT_NO_COMMON_WORDS","labeldatasets4":"FREQ_NO_COMMON_WORDS","sasOS":"X64_8PRO WIN","http://www.gutenberg.org/cache/epub/84/pg84.txt":"Frankenstein","labeldatasets1":"TEXT_ORIGINAL","labeldatasets2":"FREQ_ORIGINAL","chk2":"0","http://www.gutenberg.org/cache/epub/35688/pg35688.txt":"Alice in Wonderland","sasVersion":"9.43","labelCHECK":"Select the types of output you would like based on your selected text.","DATAGROUP":"DATA","chk1":"0","labelTEXT":"Enter a valid \"Plain Text\" Project Gutenburg URL.","http://www.gutenberg.org/cache/epub/768/pg768.txt":"Wuthering Heights","bookCHOICE":"http://www.gutenberg.org/cache/epub/35688/pg35688.txt","textURL":"","GROUPdatasets":"INFORMATION","GROUPCHECK":"REQUESTED OUTPUT","DATATAB":"DATA","GROUPCOMBO":"TEXT CHOICE"}
+]]>
+</TemplateValues>
+</Task>

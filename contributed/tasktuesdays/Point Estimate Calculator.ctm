@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.0">
+	<Registration>
+	<Name>Point Estimate Calculator</Name>
+	<Description>Calculates point estimates and insert back in to the original dataset.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>MEANS</Procedures>
+	<Version>3.5</Version>
+	<Links>
+		<Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role maxVars="1" minVars="1" name="VAR" order="true" type="N">Variable:</Role>
+				</Roles>			
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="DATAGROUP">DATA</Option>
+			<Option inputType="string" name="ROLESGROUP">ROLES</Option>
+			<Option inputType="string" name="GROUPCHECK">SUMMARY STATISTICS</Option>
+			<Option inputType="string" name="labelCHECK">Select the statistics you would like included in the output dataset.</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkMEAN">Mean</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkMIN">Minimum</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkMAX">Maximum</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkSTD">Standard Deviation</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkLCLM">LCLM</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkUCLM">UCLM</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkP25">25th Percentile</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkP75">75th Percentile</Option>	
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group open="true" option="ROLESGROUP">
+				<RoleItem role="VAR"/>
+			</Group>
+			<Group open="true" option="GROUPCHECK">
+				<OptionItem option="labelCHECK"/>
+				<OptionItem option="chkMEAN"/>
+				<OptionItem option="chkMIN"/>
+				<OptionItem option="chkMAX"/>
+				<OptionItem option="chkSTD"/>
+				<OptionItem option="chkLCLM"/>
+				<OptionItem option="chkUCLM"/>
+				<OptionItem option="chkP25"/>
+				<OptionItem option="chkP75"/>
+			</Group>
+		</Container>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+data copy;
+	set $DATASOURCE;
+run;
+
+#foreach ( $item in $VAR )
+	%let item = $item;
+
+proc means data = copy noprint;
+	var  $item;
+	output out = means (drop = _TYPE_ _FREQ_) 
+	#if ($chkMEAN == 1)		mean   = &item._mean	#end
+	#if ($chkMIN == 1)		min    = &item._min   	#end
+	#if ($chkMAX == 1)		max    = &item._max   	#end
+	#if ($chkSTD == 1)		std    = &item._std   	#end
+	#if ($chkLCLM == 1)		LCLM   = &item._LCLM  	#end
+	#if ($chkUCLM == 1)		UCLM   = &item._UCLM  	#end
+	#if ($chkP25 == 1)		p25    = &item._p25  	#end
+	#if ($chkP75 == 1)		p75    = &item._p75 	#end
+;
+run;
+
+#end
+
+data point;
+	set copy;
+	if _n_= 1 then
+		set means;
+run;
+
+title "First 10 Observations";
+proc print data=point(obs=10); 
+run;
+
+proc datasets lib=work noprint; 
+	delete copy means;
+run;
+
+		]]>
+	</CodeTemplate>
+</Task>
