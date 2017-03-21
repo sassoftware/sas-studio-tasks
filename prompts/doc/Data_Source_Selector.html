@@ -1,0 +1,23 @@
+<html>
+<h1>
+Data Source Task
+</h1> 
+The data source selector task displays an Data tab with a dataset selector and a required variable selector.   When a dataset and variable are selected global macro variables are created and set:
+<ul>
+<li>dataset - the name of the dataset selected
+<li>saslibrary - the SAS library name
+<li>sastable - the name of the table selected
+<li>var  - the variable selected
+</ul>
+<p>
+An example of the generated code is: 
+<p>
+<pre>
+%global DATASET;
+%global SASLIBRARY;
+%put DATASET=SASHELP.CARS;
+%put SASLIBRARY=SASHELP;
+%put SASTABLE=CARS;
+%put VAR=EngineSize;
+</pre>
+</html>
