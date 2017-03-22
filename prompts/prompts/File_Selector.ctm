@@ -7,8 +7,9 @@
 	<Procedures></Procedures>
 	<Version>3.6</Version>
 	<Links>
+          <Link href="https://sassoftware.github.io/sas-studio-tasks/prompts/doc/File_Selector.html">File Selector Task</Link>
 	</Links>
-	</Registration>
+	<Category>Prompts</Category>		</Registration>
 	
 	<Metadata>
 		
