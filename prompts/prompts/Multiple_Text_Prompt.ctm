@@ -5,7 +5,10 @@
 	<GUID/>
 	<Procedures/>
 	<Version>3.6</Version>
-	<Links/>
+	<Links>
+          <Link href="https://sassoftware.github.io/sas-studio-tasks/prompts/doc/Multiple_Text_Prompt.html">Multiple Text Prompt Task</Link>
+	</Links>
+	<Category>Prompts</Category>		
 	</Registration>
 	
 	<Metadata>
