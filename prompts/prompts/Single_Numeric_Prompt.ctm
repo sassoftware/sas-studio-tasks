@@ -6,7 +6,9 @@
 	<Procedures/>
 	<Version>3.6</Version>
 	<Links>
+          <Link href="https://sassoftware.github.io/sas-studio-tasks/prompts/doc/Single_Numeric_Prompthtml">Single Numeric Prompt Task</Link>
 	</Links>
+	<Category>Prompts</Category>		
 	</Registration>
 	
 	<Metadata>
