@@ -21,9 +21,8 @@ Using the Prompt Tasks
 
 If you would like to modify or combine these tasks, you can copy the tasks you would like to use by selecting "Add to My Tasks" or "Add to Folders" on the task context menu.   You can edit the copied tasks and modify the macro variable names if you would like different values.  You can also pull the appropriate sections out of the tasks into a new task if you would like more than one prompt in your task.
 
-The SAS® Studio 3.6: Developer’s Guide to Writing Custom Tasks is available here:
+The [SAS® Studio 3.6: Developer’s Guide to Writing Custom Tasks is available here](http://go.documentation.sas.com/?cdcId=webeditorcdc&cdcVersion=3.6&docsetId=webeditordg&docsetTarget=titlepage.htm&locale=en).
 
-http://pubshelpcenter.unx.sas.com:8080/production/?cdcId=webeditorcdc&cdcVersion=3.6&docsetId=webeditordg&docsetTarget=titlepage.htm&locale=en
 
 
 
