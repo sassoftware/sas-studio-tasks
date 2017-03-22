@@ -6,9 +6,10 @@
 	<Procedures/>
 	<Version>3.6</Version>
 	<Links>
+          <Link href="https://sassoftware.github.io/sas-studio-tasks/prompts/doc/Date_Month_Selector.html">Date Month Selector Task</Link>
 	</Links>
-	</Registration>
-	
+	<Category>Prompts</Category>		
+	</Registration>	
 	<Metadata>
 		
 		<DataSources>	
