@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.0" runNLS="never">
+	<Registration>
+	<Name>SGF MyIRT</Name>
+	<Description>IRT Procedure  FName LName 1/10/2017 </Description> 
+	<Procedures>IRT</Procedures>
+	<Version>3.5</Version>  
+	<Links>
+		<Link href="http://support.sas.com/">SAS Support</Link>
+	</Links>
+	</Registration>
+
+# Example Comment	
+	<Metadata>   # Example inline comment
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="N" minVars="1" maxVars="100" order="True" 
+					      name = "ITEMS">Select Items</Role>	
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+		    <Option name="DATA_SELECT" inputType="string">DATASET</Option> 
+		    <Option name="ITEM_SELECT" inputType="string">ITEMS</Option>
+		</Options>
+	</Metadata>
+
+	<UI>
+			<Container option="DATATAB">
+			<Group option="DATA_SELECT" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ITEM_SELECT" open="true">
+				<RoleItem role="ITEMS"/>
+			</Group>		
+			</Container>
+	</UI>
+
+  	<CodeTemplate>
+		<![CDATA[
+	
+proc irt data = $DATASOURCE RESFUNC=RASCH;
+var #foreach($item in $ITEMS )$item #end	;
+title "IRT from Task";
+run;
+		]]>
+	</CodeTemplate>
+</Task>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.0">
+	<Registration>
+	<Name>SGF MyIRTModel</Name>
+	<Description>IRT Procedure with Model Select  LName FName 1/10/2017  </Description> 
+	<Procedures>IRT</Procedures>
+	<Version>3.5</Version>  
+	<Links>
+		<Link href="http://support.sas.com/">SAS Support</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="N" maxVars="100" minVars="1" order="True" 
+					      name="ITEMS">Select Items</Role>	
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB"     inputType="string">DATA</Option>
+		    <Option name="DATA_SELECT" inputType="string">DATASET</Option> 
+		    <Option name="ITEM_SELECT" inputType="string">ITEMS</Option>
+		    <Option name="GROUPCHECK"  inputType="string">MODEL</Option>
+		    <Option name="chkRASCH"    inputType="checkbox" defaultValue="0" >Rasch</Option>
+			<Option name="chkONE"      inputType="checkbox" defaultValue="0" >One Parameter</Option>
+			<Option name="chkTWO"      inputType="checkbox" defaultValue="0" >Two Parameter</Option>
+			<Option name="chkTHREE"    inputType="checkbox" defaultValue="0" >Three Parameter</Option>
+			<Option name="chkFOUR"     inputType="checkbox" defaultValue="0" >Four Parameter</Option>
+			<Option name="chkGRADED"   inputType="checkbox" defaultValue="0" >Graded Response</Option>
+			<Option name="chkGPC"      inputType="checkbox" defaultValue="0" >Generalized Partial Credit</Option>
+		</Options>
+	</Metadata>
+
+	<UI>
+			<Container option="DATATAB">
+			<Group open="true" option="DATA_SELECT">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group open="true" option="ITEM_SELECT">
+				<RoleItem role="ITEMS"/>
+			</Group>	
+			<Group open="true" option="GROUPCHECK">
+				<OptionItem option="chkRASCH"/>
+				<OptionItem option="chkONE"/>
+				<OptionItem option="chkTWO"/>
+				<OptionItem option="chkTHREE"/>
+				<OptionItem option="chkFOUR"/>
+				<OptionItem option="chkGRADED"/>
+				<OptionItem option="chkGPC"/>
+			</Group>	
+			</Container>
+	</UI>
+
+  	<CodeTemplate>
+		<![CDATA[
+%macro irt(resfunc);
+proc irt data = $DATASOURCE RESFUNC=&resfunc;
+var #foreach($item in $ITEMS )$item #end	;
+title "IRT from Task Using &resfunc Model";
+run;
+%mend irt;
+
+#if ($chkRASCH == 1)
+	%irt(RASCH);
+#end
+#if ($chkONE == 1)
+	%irt(ONEP);
+#end
+#if ($chkTWO == 1)
+	%irt(TWOP);
+#end
+#if ($chkTHREE == 1)
+	%irt(THREEP);
+#end
+#if ($chkFOUR == 1)
+	%irt(FOURP);
+#end
+#if ($chkGRADED == 1)
+	%irt(GRADED);
+#end
+#if ($chkGPC == 1)
+	%irt(GPC);
+#end
+
+		]]>
+	</CodeTemplate>
+</Task>

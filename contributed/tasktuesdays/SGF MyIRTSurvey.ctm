@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Task schemaVersion="5.0" runNLS="never">
+	<Registration>
+		<Name>IRT Survey Analysis</Name>
+		<Description>IRT Analysis for Survey LName FName 1/10/2017</Description> 
+		<Procedures>IRT</Procedures>
+		<Version>3.5</Version>
+		<Links>
+			<Link href="http://support.sas.com">SAS Support</Link>
+		</Links>
+	</Registration>
+
+	<Metadata>
+		<DataSources>
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="N" minVars="1" maxVars="100" order="True" 
+					      name = "ITEMS">Select Items</Role>	
+				</Roles>
+			</DataSource>
+		</DataSources>
+		<Options>
+			<Option name="DATATAB"      inputType="string">DATA</Option>
+			<Option name="DATAGROUP"    inputType="string">DATA</Option>
+			<Option name="ITEM_SELECT"  inputType="string">SURVEY QUESTIONS</Option>
+			<Option name="OPTIONSTAB"   inputType="string">OPTIONS</Option>
+			<Option name="GROUPLISTING" inputType="string">ITEM OUTPUT FOR LISTING</Option>
+			<Option name="GROUPOUTPUT"  inputType="string">OUTPUT DATASETS</Option>
+			<Option name="chkITEMS"     inputType="checkbox" defaultValue="0">Item Statistics</Option>
+			<Option name="chkICC"       inputType="checkbox" defaultValue="0">Item Characteristic Curves</Option>
+			<Option name="chkOUTPUT"    inputType="checkbox" defaultValue="0">Create Output Datasets</Option>
+			<Option name="GROUPCOMBO"   inputType="string">CUSTOMER SURVEY</Option>
+			<Option name="comboTYPE"    inputType="combobox" defaultValue="LSF">Choose from the list below:</Option>
+			<Option name="LSF"          inputType="string">Loyalty (Short Form)</Option>
+			<Option name="LLF"          inputType="string">Loyalty (Long Form)</Option>
+			<Option name="SAT"          inputType="string">Satisfaction</Option>
+			<Option name="labelOUTPUT"  inputType="string">Produces three output datasets: 
+			                                      _Scores, _Model, and _ParameterEstimates</Option>
+		</Options>
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="GROUPCOMBO" open="true">
+				<OptionChoice option="comboTYPE">
+					<OptionItem option="LSF"/>
+					<OptionItem option="LLF"/>
+					<OptionItem option="SAT"/>
+				</OptionChoice>
+			</Group>
+			<Group option="DATAGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ITEM_SELECT" open="true">
+				<RoleItem role="ITEMS"/>
+			</Group>
+		</Container>
+		<Container option="OPTIONSTAB">
+			<Group option="GROUPLISTING" open="true">
+				<OptionItem option="chkITEMS"/>
+				<OptionItem option="chkICC"/>
+			</Group>
+			<Group option="GROUPOUTPUT" open="true">
+					<OptionItem option="chkOUTPUT"/>
+					<OptionItem option="labelOUTPUT"/>
+			</Group>
+		</Container>
+	</UI>
+
+	<CodeTemplate>
+
+		<![CDATA[
+	
+%macro LSF;
+    ods graphics on;
+    proc freq data=$DATASOURCE; tables #foreach($item in $ITEMS )$item #end ; run;
+	#if ($chkOUTPUT ==1) ods output ParameterEstimates=LSF_ParameterEstimates ; #end
+	proc irt data=$DATASOURCE resfunc=GRADED  
+		#if ($chkITEMS == 1) itemstat #end		
+		#if ($chkICC == 1) plots=icc #end	
+		#if ($chkOUTPUT == 1) out=LSF_Scores outmodel=LSF_Model #end ;	
+		var #foreach($item in $ITEMS )$item #end ;
+	run;
+	ods graphics off;
+%mend LSF;
+	
+%macro LLF;
+    ods graphics on;
+    proc means data=$DATASOURCE; var #foreach($item in $ITEMS )$item #end ; run;
+	#if ($chkOUTPUT ==1) ods output ParameterEstimates=LLF_ParameterEstimates ; #end
+	proc irt data=$DATASOURCE resfunc=GRADED 
+		#if ($chkITEMS == 1) itemstat #end		
+		#if ($chkICC == 1) plots=icc #end	
+		#if ($chkOUTPUT == 1) out=LLF_Scores outmodel=LLF_Model #end ;	
+		var #foreach($item in $ITEMS )$item #end ;
+	run;
+	ods graphics off;
+%mend LLF;
+	
+%macro SAT;
+    ods graphics on;
+    proc univariate data=$DATASOURCE; var #foreach($item in $ITEMS )$item #end ; run;
+	#if ($chkOUTPUT ==1) ods output ParameterEstimates=SAT_ParameterEstimates ; #end
+	proc irt data=$DATASOURCE resfunc=GPC  
+		#if ($chkITEMS == 1) itemstat #end		
+		#if ($chkICC == 1) plots=icc #end	
+		#if ($chkOUTPUT == 1) out=SAT_Scores outmodel=SAT_Model #end ;	
+		var #foreach($item in $ITEMS )$item #end ;
+	run;
+	ods graphics off;
+%mend SAT;
+
+#if ($comboTYPE == "LSF")  %LSF;  #end
+#if ($comboTYPE == "LLF")  %LLF;  #end
+#if ($comboTYPE == "SAT")  %SAT;  #end
+
+		]]>
+	</CodeTemplate>
+</Task>
+
