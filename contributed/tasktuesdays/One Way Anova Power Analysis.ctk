@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?><Task schemaVersion="5.0">
+    <Registration>
+        <Name>One Way Anova Power Analysis</Name> 
+        <Description>Calculate power or sample size for a one way anova</Description> 
+        <GUID>fef106be-f9b9-498c-bbd4-d031e1253ffa</GUID>
+        <Procedures>POWER</Procedures>
+        <Version>3.5</Version>
+        <Links>
+            <Link href="http://support.sas.com/documentation/onlinedoc/sasstudio/index.html">SAS Studio User's Guide</Link>
+            <Link href="http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm#statug_power_overview.htm">The POWER Procedure</Link>
+            <Link href="http://support.sas.com/training/studio">SAS Tutorials</Link>
+        </Links>
+   </Registration>
+   <Metadata>
+        <DataSources>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="propertiesTab">PROPERTIES</Option> 
+            <Option inputType="string" name="solveforGroup">SOLVE FOR</Option> 
+            <Option inputType="string" name="solveforInstruction">Select the quantity to solve for:</Option> 
+            <Option defaultValue="1" inputType="radio" name="solveforPowerChoice" variable="solveFor">Power</Option> 
+            <Option inputType="radio" name="solveforSampSizeChoice" variable="solveFor">Sample size</Option> 
+
+            <Option inputType="string" name="analysisDetailsGroup">ANALYSIS DETAILS</Option> 
+            <Option inputType="string" name="testGroup">Test</Option> 
+            <Option defaultValue="overall" inputType="combobox" name="comboTEST" width="200px">Select the test for your analysis:</Option>
+            <Option inputType="string" name="overall">Overall</Option>
+            <Option inputType="string" name="contrast">Contrast</Option>
+            
+            <Option inputType="string" name="numberOfSidesGroup">Number of Sides</Option> 
+            <Option defaultValue="sidesTwo" inputType="combobox" name="sides" width="200px">Select the number of sides of the test:</Option>
+            <Option inputType="string" name="sidesOne">One-sided test</Option>
+            <Option inputType="string" name="sidesLower">Lower one-sided test</Option>
+            <Option inputType="string" name="sidesUpper">Upper one-sided test</Option>
+            <Option inputType="string" name="sidesTwo">Two-sided test</Option>
+            
+			<Option name="numberSTDDEV" defaultValue="1"
+				inputType="numbertext"
+				minValue="0" 
+				maxValue="10"
+				promptMessage="Enter a number between 0 and 10."
+				missingMessage="Enter a number between 0 and 10."
+				rangeMessage="This number is out of range.  Enter a number between 0 and 10."
+				invalidMessage="Invalid value. Enter a number between 0 and 10."
+				>Standard Deviation:</Option>
+
+            <Option inputType="string" name="groupMeansGroup">GROUP MEANS</Option> 
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="2" label="Group mean values:" minimumRequiredRows="2" name="groupMeansTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Group Means" name="groupMeans">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter an integer for group means" missingMessage="Enter an integer for group means" promptMessage="Enter an integer for group means" rangeMessage="Enter an integer for group means" required="true"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="2" label="Group Sample Size values:" minimumRequiredRows="1" name="groupNsTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Group Sample Size" name="groupNs">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter an integer for group sample size" missingMessage="Enter an integer for group sample size" promptMessage="Enter an integer for group sample size" rangeMessage="Enter an integer for group sample size" required="true"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+
+            <Option inputType="string" name="contrastGroup">CONTRAST</Option> 
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="2" label="Contrast values:" minimumRequiredRows="2" name="contrastTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Contrast" name="contrast">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter an integer for a contrast" missingMessage="Enter an integer for a contrast" promptMessage="Enter an integer for a contrast" rangeMessage="Enter an integer for a contrast" required="true"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+            
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Group weight values:" minimumRequiredRows="0" name="weightsTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Group Weights" name="weights">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter an integer for group weights" missingMessage="Enter an integer for group weights" promptMessage="Enter an integer for group weights" rangeMessage="Enter an integer for group weights" required="false"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+            
+            <Option inputType="string" name="nullContrastGroup">NULL CONTRAST</Option> 
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Null Contrast values:" minimumRequiredRows="0" name="nullContrastTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Null Contrast" name="nullContrast">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter an integer for a null contrast" missingMessage="Enter an integer for a null contrast" promptMessage="Enter an integer for a null contrast" rangeMessage="Enter an integer for a null contrast" required="false"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Sample Size Per Group values:" minimumRequiredRows="0" name="nPerGroupTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="N Per Group" name="nPerGroup">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter an integer for a n per group" missingMessage="Enter an integer for a n per group" promptMessage="Enter an integer for a n per group" rangeMessage="Enter an integer for a n per group" required="false"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+            <Option inputType="string" name="sampleSizeGroup">SAMPLE SIZE</Option> 
+            <Option inputType="string" name="sampParamInstruction">Select a sample size parameterization:</Option> 
+            <Option defaultValue="1" inputType="radio" name="sampParam1" variable="sampParam">Total Sample Size with Optional Weights</Option> 
+            <Option inputType="radio" name="sampParam2" variable="sampParam">Sample Size Per Group in Balanced Design</Option> 
+            <Option inputType="radio" name="sampParam3" variable="sampParam">Individual Group Sample Sizes</Option> 
+
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Sample size values:" minimumRequiredRows="1" name="totalNTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Sample Size" name="totalN">
+                        <Option decimalPlaces="0" inputType="numbertext" invalidMessage="Enter an integer for total sample size that is greater than or equal to 4 plus the number of variables to partial out" minValue="4" missingMessage="Enter an integer for total sample size that is greater than or equal to 4 plus the number of variables to partial out" promptMessage="Enter an integer for total sample size that is greater than or equal to 4 plus the number of variables to partial out" rangeMessage="Enter an integer for total sample size that is greater than or equal to 4 plus the number of variables to partial out" required="false"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Sample size values:" minimumRequiredRows="1" name="fractionalTotalNTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Sample Size" name="totalN">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Enter a number for total sample size that is greater than or equal to 4 plus the number of variables to partial out and can contain a decimal fraction" minValue="4" missingMessage="Enter a number for total sample size that is greater than or equal to 4 plus the number of variables to partial out and can contain a decimal fraction" promptMessage="Enter a number for total sample size that is greater than or equal to 4 plus the number of variables to partial out and can contain a decimal fraction" rangeMessage="Enter a number for total sample size that is greater than or equal to 4 plus the number of variables to partial out and can contain a decimal fraction" required="false"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+            <Option inputType="checkbox" name="nfractional">Allow fractional sample sizes</Option> 
+            
+            <Option inputType="string" name="alphaGroup">SIGNIFICANCE LEVEL</Option> 
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Alpha values:" minimumRequiredRows="1" name="alphaTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column defaultValues="0.05" label="Alpha" name="alpha">
+                        <Option decimalPlaces="1,15" inputType="numbertext" invalidMessage="Enter a number for alpha that is greater than zero and less than 1" maxValue="0.99999999999" minValue="0.00000000001" missingMessage="Enter a number for alpha that is greater than zero and less than 1" promptMessage="Enter a number for alpha that is greater than zero and less than 1" rangeMessage="Enter a number for alpha that is greater than zero and less than 1" required="false"/>
+                    </Column>
+               </Columns>
+            </OptionTable>         
+
+            <Option inputType="string" name="powerGroup">POWER</Option> 
+            <OptionTable addRemoveRowTools="true" initialNumberOfRows="1" label="Power values:" minimumRequiredRows="1" name="powerTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Power" name="power">
+                        <Option decimalPlaces="1,15" inputType="numbertext" invalidMessage="Enter a number for power that is greater than zero and less than 1" maxValue="0.99999999999" minValue="0.00000000001" missingMessage="Enter a number for power that is greater than zero and less than 1" promptMessage="Enter a number for power that is greater than zero and less than 1" rangeMessage="Enter a number for power that is greater than zero and less than 1" required="false"/>
+                    </Column>
+                </Columns>
+            </OptionTable>
+
+            <Option inputType="string" name="optionsTab">PLOTS</Option> 
+            <Option inputType="string" name="plotsGroup">PLOTS</Option>
+            <Option inputType="string" name="plotLabel">Plots cannot be created with the groupns= option.</Option>
+            <Option defaultValue="1" inputType="checkbox" name="powerBySampleSizePlot">Power by sample size plot</Option>
+            <Option inputType="checkbox" name="powerByEffectPlot">Power by effect size plot</Option>
+            <Option inputType="checkbox" name="sampleSizeByEffectPlot">Sample size by effect size plot</Option>
+            <Option inputType="string" name="plotAxisGroup">Axis Orientation</Option>
+            <Option inputType="string" name="plotQuantityInstruction">Select the quantity to plot on the vertical axis:</Option>
+            <Option defaultValue="1" inputType="radio" name="plotQuantitySolvedForChoice" variable="plotQuantity">Quantity solved for</Option>
+            <Option inputType="radio" name="plotQuantityPowerChoice" variable="plotQuantity">Power</Option>
+            <Option inputType="radio" name="plotQuantitySampleSizeChoice" variable="plotQuantity">Sample size</Option>
+            <Option indent="1" inputType="string" name="powerPlotRangeLabel">Range of values:</Option>
+            <Option indent="1" inputType="checkbox" name="usePlotMinPowerValue">Minimum power</Option>
+            <Option indent="1" inputType="checkbox" name="usePlotMaxPowerValue">Maximum power</Option>
+            <Option decimalPlaces="1,15" indent="2" inputType="numbertext" invalidMessage="Enter a number greater than zero and less than 1 for the minimum value for power" maxValue="0.99999999999" minValue="0.00000000001" missingMessage="Enter a number greater than zero and less than 1 for the minimum value for power" name="powerMinValue" promptMessage="Enter a number greater than zero and less than 1 for the minimum value for power" rangeMessage="Enter a number greater than zero and less than 1 for the minimum value for power" required="true" width="100px">Minimum value:</Option>
+             <Option decimalPlaces="1,15" indent="2" inputType="numbertext" invalidMessage="Enter a number greater than zero and less than 1 for the maximum value for power" maxValue="0.99999999999" minValue="0.00000000001" missingMessage="Enter a number greater than zero and less than 1 for the maximum value for power" name="powerMaxValue" promptMessage="Enter a number greater than zero and less than 1 for the maximum value for power" rangeMessage="Enter a number greater than zero and less than 1 for the maximum value for power" required="true" width="100px">Maximum value:</Option> 
+            <Option indent="1" inputType="checkbox" name="usePlotMinSSValue">Minimum sample size</Option>
+            <Option indent="1" inputType="checkbox" name="usePlotMaxSSValue">Maximum sample size</Option>
+            <Option decimalPlaces="0" indent="1" inputType="numbertext" invalidMessage="Enter an integer that is zero or greater for the minimum value for sample size" minValue="0" missingMessage="Enter an integer that is zero or greater for the minimum value for sample size" name="ssMinValue" promptMessage="Enter an integer that is zero or greater for the minimum value for sample size" rangeMessage="Enter an integer that is zero or greater for the minimum value for sample size" required="true" width="100px">Minimum value:</Option>
+            <Option decimalPlaces="0" indent="1" inputType="numbertext" invalidMessage="Enter an integer that is zero or greater for the maximum value for sample size" minValue="0" missingMessage="Enter an integer that is zero or greater for the maximum value for sample size" name="ssMaxValue" promptMessage="Enter an integer that is zero or greater for the maximum value for sample size" rangeMessage="Enter an integer that is zero or greater for the maximum value for sample size" required="true" width="100px">Maximum value:</Option>       
+            <Option indent="1" inputType="string" name="effectPlotRangeLabel">Range of values:</Option>
+            <Option indent="1" inputType="checkbox" name="usePlotMinEffectValue">Minimum effect size</Option>
+            <Option indent="1" inputType="checkbox" name="usePlotMaxEffectValue">Maximum effect size</Option>
+            <Option decimalPlaces="0,15" indent="1" inputType="numbertext" invalidMessage="Enter a number between -1 and 1 for the minimum value for correlation" maxValue="0.99999999999" minValue="-0.9999999999" missingMessage="Enter a number between -1 and 1 for the minimum value for correlation" name="corrMinValue" promptMessage="Enter a number between -1 and 1 for the minimum value for correlation" rangeMessage="Enter a number between -1 and 1 for the minimum value for correlation" required="true" width="100px">Minimum value for correlation:</Option>
+            <Option decimalPlaces="0,15" indent="1" inputType="numbertext" invalidMessage="Enter a number between -1 and 1 for the maximum value for correlation" maxValue="0.99999999999" minValue="-0.9999999999" missingMessage="Enter a number between -1 and 1 for the maximum value for correlation" name="corrMaxValue" promptMessage="Enter a number between -1 and 1 for the maximum value for correlation" rangeMessage="Enter a number between -1 and 1 for the maximum value for correlation" required="true" width="100px">Maximum value for correlation:</Option>
+        </Options>
+    </Metadata>
+
+    <UI>
+        <Container option="propertiesTab">
+            <Group open="true" option="solveforGroup">
+                <OptionItem option="solveforPowerChoice"/>
+                <OptionItem option="solveforSampSizeChoice"/>
+            </Group>
+            <Group open="true" option="analysisDetailsGroup">
+                     <OptionChoice option="comboTEST">
+                        <OptionItem option="overall"/>
+                        <OptionItem option="contrast"/>
+                    </OptionChoice>     
+                    <OptionItem option="numberSTDDEV"/>
+                    <OptionChoice option="sides">
+                        <OptionItem option="sidesOne"/>
+                        <OptionItem option="sidesLower"/>
+                        <OptionItem option="sidesUpper"/>
+                        <OptionItem option="sidesTwo"/>
+            		</OptionChoice>        
+            </Group>
+            <Group open="true" option="groupMeansGroup">
+				<OptionItem option="groupMeansTable"/>
+            </Group>
+            <Group open="true" option="contrastGroup">
+				<OptionItem option="contrastTable"/>
+            </Group>
+            <Group open="true" option="nullContrastGroup">
+				<OptionItem option="nullContrastTable"/>
+            </Group>
+            <Group open="true" option="alphaGroup">
+                <OptionItem option="alphaTable"/>
+            </Group>
+            
+            <Group open="true" option="powerGroup">
+                <OptionItem option="powerTable"/>
+            </Group>
+            
+            <Group open="true" option="sampleSizeGroup">
+           	 	<OptionItem option="nfractional"/>
+            	<OptionItem option="sampParamInstruction"/>
+            	<OptionItem option="sampParam1"/>
+                <OptionItem option="sampParam2"/>
+                <OptionItem option="sampParam3"/>
+                <OptionItem option="nPerGroupTable"/>
+                <OptionItem option="groupNsTable"/>
+                <OptionItem option="totalNTable"/>
+                <OptionItem option="fractionalTotalNTable"/>
+                <OptionItem option="weightsTable"/>
+            </Group>
+        </Container>
+        
+        <Container option="optionsTab"> 
+            <OptionItem option="plotLabel"/>
+            <Group open="true" option="plotsGroup">
+                <OptionItem option="powerBySampleSizePlot"/>
+                <OptionItem option="powerPlotRangeLabel"/>
+                    <OptionItem option="usePlotMinPowerValue"/>
+                    <OptionItem option="powerMinValue"/>
+                
+                    <OptionItem option="usePlotMinSSValue"/>
+                    <OptionItem option="ssMinValue"/>
+                
+                    <OptionItem option="usePlotMaxPowerValue"/>
+                    <OptionItem option="powerMaxValue"/>
+                
+                    <OptionItem option="usePlotMaxSSValue"/>
+                    <OptionItem option="ssMaxValue"/>
+               
+                <OptionItem option="powerByEffectPlot"/>
+                <OptionItem option="sampleSizeByEffectPlot"/> 
+                
+                <OptionItem option="effectPlotRangeLabel"/>
+                    <OptionItem option="usePlotMinEffectValue"/>
+                    <OptionItem option="corrMinValue"/>
+                    <OptionItem option="usePlotMaxEffectValue"/>       
+                    <OptionItem option="corrMaxValue"/>
+           </Group>
+       </Container>        
+    </UI>
+    <Dependencies>
+         <Dependency condition="($comboTEST == 'contrast')">
+            <Target action="show" conditionResult="true" option="contrastGroup"/>
+            <Target action="hide" conditionResult="false" option="contrastGroup"/>
+            <Target action="show" conditionResult="true" option="nullContrastGroup"/>
+            <Target action="hide" conditionResult="false" option="nullContrastGroup"/>
+            <Target action="show" conditionResult="true" option="sides"/>
+            <Target action="hide" conditionResult="false" option="sides"/>
+        </Dependency> 
+    	<Dependency condition="($sampParam == 'sampParam1')">
+    		<Target action="show" conditionResult="true" option="totalNTable"/>
+            <Target action="hide" conditionResult="false" option="totalNTable"/>
+            <Target action="show" conditionResult="true" option="weightsTable"/>
+            <Target action="hide" conditionResult="false" option="weightsTable"/>
+    	</Dependency>
+    	<Dependency condition="($sampParam == 'sampParam2')">
+    		<Target action="show" conditionResult="true" option="nPerGroupTable"/>
+            <Target action="hide" conditionResult="false" option="nPerGroupTable"/>
+    	</Dependency>
+    	<Dependency condition="($sampParam == 'sampParam3')">
+    		<Target action="show" conditionResult="true" option="groupNsTable"/>
+            <Target action="hide" conditionResult="false" option="groupNsTable"/>
+            <Target action="hide" conditionResult="true" option="optionsTab"/>
+            <Target action="disable" conditionResult="true" option="optionsTab"/>
+            <Target action="hide" conditionResult="true" option="plotsGroup"/>
+            <Target action="disable" conditionResult="true" option="plotsGroup"/>
+            <Target action="show" conditionResult="true" option="plotLabel"/>
+            <Target action="hide" conditionResult="false" option="plotLabel"/>
+    	</Dependency>
+        <Dependency condition="($solveFor == 'solveforPowerChoice')">
+            <Target action="show" conditionResult="true" option="powerByEffectPlot"/>
+            <Target action="hide" conditionResult="false" option="powerByEffectPlot"/>
+            <Target action="hide" conditionResult="true" option="powerGroup"/>
+            <Target action="show" conditionResult="false" option="powerGroup"/>
+            <Target action="hide" conditionResult="true" option="sampleSizeByEffectPlot"/>
+            <Target action="show" conditionResult="false" option="sampleSizeByEffectPlot"/>
+        </Dependency>
+        <Dependency condition="($solveFor == 'solveforPowerChoice' &amp;&amp; !($nfractional == '1'))">
+            <Target action="show" conditionResult="true" option="totalNTable"/>
+            <Target action="hide" conditionResult="false" option="totalNTable"/>
+        </Dependency>
+        <Dependency condition="($solveFor == 'solveforPowerChoice' &amp;&amp; ($nfractional == '1'))">
+            <Target action="show" conditionResult="true" option="fractionalTotalNTable"/>
+            <Target action="hide" conditionResult="false" option="fractionalTotalNTable"/>
+        </Dependency>
+           
+        <Dependency condition="($powerBySampleSizePlot == '1')">
+            <Target action="show" conditionResult="true" option="powerPlotRangeLabel"/>
+            <Target action="hide" conditionResult="false" option="powerPlotRangeLabel"/>
+        </Dependency>        
+        <Dependency condition="($powerBySampleSizePlot == '1') &amp;&amp; !($solveFor == 'solveforPowerChoice')">
+            <Target action="show" conditionResult="true" option="usePlotMinPowerValue"/>
+            <Target action="hide" conditionResult="false" option="usePlotMinPowerValue"/>
+            <Target action="show" conditionResult="true" option="usePlotMaxPowerValue"/>
+            <Target action="hide" conditionResult="false" option="usePlotMaxPowerValue"/>
+        </Dependency>
+        <Dependency condition=" ($powerBySampleSizePlot == '1') &amp;&amp; ($solveFor == 'solveforPowerChoice') "> 
+            <Target action="show" conditionResult="true" option="usePlotMinSSValue"/>
+            <Target action="hide" conditionResult="false" option="usePlotMinSSValue"/>
+            <Target action="show" conditionResult="true" option="usePlotMaxSSValue"/>
+            <Target action="hide" conditionResult="false" option="usePlotMaxSSValue"/>
+        </Dependency>
+        <Dependency condition="($powerBySampleSizePlot == '1') &amp;&amp; ($usePlotMinPowerValue == '1') &amp;&amp; !($solveFor == 'solveforPowerChoice')">
+            <Target action="show" conditionResult="true" option="powerMinValue"/>
+            <Target action="hide" conditionResult="false" option="powerMinValue"/>
+        </Dependency>
+        <Dependency condition="($powerBySampleSizePlot == '1') &amp;&amp; ($usePlotMaxPowerValue == '1')  &amp;&amp; !($solveFor == 'solveforPowerChoice')">
+            <Target action="show" conditionResult="true" option="powerMaxValue"/>
+            <Target action="hide" conditionResult="false" option="powerMaxValue"/>
+        </Dependency>
+        <Dependency condition="($powerBySampleSizePlot == '1') &amp;&amp; ($usePlotMinSSValue == '1') &amp;&amp; ($solveFor == 'solveforPowerChoice')">
+            <Target action="show" conditionResult="true" option="ssMinValue"/>
+            <Target action="hide" conditionResult="false" option="ssMinValue"/>
+        </Dependency>
+        <Dependency condition="($powerBySampleSizePlot == '1') &amp;&amp; ($usePlotMaxSSValue == '1') &amp;&amp; ($solveFor == 'solveforPowerChoice')">
+            <Target action="show" conditionResult="true" option="ssMaxValue"/>
+            <Target action="hide" conditionResult="false" option="ssMaxValue"/>           
+        </Dependency>
+        
+        <Dependency condition="(             ($powerByEffectPlot &amp;&amp; $powerByEffectPlot == 1) ||             ($sampleSizeByEffectPlot &amp;&amp; $sampleSizeByEffectPlot == 1)              )">
+            <Target action="show" conditionResult="true" option="effectPlotRangeLabel"/>
+            <Target action="hide" conditionResult="false" option="effectPlotRangeLabel"/>
+            <Target action="show" conditionResult="true" option="usePlotMinEffectValue"/>
+            <Target action="hide" conditionResult="false" option="usePlotMinEffectValue"/>
+            <Target action="show" conditionResult="true" option="usePlotMaxEffectValue"/>
+            <Target action="hide" conditionResult="false" option="usePlotMaxEffectValue"/>
+        </Dependency>        
+        <Dependency condition="(             ($powerByEffectPlot &amp;&amp; $powerByEffectPlot == 1) ||             ($sampleSizeByEffectPlot &amp;&amp; $sampleSizeByEffectPlot == 1)              ) &amp;&amp; ($usePlotMinEffectValue == '1')">
+            <Target action="show" conditionResult="true" option="corrMinValue"/>
+            <Target action="hide" conditionResult="false" option="corrMinValue"/>
+        </Dependency>        
+        <Dependency condition="(             ($powerByEffectPlot &amp;&amp; $powerByEffectPlot == 1) ||             ($sampleSizeByEffectPlot &amp;&amp; $sampleSizeByEffectPlot == 1)              ) &amp;&amp; ($usePlotMaxEffectValue == '1')">
+            <Target action="show" conditionResult="true" option="corrMaxValue"/>
+            <Target action="hide" conditionResult="false" option="corrMaxValue"/>
+        </Dependency>        
+    </Dependencies>
+
+    <Requirements>
+        <Requirement condition="!(             ($powerBySampleSizePlot == '1') &amp;&amp;              !($solveFor == 'solveforPowerChoice') &amp;&amp;              ($usePlotMinPowerValue == '1') &amp;&amp;              ($usePlotMaxPowerValue == '1') &amp;&amp;             ($MathTool.toDouble($powerMinValue) &gt; $MathTool.toDouble($powerMaxValue))         )">
+            <Message nlsKey="minMaxPowerPlotRequirementKey">The maximum power for the power by sample size plot cannot be less than the minimum value.</Message>
+        </Requirement>
+        
+        <Requirement condition="!(             ($powerBySampleSizePlot == '1') &amp;&amp;              ($solveFor == 'solveforPowerChoice') &amp;&amp;              ($usePlotMinSSValue == '1') &amp;&amp;              ($usePlotMaxSSValue == '1') &amp;&amp;             ($MathTool.toDouble($ssMinValue) &gt; $MathTool.toDouble($ssMaxValue))         )">
+            <Message nlsKey="minMaxSampleSizePlotRequirementKey">The maximum sample size for the power by sample size plot cannot be less than the minimum value.</Message>
+        </Requirement>
+         
+        <Requirement condition="!(             (             ($powerByEffectPlot &amp;&amp; $powerByEffectPlot == 1) ||             ($sampleSizeByEffectPlot &amp;&amp; $sampleSizeByEffectPlot == 1)              ) &amp;&amp;              ($usePlotMinEffectValue == '1') &amp;&amp;              ($usePlotMaxEffectValue == '1') &amp;&amp;              ($MathTool.toDouble($corrMinValue) &gt; $MathTool.toDouble($corrMaxValue))          )">
+            <Message nlsKey="minMaxCorrEffectsPlotRequirementKey">The maximum correlation for the effect plot cannot be less than the minimum value.</Message>
+        </Requirement>
+        
+        <Requirement condition="!(             !($solveFor == 'solveforPowerChoice') &amp;&amp;             (                  $powerTable.columns.power.isValid == 1 &amp;&amp;                 $alphaTable.columns.alpha.isValid == 1 &amp;&amp;                 $powerTable.columns.power.numValues &gt; 0 &amp;&amp;                 $alphaTable.columns.alpha.numValues &gt; 0 &amp;&amp;                 !($CTMMathUtil.getMax($powerTable.columns.power.values) &gt; $CTMMathUtil.getMax($alphaTable.columns.alpha.values))             )             )">
+            <Message nlsKey="alphaPowerRequirementKey">At least one value for power must be larger than the largest value for alpha</Message>
+        </Requirement> 
+        <Requirement condition="!(  !($comboTEST=='overall') &amp;&amp; !($groupMeansTable.columns.groupMeans.numValues == $contrastTable.columns.contrast.numValues))">
+        	<Message nlsKey="meansContrastKey">There must be the same number of values for group means and contrast.</Message>
+        </Requirement>
+        <Requirement condition="!(  !($weightsTable.columns.weights.numValues == 0) &amp;&amp; !($weightsTable.columns.weights.numValues == $groupMeansTable.columns.groupMeans.numValues))">
+            <Message nlsKey="weightsKey">There must be the same number of values for group means and group weights.</Message>
+		</Requirement>
+    </Requirements>
+    
+    <CodeTemplate>
+        <![CDATA[
+ods noproctitle;
+#if ($powerBySampleSizePlot == 1 || (
+            ($powerByEffectPlot && $powerByEffectPlot == 1) ||
+            ($sampleSizeByEffectPlot && $sampleSizeByEffectPlot == 1) 
+            ))
+ods graphics / imagemap=on;
+#end
+
+proc power;
+   onewayanova test=$comboTEST stddev=$numberSTDDEV
+
+## group means list
+#set($_groupMeans=[])
+#foreach($item in $groupMeansTable.rows.values)
+   #if ($item.groupMeans)
+      #set($_dummy=$_groupMeans.add("$item.groupMeans"))
+   #end
+#end
+#if ($_groupMeans.size() > 1) groupmeans=#foreach($item in $_groupMeans)$item #if($velocityCount < $_groupMeans.size()) | #end#end#end
+
+## contrast list
+#set($_contrast=[])
+#foreach($item in $contrastTable.rows.values)
+   #if ($item.contrast)
+      #set($_dummy=$_contrast.add("$item.contrast"))
+   #end
+#end
+#if ($_contrast.size() > 1) contrast=(#foreach($item in $_contrast)$item #if($velocityCount < $_contrast.size()) #end#end )#end 
+
+## null contrast list
+#set($_nullContrast=[])
+#foreach($item in $nullContrastTable.rows.values)
+   #if ($item.nullContrast)
+      #set($_dummy=$_nullContrast.add("$item.nullContrast"))
+   #end
+#end
+#if ($_nullContrast.size() > 0) nullcontrast= #foreach($item in $_nullContrast)$item #if($velocityCount < $_nullContrast.size()) #end#end#end 
+
+## group n list
+#set($_groupNs=[])
+#foreach($item in $groupNsTable.rows.values)
+   #if ($item.groupNs)
+      #set($_dummy=$_groupNs.add("$item.groupNs"))
+   #end
+#end
+#if ($_groupNs.size() > 1) groupns=(#foreach($item in $_groupNs)$item #if($velocityCount < $_groupNs.size()) #end#end )#end 
+
+## n per group list
+#set($_nPerGroup=[])
+#foreach($item in $nPerGroupTable.rows.values)
+   #if ($item.nPerGroup)
+      #set($_dummy=$_nPerGroup.add("$item.nPerGroup"))
+   #end
+#end
+#if ($_nPerGroup.size() > 0) npergroup= #foreach($item in $_nPerGroup)$item #if($velocityCount < $_nPerGroup.size()) #end#end#end 
+
+#if ($comboTEST == 'contrast')
+sides=#if ($sides == 'sidesOne')1
+	#elseif($sides == 'sidesTwo')2
+	#elseif($sides == 'sidesLower')L
+	#elseif($sides == 'sidesUpper')U
+	#end
+#end
+
+#if ($solveFor == 'solveforPowerChoice')
+  	## sample size list
+   	#set($_totalN=[])
+   	#if (!($nfractional == 1)) 
+         #set($ssTable=$totalNTable)
+   	#else #set($ssTable=$fractionalTotalNTable)
+   	#end
+   	#foreach($item in $ssTable.rows.values)
+      	#if ($item.totalN)
+          	#set($_dummy=$_totalN.add("$item.totalN"))
+      	#end
+   	#end
+   	#if ($_totalN.size() > 0) ntotal=#foreach($item in $_totalN) $item#end#end
+#elseif ($solveFor == 'solveforSampSizeChoice')
+    ## Power
+    #set($_power=[])
+    #foreach($item in $powerTable.rows.values)
+        #if ($item.power)
+            #set($_dummy=$_power.add("$item.power"))
+        #end
+    #end
+    #if ($_power.size() > 0) power=#foreach($item in $_power) $item #end#end
+#end
+
+## group weights list
+#set($_weights=[])
+#foreach($item in $weightsTable.rows.values)
+   #if ($item.weights)
+      #set($_dummy=$_weights.add("$item.weights"))
+   #end
+#end
+#if ($_weights.size() > 0) groupweights= (#foreach($item in $_weights)$item #end ) #end 
+
+## Alpha
+#set($_alpha=[])
+#foreach($item in $alphaTable.rows.values)
+   #if ($item.alpha)
+      #set($_dummy=$_alpha.add("$item.alpha"))
+   #end
+#end
+#if ($_alpha.size() > 0) alpha=#foreach($item in $_alpha) $item#end#end
+
+#if ($nfractional == 1) nfractional#end   
+
+#if ($solveFor == 'solveforPowerChoice')
+ power=.
+#elseif ($solveFor == 'solveforSampSizeChoice')
+ ntotal=.
+ #end
+
+;
+
+##### PLOTS #####
+#if (!($sampParam == 'sampParam3'))
+#if ($powerBySampleSizePlot == '1')
+plot
+   #if ($solveFor == 'solveforPowerChoice') x=n 
+      #if ($usePlotMinSSValue == '1') min=$ssMinValue#end
+      #if ($usePlotMaxSSValue == '1') max=$ssMaxValue#end
+   #else x=power
+      #if ($usePlotMinPowerValue == '1') min=$powerMinValue#end
+      #if ($usePlotMaxPowerValue == '1') max=$powerMaxValue#end
+   #end
+;
+#end
+#if (($sampleSizeByEffectPlot && $sampleSizeByEffectPlot == 1) || ($powerByEffectPlot && $powerByEffectPlot == 1) )
+   plot x=effect
+      #if ($usePlotMinEffectValue == '1') min=$corrMinValue#end
+      #if ($usePlotMaxEffectValue == '1') max=$corrMaxValue#end
+   ;
+#end
+#end
+##### End of PLOTS #####
+run;
+
+]]>
+    </CodeTemplate>
+
+<TemplateValues version="3.5">
+<![CDATA[
+{"sidesTwo":"Two-sided test","usePlotMinEffectValue":"","corrMinValue":"","plotQuantitySampleSizeChoice":"0","alphaGroup":"SIGNIFICANCE LEVEL","plotLabel":"Plots cannot be created with the groupns= option.","contrast":"Contrast","comboTEST":"overall","totalNTable":{"rows":{"values":[{"id":1,"totalN":null}]},"columns":{"totalN":{"values":[null],"isValid":"1","numValues":0}}},"nullContrastTable":"","powerBySampleSizePlot":"1","analysisDetailsGroup":"ANALYSIS DETAILS","nPerGroupTable":"","usePlotMinSSValue":"","overall":"Overall","contrastGroup":"CONTRAST","sasVersion":"9.43","usePlotMaxEffectValue":"","optionsTab":"PLOTS","propertiesTab":"PROPERTIES","plotQuantityInstruction":"Select the quantity to plot on the vertical axis:","groupNsTable":"","numberSTDDEV":"1","solveforPowerChoice":"1","usePlotMaxSSValue":"","powerMaxValue":"","effectPlotRangeLabel":"Range of values:","contrastTable":"","plotsGroup":"PLOTS","sampleSizeGroup":"SAMPLE SIZE","nfractional":"","ssMinValue":"","sidesOne":"One-sided test","sampleSizeByEffectPlot":"","plotAxisGroup":"Axis Orientation","sampParam2":"0","numberOfSidesGroup":"Number of Sides","sampParam3":"0","sampParam1":"1","powerByEffectPlot":"","sidesUpper":"Upper one-sided test","solveforInstruction":"Select the quantity to solve for:","powerPlotRangeLabel":"Range of values:","plotQuantitySolvedForChoice":"1","usePlotMaxPowerValue":"","corrMaxValue":"","sidesLower":"Lower one-sided test","sasOS":"X64_8PRO WIN","plotQuantityPowerChoice":"0","plotQuantity":"plotQuantitySolvedForChoice","solveFor":"solveforPowerChoice","sampParam":"sampParam1","sides":"sidesTwo","ssMaxValue":"","groupMeansTable":{"rows":{"values":[{"id":1,"groupMeans":null},{"id":2,"groupMeans":null}]},"columns":{"groupMeans":{"values":[null,null],"isValid":"0","numValues":0}}},"nullContrastGroup":"NULL CONTRAST","powerGroup":"POWER","weightsTable":{"rows":{"values":[{"id":1,"weights":null}]},"columns":{"weights":{"values":[null],"isValid":"1","numValues":0}}},"usePlotMinPowerValue":"","groupMeansGroup":"GROUP MEANS","powerMinValue":"","testGroup":"Test","solveforGroup":"SOLVE FOR","alphaTable":{"rows":{"values":[{"id":1,"alpha":0.05}]},"columns":{"alpha":{"values":[0.05],"isValid":"1","numValues":1}}},"fractionalTotalNTable":"","powerTable":"","solveforSampSizeChoice":"0","sampParamInstruction":"Select a sample size parameterization:"}
+]]>
+</TemplateValues>
+</Task>
