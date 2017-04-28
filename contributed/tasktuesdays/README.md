@@ -14,6 +14,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [Power and Sample Size Calculations for One Way Anova](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Power-Analysis-for-One-Way-Anova/ta-p/350875)
+SAS Studio has several built-in tasks for power and sample size calculations for different types of analyses, including pearson correlation, multiple regression, confidence intervals, t-tests, and more. However, there are a few other test options under proc power that are not covered under these built-in tasks, including the onewayanova option. This task is an extensively modified version of the built-in Pearson Correlation task that allows the user to calculate power and sample size for a one way anova test.
+
 ### [SAS Global Forum Paper: PROC IRT](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-SAS-Global-Forum-PROC-IRT-Edition/ta-p/346886)
 This post will describes three custom tasks developed for PROC IRT (MyIRT, MyIRTModel, and MyIRTSurvey) from a SAS Global Forum paper written by my colleague Elliot Inman and I titled “Developing Your Own SAS Studio Custom Tasks for Advanced Analytics." It starts with a basic task, and builds up to a task that is more complex. The SAS Program "MakeData.sas" also goes along with this post.
 
