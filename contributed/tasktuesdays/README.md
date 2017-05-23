@@ -14,6 +14,10 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+
+### [Customizing Report Options](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Customizing-Report-Options/ta-p/360552)
+The Report Options task allows the user to customize certain options for their report that will show up in your report of their results. The user will be able to change the title, color of the title, and add "text decoration" (underline, strike-through, etc) to the title of their report, which will all show up in the output window as well as in the PDF version of the report. It also allows to user to decide whether or not they want dates and page numbers, which will show up in the PDF version of the report. 
+
 ### [Power and Sample Size Calculations for One Way Anova](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Power-Analysis-for-One-Way-Anova/ta-p/350875)
 SAS Studio has several built-in tasks for power and sample size calculations for different types of analyses, including pearson correlation, multiple regression, confidence intervals, t-tests, and more. However, there are a few other test options under proc power that are not covered under these built-in tasks, including the onewayanova option. This task is an extensively modified version of the built-in Pearson Correlation task that allows the user to calculate power and sample size for a one way anova test.
 
