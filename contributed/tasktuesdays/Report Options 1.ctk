@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.0">
+	<Registration>
+		<Name>Report Options</Name>
+		<Description>Creates a downloadable PDF report based on user preferences.</Description>
+		<GUID>C6AC34BD-D14A-4CF5-BF2F-A110711BF819</GUID>
+		<Procedures>PRINT</Procedures>
+		<Version>3.5</Version>
+		<Links>
+			<Link href="http://www.sas.com">SAS Home page</Link>
+		</Links>
+	</Registration>
+
+	<Metadata>
+
+		<DataSources>
+			<DataSource name="DATASOURCE">
+			</DataSource>
+		</DataSources>
+		
+		<Options>
+			<Option inputType="string" name="DATATAB">BASIC OPTIONS</Option>
+			<Option inputType="string" name="DATAGROUP">DATA</Option>
+			<Option inputType="string" name="DATERADIO">DATE</Option>
+			<Option inputType="string" name="labelDATE">Choose whether or not you want the date to be included in the PDF of the report.</Option>
+			<Option defaultValue="1" inputType="radio" name="date" variable="radioDATE">Date</Option>
+			<Option inputType="radio" name="nodate" variable="radioDATE">No Date</Option>
+			<Option inputType="string" name="NUMRADIO">PAGE NUMBER</Option>
+			<Option inputType="string" name="labelNUM">Choose whether or not you want page numbers to be included in the PDF of the report.</Option>
+			<Option defaultValue="1" inputType="radio" name="number" variable="radioNUM">Number</Option>
+			<Option inputType="radio" name="nonumber" variable="radioNUM">No Number</Option>
+			<Option inputType="string" name="TITLETEXT">TITLE</Option>
+			<Option inputType="string" name="labelTITLE">Enter a title for your report.</Option>
+			<Option defaultValue="Title goes here" indent="1" inputType="inputtext" missingMessage="Missing title." name="textTITLE" promptMessage="Enter a title." required="true">Title:</Option>
+			<Option inputType="string" name="labelTITLEDEC">Choose a title text decoration.</Option>
+			<Option defaultValue="1" indent="1" inputType="radio" name="none" variable="radioTITLEDEC">None</Option>
+			<Option indent="1" inputType="radio" name="underline" variable="radioTITLEDEC">Underline</Option>
+			<Option indent="1" inputType="radio" name="overline" variable="radioTITLEDEC">Overline</Option>
+			<Option indent="1" inputType="radio" name="line_through" variable="radioTITLEDEC">Line Through</Option>
+			<Option inputType="string" name="labelCOLOR">Select a color for your title color.</Option>
+			<Option defaultValue="black" indent="1" inputType="color" name="colorTITLE">Choose a color</Option>
+			<Option inputType="string" name="GROUPCHECK">CONTENT</Option>
+			<Option inputType="string" name="labelCHECK">Check the boxes of the output you would like to include in your report.</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkFREQ">Proc Freq</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkMEANS">Proc Means</Option>
+			<Option defaultValue="0" inputType="checkbox" name="chkPRINT">Proc Print</Option>
+		</Options>
+	</Metadata>
+
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group open="true" option="GROUPCHECK">
+				<OptionItem option="labelCHECK"/>
+				<OptionItem option="chkFREQ"/>
+				<OptionItem option="chkMEANS"/>
+				<OptionItem option="chkPRINT"/>
+			</Group>
+			<Group open="true" option="TITLETEXT">
+				<OptionItem option="labelTITLE"/>
+				<OptionItem option="textTITLE"/>
+				<OptionItem option="labelTITLEDEC"/>
+				<OptionItem option="none"/>
+				<OptionItem option="underline"/>
+				<OptionItem option="overline"/>
+				<OptionItem option="line_through"/>
+				<OptionItem option="labelCOLOR"/>
+				<OptionItem option="colorTITLE"/>
+			</Group>
+			<Group open="true" option="DATERADIO">
+				<OptionItem option="labelDATE"/>
+				<OptionItem option="date"/>
+				<OptionItem option="nodate"/>
+			</Group>
+			<Group open="true" option="NUMRADIO">
+				<OptionItem option="labelNUM"/>
+				<OptionItem option="number"/>
+				<OptionItem option="nonumber"/>
+			</Group>
+		</Container>
+
+	</UI>
+	<CodeTemplate>
+		<![CDATA[
+
+options $radioDATE $radioNUM;
+
+ods escapechar='^';
+title "^{style [textdecoration=$radioTITLEDEC color=$colorTITLE]$textTITLE }";
+
+
+%macro analysis;
+%if $chkFREQ = 1 %then %do;
+	proc freq data=$DATASOURCE;
+	run;
+%end;
+
+%if $chkMEANS = 1 %then %do;
+	proc means data=$DATASOURCE;
+	run;
+%end;
+
+%if $chkPRINT = 1 %then %do;
+	proc print data=$DATASOURCE;
+	run;
+%end;
+%mend analysis;
+
+%analysis;
+
+title;
+ods _all_ close; 
+		]]>
+	</CodeTemplate>
+
+<TemplateValues version="3.5">
+<![CDATA[
+{"textTITLE":"Title goes here","radioTITLEDEC":"none","date":"1","colorTITLE":"black","TITLETEXT":"TITLE","labelCOLOR":"Select a color for your title color.","underline":"0","none":"1","sasOS":"X64_8PRO WIN","nonumber":"0","DATERADIO":"DATE","sasVersion":"9.43","chkMEANS":"0","labelTITLE":"Enter a title for your report.","DATASOURCE":{"librarytable":"SASHELP.CLASS"},"labelCHECK":"Check the boxes of the output you would like to include in your report.","radioDATE":"date","overline":"0","DATAGROUP":"DATA","NUMRADIO":"PAGE NUMBER","chkPRINT":"0","number":"1","chkFREQ":"0","labelDATE":"Choose whether or not you want the date to be included in the PDF of the report.","nodate":"0","labelTITLEDEC":"Choose a title text decoration.","GROUPCHECK":"CONTENT","DATATAB":"BASIC OPTIONS","radioNUM":"number","line_through":"0","labelNUM":"Choose whether or not you want page numbers to be included in the PDF of the report."}
+]]>
+</TemplateValues>
+</Task>
