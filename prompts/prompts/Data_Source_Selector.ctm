@@ -42,10 +42,10 @@
 		
 %global DATASET;
 %global SASLIBRARY;
-%put DATASET=$DATASOURCE;
-%put SASLIBRARY=$DATASOURCE.getLibrary();
-%put SASTABLE=$DATASOURCE.getTable(); 
-#if( $VAR.size() > 0 )%put VAR=#foreach( $item in $VAR )$item #end;#end
+%let DATASET=$DATASOURCE;
+%let SASLIBRARY=$DATASOURCE.getLibrary();
+%let SASTABLE=$DATASOURCE.getTable(); 
+#if( $VAR.size() > 0 )%let VAR=#foreach( $item in $VAR )$item #end;#end
 
 
 		]]>
