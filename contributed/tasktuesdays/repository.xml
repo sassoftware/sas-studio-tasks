@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <Repository label="Custom Task Tuesday Repository" version="1.0">
+         <Tasks>
+             <Category label="Custom Task Tuesday Tasks">
+                 <Location uri="./contributed/tasktuesdays/tasks.xml" />
+             </Category>
+         </Tasks>
+    </Repository>
