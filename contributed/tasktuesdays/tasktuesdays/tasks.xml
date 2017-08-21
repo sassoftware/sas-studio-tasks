@@ -6,58 +6,58 @@
          </Task>
         <Task>
             <Name label="Data Size Reduction"/>
-                <Template uri="./Data Size Reduction.ctm"/>
+                <Template uri="./DataSizeReduction.ctm"/>
          </Task>
         <Task>
             <Name label="Dataset Directory Search"/>
-                <Template uri="./Dataset Directory Search.ctm"/>
+                <Template uri="./DatasetDirectorySearch.ctm"/>
          </Task>
         <Task>
             <Name label="Itsy Bitsy Data Analysis"/>
-                <Template uri="./Itsy Bitsy Data Analysis.ctm"/>
+                <Template uri="./ItsyBitsyDataAnalysis.ctm"/>
          </Task>
         <Task>
             <Name label="Macro Proc Execution"/>
-                <Template uri="./Macro Proc Execution.ctm"/>
+                <Template uri="./MacroProcExecution.ctm"/>
          </Task>
         <Task>
             <Name label="One Way Anova Power Analysis"/>
-                <Template uri="./One Way Anova Power Analysis.ctm"/>
+                <Template uri="./OneWayAnovaPowerAnalysis.ctm"/>
          </Task>
         <Task>
             <Name label="Point Estimate Calculator 2.0"/>
-                <Template uri="./Point Estimate Calculator 2.0.ctm"/>
+                <Template uri="./PointEstimateCalculator2.0.ctm"/>
          </Task>
         <Task>
             <Name label="Point Estimate Calculator"/>
-                <Template uri="./Point Estimate Calculator.ctm"/>
+                <Template uri="./PointEstimateCalculator.ctm"/>
          </Task>
         <Task>
             <Name label="Report Options"/>
-                <Template uri="./Report Options.ctm"/>
+                <Template uri="./ReportOptions.ctm"/>
          </Task>
         <Task>
             <Name label="SGF MyIRT"/>
-                <Template uri="./SGF MyIRT.ctm"/>
+                <Template uri="./SGFMyIRT.ctm"/>
          </Task>
         <Task>
             <Name label="SGF MyIRTModel"/>
-                <Template uri="./SGF MyIRTModel.ctm"/>
+                <Template uri="./SGFMyIRTModel.ctm"/>
          </Task>
         <Task>
             <Name label="SGF MyIRTSurvey"/>
-                <Template uri="./SGF MyIRTSurvey.ctm"/>
+                <Template uri="./SGFMyIRTSurvey.ctm"/>
          </Task>
         <Task>
             <Name label="State Map"/>
-                <Template uri="./State Map.ctm"/>
+                <Template uri="./StateMap.ctm"/>
          </Task>
         <Task>
             <Name label="Text Analysis"/>
-                <Template uri="./ListData.ctm"/>
+                <Template uri="./TextAnalysis.ctm"/>
          </Task>
         <Task>
             <Name label="UN COMTRADE Analysis"/>
-                <Template uri="./UN COMTRADE Analysis.ctm"/>
+                <Template uri="./UNCOMTRADEAnalysis.ctm"/>
          </Task>
     </Tasks>
