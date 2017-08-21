@@ -2,7 +2,7 @@
     <Tasks>
         <Task>
             <Name label="Bin Continuous Data Edit"/>
-                <Template uri="./Bin Continuous Data Edit.ctm"/>
+                <Template uri="./BinContinuousDataEdit.ctm"/>
          </Task>
         <Task>
             <Name label="Data Size Reduction"/>
