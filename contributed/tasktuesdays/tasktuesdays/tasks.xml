@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <Tasks>
+        <Task>
+            <Name label="Bin Continuous Data Edit"/>
+                <Template uri="./Bin Continuous Data Edit.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Data Size Reduction"/>
+                <Template uri="./Data Size Reduction.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Dataset Directory Search"/>
+                <Template uri="./Dataset Directory Search.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Itsy Bitsy Data Analysis"/>
+                <Template uri="./Itsy Bitsy Data Analysis.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Macro Proc Execution"/>
+                <Template uri="./Macro Proc Execution.ctm"/>
+         </Task>
+        <Task>
+            <Name label="One Way Anova Power Analysis"/>
+                <Template uri="./One Way Anova Power Analysis.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Point Estimate Calculator 2.0"/>
+                <Template uri="./Point Estimate Calculator 2.0.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Point Estimate Calculator"/>
+                <Template uri="./Point Estimate Calculator.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Report Options"/>
+                <Template uri="./Report Options.ctm"/>
+         </Task>
+        <Task>
+            <Name label="SGF MyIRT"/>
+                <Template uri="./SGF MyIRT.ctm"/>
+         </Task>
+        <Task>
+            <Name label="SGF MyIRTModel"/>
+                <Template uri="./SGF MyIRTModel.ctm"/>
+         </Task>
+        <Task>
+            <Name label="SGF MyIRTSurvey"/>
+                <Template uri="./SGF MyIRTSurvey.ctm"/>
+         </Task>
+        <Task>
+            <Name label="State Map"/>
+                <Template uri="./State Map.ctm"/>
+         </Task>
+        <Task>
+            <Name label="Text Analysis"/>
+                <Template uri="./ListData.ctm"/>
+         </Task>
+        <Task>
+            <Name label="UN COMTRADE Analysis"/>
+                <Template uri="./UN COMTRADE Analysis.ctm"/>
+         </Task>
+    </Tasks>
