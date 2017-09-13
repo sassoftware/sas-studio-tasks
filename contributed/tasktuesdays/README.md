@@ -12,7 +12,7 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 2. On the Repositories tab of the Preferences dialog click the Add (+) button.
 3. On the Add Repository dialog in the Name field specify the name (Ex. Custom Task Tuesday Tasks) you would like to appear in the Tasks and Utilities tree. In the URL field specify https://sassoftware.github.io/sas-studio-tasks/contributed/tasktuesdays/repository.html for the URL.
 4. Save the definition.
-5. An icon with the name that you specified in the defintion (Ex. Custom Task Tuesday Tasks) will show up in your Tasks and Utilities panel. In the Prompts folder you will see sample SAS Studio tasks.
+5. An icon with the name that you specified in the defintion (Ex. Custom Task Tuesday Tasks) will show up in your Tasks and Utilities panel. In the folder you will see sample SAS Studio tasks.
 
 ### Additional Resources for writing SAS Studio Custom Tasks can be found here:
 * [SAS Studio 3.5: Developers Guide to Writing Custom Tasks](https://support.sas.com/documentation/cdl/en/webeditordg/68829/PDF/default/webeditordg.pdf)
