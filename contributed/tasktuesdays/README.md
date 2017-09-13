@@ -6,6 +6,14 @@ The examples here are part of a SAS Communities article series called #CustomTas
 Descriptions of each task are located below, beginning with the most recent. Clicking the titles will lead you to the blog post on that task which will have step-by-step instructions on creating the task yourself. 
 Tasks in this series include easy examples as well as more complex ones, so you'll be able to find something on your level whether you are just getting started or already know what you're doing. 
 
+### Accessing this SAS Studio Repository
+
+1. In SAS Studio go to the main menu and select Preferences.
+2. On the Repositories tab of the Preferences dialog click the Add (+) button.
+3. On the Add Repository dialog in the Name field specify the name (Ex. Custom Task Tuesday Tasks) you would like to appear in the Tasks and Utilities tree. In the URL field specify https://sassoftware.github.io/sas-studio-tasks/contributed/tasktuesdays/repository.html for the URL.
+4. Save the definition.
+5. An icon with the name that you specified in the defintion (Ex. Custom Task Tuesday Tasks) will show up in your Tasks and Utilities panel. In the Prompts folder you will see sample SAS Studio tasks.
+
 ### Additional Resources for writing SAS Studio Custom Tasks can be found here:
 * [SAS Studio 3.5: Developers Guide to Writing Custom Tasks](https://support.sas.com/documentation/cdl/en/webeditordg/68829/PDF/default/webeditordg.pdf)
 * [SAS Tech Talk: SAS Studio Demonstration](https://www.youtube.com/watch?v=xa6CGmbwPic)
