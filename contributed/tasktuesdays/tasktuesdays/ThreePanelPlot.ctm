@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.1" runNLS="never">
+	<Registration>
+	<Name>Three-panel Visualization</Name>
+	<Description>A three-panel visualization for univariate data</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGRENDER</Procedures>
+	<Version>3.6</Version>
+	<Links>
+		<Link href="http://blogs.sas.com/content/iml/three-panel-visualization">Blog post: A three-panel visualization of a distribution</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role maxVars="1" minVars="1" name="PLOTVAR" order="true" type="A">Select variable to plot:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="DATATAB">OPTIONS</Option>
+			<Option inputType="string" name="DATAGROUP">DATASET</Option>	
+			<Option inputType="string" name="ROLESGROUP1">PLOT VARIABLE</Option>
+            <Option inputType="string" name="GROUPTEXT">OTHER</Option>	
+            <Option defaultValue="" indent="1" missingMessage="Missing title" 
+               inputType="inputtext" name="textTITLE" 
+               required="false">Enter a name plot title (optional):</Option>
+            <Option defaultValue="600" inputType="numbertext" 
+                invalidMessage="Invalid value. Enter a number between 100 and 10000." maxValue="10000" minValue="100" 
+                missingMessage="Enter a height between 100 and 10000." name="Height" 
+                promptMessage="Enter a height between 100 and 10000." 
+                rangeMessage="This height value is out of range.  Enter a number between 100 and 10000.">Height:</Option>
+            <Option defaultValue="800" inputType="numbertext" 
+                invalidMessage="Invalid value. Enter a number between 100 and 10000." maxValue="10000" minValue="100" 
+                missingMessage="Enter a Width between 100 and 10000." name="Width" 
+                promptMessage="Enter a Width between 100 and 10000." 
+                rangeMessage="This Width value is out of range.  Enter a number between 100 and 10000.">Width:</Option>                
+           
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group open="true" option="ROLESGROUP1">
+				<RoleItem role="PLOTVAR"/>
+			</Group>		
+			<Group open="true" option="GROUPTEXT">
+				<OptionItem option="textTITLE"/>
+		        <OptionItem option="Height"/>
+		        <OptionItem option="Width"/>				
+			</Group>
+		</Container>	
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+/* define 'threepanel' template that displays a histogram, box plot, and Q-Q plot */
+
+/* Use WORK as a place to update templates, since SASUSER is often read-only */
+ods path (prepend) work.templat update;
+proc template;
+define statgraph threepanel /store=work.templat;
+dynamic _X _QUANTILE _Title _mu _sigma;
+begingraph;
+   entrytitle halign=center _Title;
+   layout lattice / rowdatarange=data columndatarange=union 
+      columns=1 rowgutter=5 rowweights=(0.4 0.10 0.5);
+      layout overlay;
+         histogram   _X / name='histogram' binaxis=false;
+         densityplot _X / name='Normal' normal();
+         densityplot _X / name='Kernel' kernel() lineattrs=GraphData2(thickness=2 );
+         discretelegend 'Normal' 'Kernel' / border=true halign=right valign=top location=inside across=1;
+      endlayout;
+      layout overlay;
+         boxplot y=_X / boxwidth=0.8 orient=horizontal;
+      endlayout;
+      layout overlay;
+         scatterplot x=_X y=_QUANTILE;
+         lineparm x=_mu y=0.0 slope=eval(1./_sigma) / extend=true clip=true;
+      endlayout;
+      columnaxes;
+         columnaxis;
+      endcolumnaxes;
+   endlayout;
+endgraph;
+end;
+run;
+ods path (prepend) work.templat read;
+
+/* Macro to create a three-panel display that shows the 
+   distribution of data and compares the distribution to a normal
+   distribution. The arguments are 
+   DSName = name of SAS data set
+   Var    = name of variable in the data set.
+   The macro calls the SGRENDER procedure to produce a plot
+   that is defined by the 'threepanel' template. The plot includes
+   1) A histogram with a normal and kernel density overlay
+   2) A box plot
+   3) A normal Q-Q plot
+
+   Example calling sequence:
+   ods graphics on;
+   %ThreePanel(sashelp.cars, MPG_City, Distribution of MPG_City)
+   %ThreePanel(sashelp.iris, SepalLength, Distribution of SepalLength)
+
+   For details, see
+   http://blogs.sas.com/content/iml/three-panel-visualization/
+*/
+%macro ThreePanel(DSName, Var, PlotTitle);
+   ods graphics on;
+
+   %local mu sigma;
+
+   /* 1. sort copy of data */
+   proc sort data=&DSName out=_MyData(keep=&Var);
+      by &Var;
+   run;
+
+   /* 2. Use PROC UNIVARIATE to create Q-Q plot 
+         and parameter estimates */
+   ods exclude all;
+   proc univariate data=_MyData;
+      var &Var;
+      histogram &Var / normal; /* create ParameterEstimates table */
+      qqplot    &Var / normal; 
+      ods output ParameterEstimates=_PE QQPlot=_QQ(keep=Quantile Data rename=(Data=&Var));
+   run;
+   ods exclude none;
+
+   /* 3. Merge quantiles with data */
+   data _MyData;
+   merge _MyData _QQ;
+   label Quantile = "Normal Quantile";
+   run;
+
+   /* 4. Get parameter estimates into macro vars */
+   data _null_;
+   set _PE;
+   if Symbol="Mu"    then call symputx("mu", Estimate);
+   if Symbol="Sigma" then call symputx("sigma", Estimate);
+   run;
+
+   proc sgrender data=_MyData template=threepanel;
+   dynamic _X="&Var" _QUANTILE="Quantile" _mu="&mu" _sigma="&sigma"
+          _title="&PlotTitle";
+   run;
+%mend;
+
+ods graphics / height=$Height width=$Width;
+%ThreePanel(
+    $DATASOURCE, 
+	#if( $PLOTVAR.size() > 0 ) 
+		#foreach( $item in $PLOTVAR )
+		 $item,
+		#end
+	#end
+    #if($textTITLE != "")
+      $textTITLE
+    #else
+      Three panel plot of 
+      	#if( $PLOTVAR.size() > 0 ) 
+		 #foreach( $item in $PLOTVAR )
+		   $item
+		 #end
+	    #end
+    #end
+); 
+		]]>
+	</CodeTemplate>
+</Task>
