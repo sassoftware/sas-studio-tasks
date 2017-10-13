@@ -16,7 +16,7 @@
 		<DataSources>
 			<DataSource name="DATASOURCE">
 				<Roles>
-					<Role maxVars="1" minVars="1" name="PLOTVAR" order="true" type="A">Select variable to plot:</Role>
+					<Role maxVars="1" minVars="1" name="PLOTVAR" order="true" type="N">Select variable to plot:</Role>
 				</Roles>
 			</DataSource>
 		</DataSources>
@@ -25,8 +25,8 @@
 			<Option inputType="string" name="DATATAB">OPTIONS</Option>
 			<Option inputType="string" name="DATAGROUP">DATASET</Option>	
 			<Option inputType="string" name="ROLESGROUP1">PLOT VARIABLE</Option>
-            <Option inputType="string" name="GROUPTEXT">OTHER</Option>	
-            <Option defaultValue="" indent="1" missingMessage="Missing title" 
+            <Option inputType="string" name="GROUPTEXT">OPTIONS</Option>	
+            <Option defaultValue="" missingMessage="Missing title" 
                inputType="inputtext" name="textTITLE" 
                required="false">Enter a name plot title (optional):</Option>
             <Option defaultValue="600" inputType="numbertext" 
