@@ -36,6 +36,10 @@
             <Name label="Report Options"/>
                 <Template uri="./ReportOptions.ctm"/>
          </Task>
+         <Task>
+            <Name label="Three-panel Visualization (Univariate)"/>
+                <Template uri="./ThreePanelPlot.ctm"/>
+         </Task>		 
         <Task>
             <Name label="SGF MyIRT"/>
                 <Template uri="./SGFMyIRT.ctm"/>
