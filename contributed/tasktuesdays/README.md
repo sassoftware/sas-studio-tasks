@@ -50,6 +50,9 @@ The Data Size Reduction task allows the user to delete variables from their data
 ### [Creating a State Map Task](https://communities.sas.com/t5/SAS-Communities-Library/SAS-Studio-Custom-Task-Tuesday-Creating-a-State-Map-Using-Proc/ta-p/320624)
 The Create State Map Task allows the user to create their own map of a State, and upload a dataset containing latitude and longitude coordinates to be put on the map.
 
+### [Three-panel Visualization of a Distribution](https://communities.sas.com/t5/SAS-Communities-Library/SAS-Custom-Task-Tuesday-How-to-create-the-Three-panel/ta-p/405555)
+The Three-Panel Visualization task puts a simple front end on this useful example from Rick Wicklin: [A three-panel visualization of a distribution](https://blogs.sas.com/content/iml/2013/05/08/three-panel-visualization.html).
+
 ### [United Nations API Call Task](https://communities.sas.com/t5/SAS-Communities-Library/SAS-Studio-Custom-Task-Tuesday-API-Calls-Made-Easy/ta-p/320619)
 The UN API Task allows the user to download data from the public United Nations Comtrade API for specific reporting countries, partnering countries, and time periods. Then the task will output a trade flow analysis of the data.
 
