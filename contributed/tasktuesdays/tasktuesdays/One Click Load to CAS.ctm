@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task runNLS="never" schemaVersion="5.0">
+    <Registration>
+        <Name>One Click Upload to CAS</Name>
+        <Description>Allows user to reduce size of their input dataset by optionally dropping variables and removing duplicate records. Added an additional check box to allow one-click upload to CAS.</Description>
+        <Procedures>SORT, PRINT</Procedures>
+        <Version>4.4</Version>
+        <Links>
+            <Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+            <Link href="https://communities.sas.com/t5/SAS-Communities-Library/Always-looking-for-a-shortcut-Custom-Task-Tuesday-is-for-you/ta-p/320053">Task Tuesday Introduction Post</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <DataSources>
+            <DataSource name="DATASOURCE">
+                <Roles>
+                    <Role maxVars="10" minVars="0" name="DROPVAR"
+                        order="true" type="A">Select variables to drop:</Role>
+                    <Role maxVars="1" minVars="1" name="BYVAR"
+                        order="true" type="A">Select a by variable:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="DATATAB">DATA</Option>
+            <Option inputType="string" name="DATAGROUP">DATASET</Option>
+            <Option inputType="string" name="ROLESGROUP1">DROP VARIABLES</Option>
+            <Option inputType="string" name="labelTEXT2">Variables will be dropped after all other operations (dropping duplicate records) are complete.</Option>
+            <Option inputType="string" name="ROLESGROUP2">DELETE DUPLICATE RECORDS</Option>
+            <Option inputType="string" name="GROUPCHECK">OPTIONS</Option>
+            <Option inputType="string" name="labelCHECK">Select additional data reduction options.</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkNODUP">Delete Duplicate Records</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkNODUPKEY">Delete Duplicate Records by Chosen By-Variable</Option>
+            <Option inputType="string" name="GROUPTEXT">OUTPUT DATASET</Option>
+            <Option inputType="string" name="labelTEXT">Enter a name for your new output dataset.</Option>
+            <Option defaultValue="Dataset_Reduced" indent="1"
+                inputType="inputtext"
+                missingMessage="Missing dataset name."
+                name="textDATASET"
+                promptMessage="Enter a valid dataset name." required="true">Output Dataset:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkCAS">Output Dataset to CAS</Option>
+        </Options>
+    </Metadata>
+    <UI>
+        <Container option="DATATAB">
+            <Group open="true" option="DATAGROUP">
+                <DataItem data="DATASOURCE"/>
+            </Group>
+            <Group open="true" option="ROLESGROUP2">
+                <RoleItem role="BYVAR"/>
+                <OptionItem option="chkNODUP"/>
+                <OptionItem option="chkNODUPKEY"/>
+            </Group>
+            <Group open="true" option="ROLESGROUP1">
+                <OptionItem option="labelTEXT2"/>
+                <RoleItem role="DROPVAR"/>
+            </Group>
+            <Group open="true" option="GROUPTEXT">
+                <OptionItem option="labelTEXT"/>
+                <OptionItem option="textDATASET"/>
+                <OptionItem option="chkCAS"/>
+            </Group>
+        </Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="$BYVAR.size() == 0">
+            <Target action="hide" conditionResult="true" option="chkNODUPKEY"/>
+        </Dependency>
+        <Dependency condition="$BYVAR.size() != 0">
+            <Target action="show" conditionResult="true" option="chkNODUPKEY"/>
+        </Dependency>
+        <Dependency condition="$BYVAR.size() == 0">
+            <Target action="hide" conditionResult="true" option="chkNODUP"/>
+        </Dependency>
+        <Dependency condition="$BYVAR.size() != 0">
+            <Target action="show" conditionResult="true" option="chkNODUP"/>
+        </Dependency>
+    </Dependencies>
+    <CodeTemplate><![CDATA[
+option spool;
+
+
+data $textDATASET;
+	set $DATASOURCE;
+run;
+
+%macro options;
+%if $chkNODUP = 1 && $chkNODUPKEY = 1 %then %do;
+	#if( $BYVAR.size() > 0 ) 
+		#foreach( $item in $BYVAR )
+	proc sort data=$textDATASET nodupkey noduprecs;
+			by $item;
+			#end
+	run;
+	#end
+%end;
+%if $chkNODUPKEY = 1 && $chkNODUP = 0 %then %do;
+	#if( $BYVAR.size() > 0 ) 
+		#foreach( $item in $BYVAR )
+	proc sort data=$textDATASET nodupkey;
+			by $item;
+			#end
+	run;
+	#end
+%end;
+%if $chkNODUPKEY = 0 && $chkNODUP = 1 %then %do;
+	#if( $BYVAR.size() > 0 ) 
+		#foreach( $item in $BYVAR )
+	proc sort data=$textDATASET nodup;
+			by $item;
+			#end
+	run;
+	#end
+%end;
+%mend options;
+
+%options;
+
+#if( $DROPVAR.size() > 0 ) 
+data $textDATASET;
+	set $textDATASET;
+	#foreach( $item in $DROPVAR )
+		drop $item;
+	#end
+run;
+#end
+
+proc print data=$textDATASET;
+run;
+
+#if( $chkCAS == 1)
+libname mycaslib cas caslib=casuser;
+
+data mycaslib.$textDATASET;
+	set $textDATASET;
+run;      
+#end
+		]]></CodeTemplate>
+</Task>
