@@ -22,6 +22,8 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [One Click Load to CAS](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-One-Click-Load-to-CAS/ta-p/488649)
+This task is a modification of a previous task (Reducing Data Size Quickly Task), with an added check-box for an easy "one-click" load to CAS of the output data set. In the article, code is provided for both the DATA Step and the PROC CASUTIL approaches for loading data.
 
 ### [Customizing Report Options](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Customizing-Report-Options/ta-p/360552)
 The Report Options task allows the user to customize certain options for their report that will show up in your report of their results. The user will be able to change the title, color of the title, and add "text decoration" (underline, strike-through, etc) to the title of their report, which will all show up in the output window as well as in the PDF version of the report. It also allows to user to decide whether or not they want dates and page numbers, which will show up in the PDF version of the report. 
