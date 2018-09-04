@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="6.3">
+    <Registration>
+        <Name>CAS Action Summary</Name>
+        <Description>Allows used to select from table info, column info, and summary data set for their input CAS table. This task uses CAS Actions.</Description>
+        <GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+        <Procedures>CAS, PRINT</Procedures>
+        <Links>
+            <Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+            <Link href="https://go.documentation.sas.com/?docsetId=proccas&amp;docsetVersion=3.2&amp;docsetTarget=p09ouj759e7ysyn1b0ws8f0ho9e5.htm&amp;locale=en">PROC CAS Documentation</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <DataSources>
+            <DataSource libraryEngineInclude="CAS" name="DATASOURCE" where="true">
+                <Roles>
+                    <Role maxVars="1" minVars="0" name="VAR" order="true" type="A">Optional Group By Variable for Summary:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="DATATAB">DATA</Option>
+            <Option inputType="string" name="DATAGROUP">DATA</Option>
+            <Option inputType="string" name="ROLESGROUP">SUMMARY BY VARIABLE</Option>
+            <Option inputType="string" name="GROUPCHECK">OUTPUT OPTIONS</Option>
+            <Option inputType="string" name="labelCHECK">Select the output you would like to receive about the CAS Table you selected.</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkTABLE">Table Info</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkCOLUMN">Column Info</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkSUMMARY">Summary Output Data Set</Option>
+            <Option name="GROUPSELECTOR" inputType="string">SUMMARY OUTPUT DATA SET</Option>
+			<Option name="labelOutputData" inputType="string">An example of an output data selector.</Option>
+			<Option name="outputData" inputType="outputdata" unique="true" libraryEngineInclude="CAS" defaultValue="CASUSER.MYDATA" where="true">Data set name:</Option>
+        </Options>
+    </Metadata>
+    <UI>
+        <Container option="DATATAB">
+            <Group open="true" option="DATAGROUP">
+                <DataItem data="DATASOURCE"/>
+            </Group>
+            <Group open="true" option="GROUPCHECK">
+                <OptionItem option="labelCHECK"/>
+                <OptionItem option="chkTABLE"/>
+                <OptionItem option="chkCOLUMN"/>
+                <OptionItem option="chkSUMMARY"/>
+            </Group>
+            <Group open="true" option="ROLESGROUP">
+                <RoleItem role="VAR"/>
+            </Group>
+			<Group option="GROUPSELECTOR" open="true">
+				<OptionItem option="labelOutputData"/>
+				<OptionItem option="outputData"/>
+			</Group>
+        </Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="$chkSUMMARY == '1'">
+            <Target action="show" conditionResult="true" option="ROLESGROUP"/>
+            <Target action="hide" conditionResult="false" option="ROLESGROUP"/>
+            <Target action="show" conditionResult="true" option="GROUPSELECTOR"/>
+            <Target action="hide" conditionResult="false" option="GROUPSELECTOR"/>
+        </Dependency>
+    </Dependencies>
+    <CodeTemplate><![CDATA[
+#set($outputLibrefIndex = $outputData.toString().indexOf(".")) 
+#set($outputLibrefIndex1 = $outputData.toString().indexOf(".")+1)   
+#set($outputCASLibref = $outputData.toString().substring(0, $outputLibrefIndex))
+#set($outputCASName = $outputData.toString().substring($outputLibrefIndex1))
+
+#set($inputLibrefIndex = $DATASOURCE.toString().indexOf(".")) 
+#set($inputLibrefIndex1 = $DATASOURCE.toString().indexOf(".")+1)   
+#set($inputCASLibref = $DATASOURCE.toString().substring(0, $inputLibrefIndex))
+#set($inputCASName = $DATASOURCE.toString().substring($inputLibrefIndex1))
+
+
+proc cas ;
+#if ( $chkTABLE == 1 )
+	table.tableinfo /name='$inputCASName' caslib='$inputCASLibref';
+#end
+
+#if ( $chkCOLUMN == 1 )
+	table.columninfo result=r /table={name='$inputCASName', caslib='$inputCASLibref'};
+	print r;
+#end
+
+#if ( $chkSUMMARY == 1 )
+simple.summary / table={name='$inputCASName', caslib='$inputCASLibref' #if ($VAR.size() !=0 ), groupby={ #foreach( $item in $VAR ) '$item' #end} #end}
+	casOut={caslib="$outputCASLibref", name="$outputCASName", replace=true};	
+#end
+run;
+
+#if ( $chkSUMMARY == 1 )
+proc print data=$outputData;
+run;
+#end
+		]]></CodeTemplate>
+</Task>
