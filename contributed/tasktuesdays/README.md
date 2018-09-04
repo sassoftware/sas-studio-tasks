@@ -22,6 +22,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [CAS Action Examples](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-CAS-Actions-in-a-Custom-Task/ta-p/491264)
+This task allows the user to select from 3 types of information to output about their input CAS table, that will generate PROC CAS/CAS Action code: table information (tables.tableinfo), column information (tables.columninfo), and summary about data set (simple.summary).
+
 ### [One Click Load to CAS](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-One-Click-Load-to-CAS/ta-p/488649)
 This task is a modification of a previous task (Reducing Data Size Quickly Task), with an added check-box for an easy "one-click" load to CAS of the output data set. In the article, code is provided for both the DATA Step and the PROC CASUTIL approaches for loading data.
 
