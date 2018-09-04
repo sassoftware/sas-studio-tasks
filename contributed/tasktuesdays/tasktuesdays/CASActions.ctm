@@ -4,6 +4,7 @@
         <Description>Allows used to select from table info, column info, and summary data set for their input CAS table. This task uses CAS Actions.</Description>
         <GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
         <Procedures>CAS, PRINT</Procedures>
+	<Version></Version>
         <Links>
             <Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
             <Link href="https://go.documentation.sas.com/?docsetId=proccas&amp;docsetVersion=3.2&amp;docsetTarget=p09ouj759e7ysyn1b0ws8f0ho9e5.htm&amp;locale=en">PROC CAS Documentation</Link>
