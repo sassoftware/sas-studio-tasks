@@ -22,6 +22,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [Viya Clustering & V9 Graphing](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Combine-Viya-Clustering-and-V9-Graphing/ta-p/494133)
+This task is an altered version of the built-in Viya Clustering task. It has added options for V9 histograms and correlations of interval variable and bar charts of nominal variables. Adding these options creates an end-to-end analytic task that allows users to investigate their input variables before examining the clustering output.
+
 ### [CAS Action Examples](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-CAS-Actions-in-a-Custom-Task/ta-p/491264)
 This task allows the user to select from 3 types of information to output about their input CAS table, that will generate PROC CAS/CAS Action code: table information (tables.tableinfo), column information (tables.columninfo), and summary about data set (simple.summary).
 
