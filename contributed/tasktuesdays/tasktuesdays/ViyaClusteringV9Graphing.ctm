@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?><Task schemaVersion="6.3">
+    <Registration>
+        <Name>Clustering and Histograns</Name>
+        <Description></Description>
+        <GUID>3b7689dc-4111-46f6-933d-6af221a5cf9c</GUID>
+        <Procedures>KCLUS, SGPLOT, UNIVARIATE, CORR</Procedures>
+        <Version>4.3</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/?softwareId=STUDIOBASIC&amp;softwareVersion=4.3&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://documentation.sas.com/?softwareId=ANVIYA&amp;softwareVersion=4.3_8.2&amp;softwareContextId=proc_kclus&amp;requestor=inapp">The KCLUS Procedure</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://support.sas.com/training/viyasdmml">SAS Tutorials</Link>
+        </Links>
+        <Category>SAS Viya Unsupervised Learning</Category>
+    </Registration>
+    <Metadata>
+        <DataSources>
+            <DataSource libraryEngineInclude="CAS" name="dataset" where="true">
+                <Roles>
+                    <Role exclude="nominalVariables,freqVariable" maxVars="0" minVars="1" name="intervalVariables" order="true" type="N">Interval inputs:</Role>
+                    <Role exclude="intervalVariables,freqVariable" maxVars="0" minVars="1" name="nominalVariables" order="true" type="A">Nominal inputs:</Role>
+                    <Role exclude="intervalVariables,nominalVariables" maxVars="1" minVars="0" name="freqVariable" type="N">Frequency count:</Role>
+                    <Role indent="2" maxVars="0" minVars="1" name="copyVariables" order="true" type="A">Include these variables:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="GROUPCHECK">ADDITIONAL ANALYSES</Option>
+            <Option inputType="string" name="labelCHECK">Select one or more of the following options to run before your clustering.</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkBAR">Bar Charts of nominal variables</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkHIST">Histograms of interval variables</Option>
+            <Option defaultValue="0" inputType="checkbox" name="chkCORR">Correlation matrix interval variables</Option>
+            <Option inputType="string" name="dataTab">DATA</Option>
+            <Option inputType="string" name="optionsTab">OPTIONS</Option>
+            <Option inputType="string" name="dataGroup">DATA</Option>
+            <Option inputType="string" name="rolesGroup">ROLES</Option>
+            <Option inputType="string" name="otherRolesGroup">ADDITIONAL ROLES</Option>
+            <Option inputType="string" name="methodsGroup">METHODS</Option>
+            <Option inputType="string" name="measurementLevelGroup">LEVEL OF MEASUREMENT</Option>
+            <Option inputType="string" name="dataPrepGroup">Data Preparation</Option>
+            <Option inputType="string" name="measurementLevelsLabel">Inputs to use in clustering:</Option>
+            <Option defaultValue="1" inputType="radio" name="intervalData" variable="measurementLevel">Interval inputs</Option>
+            <Option inputType="radio" name="nominalData" variable="measurementLevel">Nominal inputs</Option>
+            <Option inputType="radio" name="bothData" variable="measurementLevel">Interval and nominal inputs</Option>
+            <Option inputType="string" name="intervalLabel">Interval inputs</Option>
+            <Option inputType="string" name="nominalLabel">Nominal inputs</Option>
+            <Option inputType="string" name="missingValuesLabel">Missing Values</Option>
+            <Option inputType="checkbox" name="intervalImputeData">Replace interval missing values with the mean</Option>
+            <Option inputType="checkbox" name="nominalImputeData">Replace nominal missing values with the most frequent value</Option>
+            <!-- Standardization methods -->
+            <Option inputType="string" name="stdGroup">Standardization</Option>
+            <Option defaultValue="noStdChoice" inputType="combobox" name="intervalStdizeMethod">Standardization method:</Option>
+            <Option inputType="string" name="noStdChoice">No standardization</Option>
+            <Option inputType="string" name="stdDevChoice">Standard deviation</Option>
+            <Option inputType="string" name="rangeChoice">Range</Option>
+            <Option indent="1" inputType="string" name="intervalStdDevNote">Subtract the mean, divide by the standard deviation (default)</Option>
+            <Option indent="1" inputType="string" name="intervalRangeNote">Subtract the minimum, divide by the range</Option>
+            <!-- Clustering -->
+            <Option inputType="string" name="clusteringGroup">Clustering</Option>
+            <Option inputType="combobox" name="intervalDistanceCombo">Select the interval distance measure:</Option>
+            <Option inputType="string" name="euclideanDistanceChoice">Euclidean distance</Option>
+            <Option inputType="string" name="cityBlockDistanceChoice">City block (Manhattan) distance</Option>
+            <Option inputType="combobox" name="nominalDistanceCombo">Select the nominal distance measure:</Option>
+            <Option inputType="string" name="binaryDistanceChoice">Simple matching distance</Option>
+            <Option inputType="string" name="globalFreqChoice">Frequency-based dissimilarity</Option>
+            <Option inputType="string" name="relativeFreqChoice">Cluster frequency-based dissimilarity</Option>
+            <Option decimalPlaces="0,15" defaultValue="0.5" inputType="numbertext" invalidMessage="Enter a number greater than 0 for weight of the nominal distance measure" maxValue="2147483647" minValue="0.000000001" missingMessage="Enter a number greater than 0 for weight of the nominal distance measure" name="gamma" promptMessage="Enter a number greater than 0 for weight of the nominal distance measure" rangeMessage="Enter a number greater than 0 for weight of the nominal distance measure" required="true" width="100px">Weight of the nominal distance measure (gamma):</Option>
+            <Option inputType="string" name="numberOfClustersLabel">Number of Clusters</Option>
+            <Option defaultValue="1" inputType="radio" name="specifyNumberOfClusters" variable="numberOfClusters">Specify the number of clusters</Option>
+            <Option inputType="radio" name="estimateNumberOfClusters" variable="numberOfClusters">Estimate the number of clusters</Option>
+            <Option decimalPlaces="0" defaultValue="6" increment="1" indent="1" inputType="numstepper" invalidMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the number of clusters" maxValue="2147483647" minValue="1" missingMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the number of clusters" name="numClusters" promptMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the number of clusters" rangeMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the number of clusters" required="true" width="100px">Number of clusters:</Option>
+            <Option decimalPlaces="0" defaultValue="2" increment="1" indent="1" inputType="numstepper" invalidMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the minimum number of clusters" maxValue="2147483647" minValue="1" missingMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the minimum number of clusters" name="minClusters" promptMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the minimum number of clusters" rangeMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the minimum number of clusters" required="true" width="100px">Minimum clusters:</Option>
+            <Option decimalPlaces="0" defaultValue="6" increment="1" indent="1" inputType="numstepper" invalidMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the maximum number of clusters" maxValue="2147483647" minValue="1" missingMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the maximum number of clusters" name="maxClusters" promptMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the maximum number of clusters" rangeMessage="Enter an integer number greater than 0 and less than 2,147,483,648 for the maximum number of clusters" required="true" width="100px">Maximum clusters:</Option>
+            <Option defaultValue="defaultCriterionChoice" indent="1" inputType="combobox" name="abcCriterionCombo">Select the criterion to estimate the number of clusters:</Option>
+            <Option inputType="string" name="defaultCriterionChoice">Default</Option>
+            <Option inputType="string" name="globalPeakChoice">Use the global peak value in gap statistics</Option>
+            <Option inputType="string" name="firstPeakChoice">Use the first peak value in gap statistics</Option>
+            <Option inputType="string" name="allCriterionChoice">Use all criteria</Option>
+            <Option inputType="string" name="clusterDetails">Details</Option>
+            <Option defaultValue="0" inputType="checkbox" name="useRandomSeed">Random number seed</Option>
+            <Option decimalPlaces="0" indent="1" inputType="numbertext" invalidMessage="Enter an integer greater than 0 for the random number seed" maxValue="999999999" minValue="1" missingMessage="Enter an integer greater than 0 for the random number seed" name="randomSeed" promptMessage="Enter an integer greater than 0 for the random number seed" rangeMessage="Enter an integer greater than 0 for the random number seed" required="true" width="100px">Random seed:</Option>
+            <Option indent="1" inputType="string" name="randomSeedNote">Specifying a random number seed may not replicate results in a distributed computing environment.</Option>
+            <Option inputType="checkbox" name="useMaxiter">Maximum number of iterations</Option>
+            <Option decimalPlaces="0" defaultValue="10" indent="1" inputType="numbertext" invalidMessage="Enter an integer greater than 0 for the maximum number of iterations" maxValue="999999999" minValue="1" missingMessage="Enter an integer greater than 0 for the maximum number of iterations" name="maxiter" promptMessage="Enter an integer greater than 0 for the maximum number of iterations" rangeMessage="Enter an integer greater than 0 for the maximum number of iterations" required="true" width="100px">Number of iterations:</Option>
+            <Option inputType="string" name="outputTab">OUTPUT</Option>
+            <Option inputType="string" name="outputGroup">OUTPUT DATA</Option>
+            <Option inputType="string" name="casOutputLibrefNote">The following tables must use a CAS engine libref:</Option>
+            <Option inputType="checkbox" name="outDS">Save cluster scores</Option>
+            <Option indent="1" inputType="outputdata" libraryEngineInclude="cas" name="outDSName" required="true">Specify a CAS table:</Option>
+            <Option indent="1" inputType="string" name="includeVarsInstruction">Include variables from the input CAS table:</Option>
+            <Option indent="1" inputType="radio" name="includeAllVars" variable="includeVars">All variables</Option>
+            <Option indent="1" inputType="radio" name="includeAnalysisVars" variable="includeVars">Variables used in the analysis</Option>
+            <Option indent="1" inputType="radio" name="includeSelectedVars" variable="includeVars">Selected variables</Option>
+            <Option defaultValue="1" indent="1" inputType="radio" name="includeNoVars" variable="includeVars">No variables</Option>
+            <Option inputType="checkbox" name="outstatDS">Save cluster statistics</Option>
+            <Option indent="1" inputType="outputdata" libraryEngineInclude="cas" name="outstatDSName" required="true">Specify a CAS table:</Option>
+            <Option inputType="string" name="scoreCodeFileNote">Specify a path name for the scoring code:</Option>
+            <Option inputType="checkbox" name="scoreCode">Save scoring code</Option>
+            <!-- Note: The sasserverpath component is for internal use only -->
+            <Option defaultExtension="sas" defaultName="score" indent="1" inputType="sasserverpath" name="scoringCodeFileName"/>
+            <Option inputType="string" name="statsGroup">STATISTICS</Option>
+            <Option defaultValue="defaultPrint" inputType="combobox" name="statsCombo">Display statistics:</Option>
+            <Option inputType="string" name="defaultPrint">Default statistics</Option>
+            <Option inputType="string" name="customPrint">Selected statistics</Option>
+            <Option inputType="string" name="noprint">None</Option>
+            <Option inputType="string" name="plotsGroup">PLOTS</Option>
+            <Option inputType="checkbox" name="gapByClusterPlot">Gap statistic by number of clusters</Option>
+        </Options>
+    </Metadata>
+    <UI>
+        <Container option="dataTab">
+            <Group open="true" option="dataGroup">
+                <DataItem data="dataset"/>
+            </Group>
+            <Group open="true" option="rolesGroup">
+                <OptionItem option="measurementLevelsLabel"/>
+                <OptionItem option="intervalData"/>
+                <OptionItem option="nominalData"/>
+                <OptionItem option="bothData"/>
+                <RoleItem role="intervalVariables"/>
+                <RoleItem role="nominalVariables"/>
+            </Group>
+            <Group option="otherRolesGroup">
+                <RoleItem role="freqVariable"/>
+            </Group>
+            <Group open="true" option="GROUPCHECK">
+                <OptionItem option="labelCHECK"/>
+                <OptionItem option="chkBAR"/>
+                <OptionItem option="chkHIST"/>
+                <OptionItem option="chkCORR"/>
+            </Group>
+        </Container>
+        <Container option="optionsTab">
+            <Group open="true" option="methodsGroup">
+                <Group open="true" option="dataPrepGroup">
+                    <OptionItem option="nominalLabel"/>
+                    <OptionItem option="nominalImputeData"/>
+                    <OptionItem option="intervalLabel"/>
+                    <OptionItem option="intervalImputeData"/>
+                    <OptionChoice option="intervalStdizeMethod">
+                        <OptionItem option="rangeChoice"/>
+                        <OptionItem option="stdDevChoice"/>
+                        <OptionItem option="noStdChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="intervalRangeNote"/>
+                    <OptionItem option="intervalStdDevNote"/>
+                </Group>
+                <Group open="true" option="clusteringGroup">
+                    <OptionChoice option="intervalDistanceCombo">
+                        <OptionItem option="euclideanDistanceChoice"/>
+                        <OptionItem option="cityBlockDistanceChoice"/>
+                    </OptionChoice>
+                    <OptionChoice option="nominalDistanceCombo">
+                        <OptionItem option="binaryDistanceChoice"/>
+                        <OptionItem option="globalFreqChoice"/>
+                        <OptionItem option="relativeFreqChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="gamma"/>
+                    <OptionItem option="numberOfClustersLabel"/>
+                    <OptionItem option="specifyNumberOfClusters"/>
+                    <OptionItem option="numClusters"/>
+                    <OptionItem option="estimateNumberOfClusters"/>
+                    <OptionItem option="minClusters"/>
+                    <OptionItem option="maxClusters"/>
+                    <OptionChoice option="abcCriterionCombo">
+                        <OptionItem option="defaultCriterionChoice"/>
+                        <OptionItem option="globalPeakChoice"/>
+                        <OptionItem option="firstPeakChoice"/>
+                        <OptionItem option="allCriterionChoice"/>
+                    </OptionChoice>
+                    <Group option="clusterDetails">
+                        <OptionItem option="useRandomSeed"/>
+                        <OptionItem option="randomSeed"/>
+                        <OptionItem option="randomSeedNote"/>
+                        <OptionItem option="useMaxiter"/>
+                        <OptionItem option="maxiter"/>
+                    </Group>
+                </Group>
+            </Group>
+            <!-- not used                     
+            <Group option="statsGroup" open="true">
+                <OptionChoice option="statsCombo">
+                    <OptionItem option="defaultPrint"/>
+                    <OptionItem option="noprint"/>
+                </OptionChoice>
+                
+            </Group>
+-->
+            <Group option="plotsGroup">
+                <OptionItem option="gapByClusterPlot"/>
+            </Group>
+        </Container>
+        <Container option="outputTab">
+            <Group open="true" option="outputGroup">
+                <OptionItem option="casOutputLibrefNote"/>
+                <OptionItem option="outDS"/>
+                <OptionItem option="outDSName"/>
+                <OptionItem option="includeVarsInstruction"/>
+                <OptionItem option="includeAllVars"/>
+                <OptionItem option="includeAnalysisVars"/>
+                <OptionItem option="includeNoVars"/>
+                <OptionItem option="includeSelectedVars"/>
+                <RoleItem role="copyVariables"/>
+                <OptionItem option="outstatDS"/>
+                <OptionItem option="outstatDSName"/>
+                <OptionItem option="scoreCodeFileNote"/>
+                <OptionItem option="scoreCode"/>
+                <OptionItem option="scoringCodeFileName"/>
+            </Group>
+        </Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="($measurementLevel == 'intervalData' || $measurementLevel == 'bothData')">
+            <Target action="show" conditionResult="true" option="chkHIST"/>
+            <Target action="hide" conditionResult="false" option="chkHIST"/>
+        </Dependency>
+        <Dependency condition="(($measurementLevel == 'intervalData' || $measurementLevel == 'bothData')  &amp;&amp; ($intervalVariables.size() &gt; 1))">
+            <Target action="show" conditionResult="true" option="chkCORR"/>
+            <Target action="hide" conditionResult="false" option="chkCORR"/>
+        </Dependency>
+        <Dependency condition="($measurementLevel == 'nominalData' || $measurementLevel == 'bothData')">
+            <Target action="show" conditionResult="true" option="chkBAR"/>
+            <Target action="hide" conditionResult="false" option="chkBAR"/>
+        </Dependency>
+        <!-- Dependencies whose targets are used in conditions of dependencies -->
+        <Dependency condition="($measurementLevel == 'intervalData' || $measurementLevel == 'bothData')">
+            <Target action="enable" conditionResult="true" option="estimateNumberOfClusters"/>
+            <Target action="disable" conditionResult="false" option="estimateNumberOfClusters"/>
+        </Dependency>
+        <!-- End of Dependencies whose targets are used in conditions of dependencies -->
+        <Dependency condition="($measurementLevel == 'bothData')">
+            <Target action="show" conditionResult="true" option="intervalLabel"/>
+            <Target action="hide" conditionResult="false" option="intervalLabel"/>
+            <Target action="show" conditionResult="true" option="nominalLabel"/>
+            <Target action="hide" conditionResult="false" option="nominalLabel"/>
+            <Target action="show" conditionResult="true" option="gamma"/>
+            <Target action="hide" conditionResult="false" option="gamma"/>
+        </Dependency>
+        <Dependency condition="($useRandomSeed==1)">
+            <Target action="show" conditionResult="true" option="randomSeed"/>
+            <Target action="hide" conditionResult="false" option="randomSeed"/>
+            <Target action="show" conditionResult="true" option="randomSeedNote"/>
+            <Target action="hide" conditionResult="false" option="randomSeedNote"/>
+        </Dependency>
+        <Dependency condition="($useMaxiter == 1)">
+            <Target action="show" conditionResult="true" option="maxiter"/>
+            <Target action="hide" conditionResult="false" option="maxiter"/>
+        </Dependency>
+        <Dependency condition="($measurementLevel == 'intervalData' || $measurementLevel == 'bothData')">
+            <Target action="show" conditionResult="true" option="intervalVariables"/>
+            <Target action="hide" conditionResult="false" option="intervalVariables"/>
+            <Target action="show" conditionResult="true" option="intervalImputeData"/>
+            <Target action="hide" conditionResult="false" option="intervalImputeData"/>
+            <Target action="show" conditionResult="true" option="intervalStdizeMethod"/>
+            <Target action="hide" conditionResult="false" option="intervalStdizeMethod"/>
+            <Target action="show" conditionResult="true" option="intervalDistanceCombo"/>
+            <Target action="hide" conditionResult="false" option="intervalDistanceCombo"/>
+        </Dependency>
+        <Dependency condition="($measurementLevel == 'nominalData' || $measurementLevel == 'bothData')">
+            <Target action="show" conditionResult="true" option="nominalVariables"/>
+            <Target action="hide" conditionResult="false" option="nominalVariables"/>
+            <Target action="show" conditionResult="true" option="nominalImputeData"/>
+            <Target action="hide" conditionResult="false" option="nominalImputeData"/>
+            <Target action="show" conditionResult="true" option="nominalDistanceCombo"/>
+            <Target action="hide" conditionResult="false" option="nominalDistanceCombo"/>
+        </Dependency>
+        <!-- Standardization -->
+        <Dependency condition="(($measurementLevel == 'intervalData' || $measurementLevel == 'bothData') &amp;&amp; $intervalStdizeMethod == 'rangeChoice')">
+            <Target action="show" conditionResult="true" option="intervalRangeNote"/>
+            <Target action="hide" conditionResult="false" option="intervalRangeNote"/>
+        </Dependency>
+        <Dependency condition="(($measurementLevel == 'intervalData' || $measurementLevel == 'bothData') &amp;&amp; $intervalStdizeMethod == 'stdDevChoice')">
+            <Target action="show" conditionResult="true" option="intervalStdDevNote"/>
+            <Target action="hide" conditionResult="false" option="intervalStdDevNote"/>
+        </Dependency>
+        <Dependency condition="($numberOfClusters == 'specifyNumberOfClusters')">
+            <Target action="show" conditionResult="true" option="numClusters"/>
+            <Target action="hide" conditionResult="false" option="numClusters"/>
+        </Dependency>
+        <Dependency condition="(($measurementLevel == 'intervalData' || $measurementLevel == 'bothData') &amp;&amp; $numberOfClusters == 'estimateNumberOfClusters')">
+            <Target action="show" conditionResult="true" option="minClusters"/>
+            <Target action="hide" conditionResult="false" option="minClusters"/>
+            <Target action="show" conditionResult="true" option="maxClusters"/>
+            <Target action="hide" conditionResult="false" option="maxClusters"/>
+            <Target action="show" conditionResult="true" option="abcCriterionCombo"/>
+            <Target action="hide" conditionResult="false" option="abcCriterionCombo"/>
+            <Target action="show" conditionResult="true" option="plotsGroup"/>
+            <Target action="hide" conditionResult="false" option="plotsGroup"/>
+        </Dependency>
+        <Dependency condition="($outstatDS == 1)">
+            <Target action="enable" conditionResult="true" option="outstatDSName"/>
+            <Target action="disable" conditionResult="false" option="outstatDSName"/>
+        </Dependency>
+        <Dependency condition="($outDS == 1)">
+            <Target action="enable" conditionResult="true" option="outDSName"/>
+            <Target action="disable" conditionResult="false" option="outDSName"/>
+            <Target action="show" conditionResult="true" option="includeVarsInstruction"/>
+            <Target action="hide" conditionResult="false" option="includeVarsInstruction"/>
+            <Target action="show" conditionResult="true" option="includeVars"/>
+            <Target action="hide" conditionResult="false" option="includeVars"/>
+        </Dependency>
+        <Dependency condition="($outDS=='1' &amp;&amp; $includeVars=='includeSelectedVars')">
+            <Target action="show" conditionResult="true" option="copyVariables"/>
+            <Target action="hide" conditionResult="false" option="copyVariables"/>
+        </Dependency>
+        <Dependency condition="($scoreCode==1)">
+            <Target action="enable" conditionResult="true" option="scoringCodeFileName"/>
+            <Target action="disable" conditionResult="false" option="scoringCodeFileName"/>
+        </Dependency>
+    </Dependencies>
+    <Requirements>
+        <Requirement condition="($numberOfClusters == 'specifyNumberOfClusters' ||              ($numberOfClusters == 'estimateNumberOfClusters' &amp;&amp; ($minClusters &lt; $maxClusters))              )">
+            <Message nlsKey="minMaxClustersRequirementKey">The maximum number of clusters cannot be less than the minimum number.</Message>
+        </Requirement>
+        <Requirement condition="!($outDS == 1 &amp;&amp; $outstatDS == 1 &amp;&amp; !($outDSName == '') &amp;&amp; $outDSName.equalsIgnoreCase($outstatDSName))">
+            <Message nlsKey="scoresAndStatsDatasetsMustBeDifferentMsgKey">The names of the cluster scores and statistics output data sets must be different.</Message>
+        </Requirement>
+        <Requirement condition="!($outDSName &amp;&amp; $outDSName != '' &amp;&amp;             ($outDSName.indexOf('.') &gt; 0 &amp;&amp;             $outDSName.toUpperCase().substring(0,$outDSName.indexOf('.')) == 'WORK'))">
+            <Message nlsKey="outputDSNameMsgKey">The cluster scores data set must have a two-level name that includes a CAS engine libref.</Message>
+        </Requirement>
+        <Requirement condition="!($outstatDSName &amp;&amp; $outstatDSName != '' &amp;&amp;             ($outstatDSName.indexOf('.') &gt; 0 &amp;&amp;             $outstatDSName.toUpperCase().substring(0,$outstatDSName.indexOf('.')) == 'WORK'))">
+            <Message nlsKey="outmodelDSNameMsgKey">The cluster statistics data set must have a two-level name that includes a CAS engine libref.</Message>
+        </Requirement>
+    </Requirements>
+    <CodeTemplate><![CDATA[
+#if ($chkHIST == 1)
+#if ($intervalVariables.size() > 0 )
+ods graphics / imagemap=on;
+proc univariate data=$dataset;
+	ods select Histogram;
+	var #foreach( $item in $intervalVariables ) $item#end;
+	histogram #foreach( $item in $intervalVariables ) $item#end;
+run;
+#end
+#end
+
+#if ($chkBAR == 1)
+#if ($nominalVariables.size() > 0 )
+proc sgplot data=$dataset;
+	vbar  #foreach( $item in $nominalVariables ) $item#end /;
+	yaxis grid;
+run;
+#end
+#end
+
+#if ($chkCORR == 1)
+#if ($intervalVariables.size() > 1 )
+proc corr data=$dataset;
+var #foreach( $item in $intervalVariables ) $item#end;
+run; 
+#end
+#end
+
+proc kclus data=$dataset 
+#if ($measurementLevel == 'intervalData' || $measurementLevel == 'bothData')
+   #if ($intervalImputeData == 1) impute=mean#end
+   #if (!($intervalStdizeMethod == 'noStdChoice') ) standardize=
+      #if     ($intervalStdizeMethod =='stdDevChoice')std
+      #elseif ($intervalStdizeMethod =='rangeChoice')range
+      #end
+   #end
+ distance=
+   #if     ($intervalDistanceCombo == 'euclideanDistanceChoice')euclidean
+   #elseif ($intervalDistanceCombo == 'cityBlockDistanceChoice')manhattan
+   #end
+#end
+#if ($measurementLevel == 'nominalData' || $measurementLevel == 'bothData')
+   #if ($nominalImputeData == 1) imputenom=mode#end
+ distancenom=
+   #if     ($nominalDistanceCombo == 'binaryDistanceChoice')binary
+   #elseif ($nominalDistanceCombo == 'globalFreqChoice')globalfreq
+   #elseif ($nominalDistanceCombo == 'relativeFreqChoice')relativefreq   
+   #end
+#end
+
+#if ($measurementLevel == 'bothData' && !($gamma == 0.5)) kPrototypeParams=userGamma(value=$gamma)#end
+
+#if     ($numberOfClusters == 'specifyNumberOfClusters') maxclusters=$numClusters
+#elseif ($numberOfClusters == 'estimateNumberOfClusters') noc=abc(minclusters=$minClusters
+   #if (!($abcCriterionCombo == 'defaultCriterionChoice')) criterion=
+      #if ($abcCriterionCombo == 'globalPeakChoice')globalpeak
+      #elseif ($abcCriterionCombo == 'firstPeakChoice')firstpeak
+      #elseif ($abcCriterionCombo == 'allCriterionChoice')all
+      #end
+   #end
+   )
+    maxclusters=$maxClusters
+#end
+
+#if ($statsCombo == 'noprint') noprint#end
+
+#if ($outstatDS == 1) outstat=$outstatDSName#end
+#if ($useMaxiter == 1) maxiter=$maxiter#end
+#if($useRandomSeed == 1) seed=$randomSeed#end
+;
+
+#if ($dataset.getWhereClause() != '')
+   where $dataset.getWhereClause();
+#end
+
+#if (($measurementLevel == 'intervalData' || $measurementLevel == 'bothData') && $intervalVariables.size() > 0) 
+   input #foreach( $item in $intervalVariables ) $item#end
+       / level=interval;
+#end
+#if (($measurementLevel == 'nominalData' || $measurementLevel == 'bothData') && $nominalVariables.size() > 0) 
+   input #foreach( $item in $nominalVariables ) $item#end
+      / level=nominal;
+#end
+
+#if( $freqVariable.size() > 0 )
+   freq #foreach( $item in $freqVariable ) $item #end;
+#end
+#if ($outDS == 1)
+   score out=$outDSName
+   #if     ($includeVars=='includeAllVars') copyvars=(_all_)
+   #elseif ($includeVars=='includeSelectedVars')
+      #if( $copyVariables.size() > 0 ) copyvars=(#foreach( $item in $copyVariables ) $item#end)#end
+   #elseif ($includeVars=='includeAnalysisVars')
+      #if ((($measurementLevel == 'intervalData' || $measurementLevel == 'bothData') && $intervalVariables.size() > 0) ||
+           (($measurementLevel == 'nominalData' || $measurementLevel == 'bothData') && $nominalVariables.size() > 0) ||
+           $freqVariable.size() > 0 ) 
+ copyvars=(
+         #if (($measurementLevel == 'intervalData' || $measurementLevel == 'bothData') && $intervalVariables.size() > 0)
+             #foreach( $item in $intervalVariables ) $item#end
+         #end
+         #if (($measurementLevel == 'nominalData' || $measurementLevel == 'bothData') && $nominalVariables.size() > 0)
+             #foreach( $item in $nominalVariables ) $item#end
+         #end
+         #if ($freqVariable.size() > 0)
+             #foreach( $item in $freqVariable ) $item#end
+         #end
+ )
+       #end  
+   #end
+   ;
+#end
+
+#if ($scoreCode == 1)
+   code file="$scoringCodeFileName.fullPath"  
+ ;
+#end
+
+#if ($numberOfClusters == 'estimateNumberOfClusters' && $gapByClusterPlot == 1)
+   ods output ABCStats=work._abc_stats_;
+#end
+
+run;
+
+#if ($numberOfClusters == 'estimateNumberOfClusters' && $gapByClusterPlot == 1)
+proc sgplot data=work._abc_stats_;
+    vline K / response=Gap lineattrs=(thickness=5) nostatlabel;
+    yaxis grid;
+    label K ='Number of Clusters' Gap='Gap Statistic';
+run;
+
+proc delete data=work._abc_stats_;run;
+#end
+
+]]></CodeTemplate>
+</Task>
