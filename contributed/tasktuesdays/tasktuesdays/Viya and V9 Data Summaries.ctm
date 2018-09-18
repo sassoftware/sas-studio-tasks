@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="6.3">
+    <Registration>
+        <Name>Viya & V9 Data Summaries</Name>
+        <Description/>
+        <GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+        <Procedures>MEANS, CARDINALITY</Procedures>
+        <Version>4.3</Version>
+        <Links>
+            <Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <DataSources>
+            <DataSource libraryEngineInclude="CAS" name="DATASOURCE" where="true"/>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="DATATAB">DATA</Option>
+            <Option inputType="string" name="DATAGROUP">DATA</Option>
+            <Option inputType="string" name="DESCGROUP">DESCRIPTION</Option>
+            <Option inputType="string" name="labelTEXT">This task will create output summary datasets for PROC MEANS and PROC CARDINALITY and merge them into one dataset: SUMMARYSTATS.</Option>
+        </Options>
+    </Metadata>
+    <UI>
+        <Container option="DATATAB">
+            <Group open="true" option="DESCGROUP">
+                <OptionItem option="labelTEXT"/>
+            </Group>
+            <Group open="true" option="DATAGROUP">
+                <DataItem data="DATASOURCE"/>
+            </Group>
+        </Container>
+    </UI>
+    <CodeTemplate><![CDATA[
+
+#set($inputLibrefIndex = $DATASOURCE.toString().indexOf(".")) 
+#set($inputCASLibref = $DATASOURCE.toString().substring(0, $inputLibrefIndex))
+%let inputLibref = $inputCASLibref;
+
+ods exclude all;
+proc means data=$DATASOURCE css cv clm lclm uclm mode median p1 p5 p10 p25 p75 p90 p95 p99 qrange probt t range stderr sum uss var           
+	STACKODSOUTPUT;
+ods output Summary=&inputLibref..MEANS;
+run;
+ods exclude none;
+proc cardinality data=$DATASOURCE outcard=&inputLibref..card;
+run;
+
+data &inputLibref..SummaryStats;
+	length variable $50.;
+	merge &inputLibref..means &inputLibref..card(rename=(_VARNAME_=Variable));
+	by variable;
+	rename 	_FMTWIDTH_  = FormatWidth
+			_TYPE_ = Type
+			_RLEVEL_ = RLevel
+			_ORDER_ = Order
+			_MORE_ = More
+			_CARDINALITY_ = Cardinality
+			_NOBS_ = NObs
+			_SUMFREQS_ = SumFreqs
+			_NMISS_ = NMiss
+			_MISSFMT_ = MissFormat
+			_VISIBLE_ = Visible
+			_MIN_ = Min
+			_MAX_ = Max
+			_MEAN_ = Mean
+			_STDDEV_ = StdDev
+			_SKEWNESS_ = Skewness
+			_KURTOSIS_ = Kurtosis
+			_MFREQ_ = MFreq
+			_MFREQFOUNDLEVEL_ = MFreqFoundLevel
+			_MFREQNUM_ = MFreqNum
+			_MFREQCHR_ = MFreqChr
+			_MFREQCFMT_ = MFreqCFormat
+			_LASTNUM_ = LastNum
+			_LASTCHR_ = LastChr
+			_LASTCFMT_ = LastcFormat;
+run;
+
+title "&inputLibref..SUMMARYSTATS";
+proc print data=&inputLibref..summarystats;
+run;
+		]]></CodeTemplate>
+</Task>
