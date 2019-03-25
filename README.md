@@ -5,4 +5,4 @@ This repository hosts SAS-provided tasks and contributed custom tasks to extend 
 - XML files: define task repository structures and SAS code snippet libraries
 - SAS files: SAS program files
 
-For more "How to" information, see [SAS Studio Developer's Guide for Writing Custom Tasks](http://go.documentation.sas.com/?cdcId=webeditorcdc&cdcVersion=3.6&docsetId=webeditordg&docsetTarget=bookinfo.htm&locale=en).
+For more "How to" information, see [SAS Studio Developer's Guide for Writing Custom Tasks](https://go.documentation.sas.com/?docsetId=webeditordg&docsetTarget=titlepage.htm&docsetVersion=3.8&locale=en).
