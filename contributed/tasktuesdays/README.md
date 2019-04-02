@@ -22,6 +22,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [CAS Administrative Functions](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-CAS-Administrative-Functions/ta-p/547670)
+This task is the minimum administrative functions you will need to perform to be able to use CAS. It will connect to CAS, create a CAS session, disconnect, reconnect, etc. The SAS code for the task is taken from the built-in CAS Snippets in SAS Studio. 
+
 ### [Viya & V9 Data Summaries](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Combine-Viya-amp-V9-Data-Summaries/ta-p/494967)
 This task combines the output from PROC MEANS (V9) and PROC CARDINALITY (Viya). The task will output CAS tables from both PROCs and then merge them into one summary CAS-table. For measures that are available in both PROC MEANS and PROC CARDINALITY, the PROC CARDINALITY measure was used (but they will be the same :) )
 
