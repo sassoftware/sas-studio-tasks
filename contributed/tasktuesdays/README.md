@@ -22,6 +22,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [Segmentation Modeling (All-in-One Analytic Task)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Segmentation-Modeling-All-in-One-Analytic/ta-p/549362)
+This task is an example of an all-in-one analytic modeling task. If you have a set of analytic processes that you want to run over and over on the same dataset, you can combine them all into one task and only make data and variable selections once. 
+
 ### [CAS Administrative Functions](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-CAS-Administrative-Functions/ta-p/547670)
 This task is the minimum administrative functions you will need to perform to be able to use CAS. It will connect to CAS, create a CAS session, disconnect, reconnect, etc. The SAS code for the task is taken from the built-in CAS Snippets in SAS Studio. 
 
