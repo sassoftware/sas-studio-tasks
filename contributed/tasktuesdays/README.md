@@ -15,9 +15,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 5. An icon with the name that you specified in the defintion (Ex. Custom Task Tuesday Tasks) will show up in your Tasks and Utilities panel. In the folder you will see sample SAS Studio tasks.
 
 ### Additional Resources for writing SAS Studio Custom Tasks can be found here:
-* [SAS Studio 3.5: Developers Guide to Writing Custom Tasks](https://support.sas.com/documentation/cdl/en/webeditordg/68829/PDF/default/webeditordg.pdf)
+* [SAS Studio 3.8: Developers Guide to Writing Custom Tasks](https://go.documentation.sas.com/?docsetId=webeditordg&docsetTarget=titlepage.htm&docsetVersion=3.8&locale=en)
 * [SAS Tech Talk: SAS Studio Demonstration](https://www.youtube.com/watch?v=xa6CGmbwPic)
-* [SAS Studio 3.5: User's Guide](http://support.sas.com/documentation/cdl/en/webeditorug/68828/PDF/default/webeditorug.pdf)
+* [SAS Studio 3.8: User's Guide](https://go.documentation.sas.com/?docsetId=webeditorug&docsetTarget=titlepage.htm&docsetVersion=3.8&locale=en)
 * [Teach Them to Fish- How to Use Tasks in SAS Studio to Enable Coworkers to Run Your Reports Themselves](http://support.sas.com/resources/papers/proceedings15/SAS1831-2015.pdf)
 
 ## Task Tuesday Example List
