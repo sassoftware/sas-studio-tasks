@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="6.4" runNLS="never">
+	<Registration>
+	<Name>Segmentation Modeling</Name>
+	<Description></Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>TBD</Procedures>
+	<Version>4.4</Version>
+	<Links>
+		<Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="TARGET">Target variable:</Role>
+					<Role type="N" maxVars="0" order="true" minVars="0" name="INTVARS" exclude="TARGET">Interval variables:</Role>
+					<Role type="A" maxVars="0" order="true" minVars="0" name="NOMVARS" exclude="TARGET,INTVARS">Nominal variables:</Role>
+					<Role type="A" maxVars="0" order="true" minVars="0" name="COPYVARS" exclude="TARGET,INTVARS,NOMVARS">Additional variables to copy:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+		
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+			<Option name="DATAGROUP" inputType="string">DATA</Option>
+			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
+			<Option name="OPTIONSTAB" inputType="string">OPTIONS</Option>
+				
+			<Option name="GROUPNUMSTEPPER" inputType="string">NUMBER OF RUNS</Option>
+			<Option name="labelNumStepperEXAMPLE1" inputType="string">Range of runs for numbers of clusters</Option>
+			<Option name="runFIRST" defaultValue="2" inputType="numstepper" indent="1">First Run:</Option>
+			<Option name="runLAST" defaultValue="6" inputType="numstepper" indent="1">Last Run:</Option>
+			<Option name="GROUPSEEDS" inputType="string">SEEDS</Option>
+			<Option name="clusteringSEED" decimalPlaces="0" defaultValue="1234"
+				inputType="numbertext"
+				minValue="1" 
+				maxValue="999999999"
+				promptMessage="Enter a number greater than 0."
+				missingMessage="Enter a number greater than 0."
+				rangeMessage="This number is out of range. Enter a number greater than 0."
+				invalidMessage="Invalid value. Enter a number greater than 0."
+				>Clustering Seed:</Option>
+			<Option decimalPlaces="0" name="forestSEED" defaultValue="1234"
+				inputType="numbertext"
+				minValue="1" 
+				maxValue="999999999"
+				promptMessage="Enter a number greater than 0."
+				missingMessage="Enter a number greater than 0."
+				rangeMessage="This number is out of range.  Enter a number greater than 0."
+				invalidMessage="Invalid value. Enter a number greater than 0."
+				>Forest Seed:</Option>
+			<Option decimalPlaces="0" name="sampleSEED" defaultValue="1234"
+				inputType="numbertext"
+				minValue="1" 
+				maxValue="999999999"
+				promptMessage="Enter a number greater than 0."
+				missingMessage="Enter a number greater than 0."
+				rangeMessage="This number is out of range.  Enter a number greater than 0."
+				invalidMessage="Invalid value. Enter a number greater than 0."
+				>Random Sample Seed:</Option>
+			<Option name="GROUPVA" inputType="string">VISUAL ANALYTICS PROMOTION</Option>
+			<Option name="labelVA" inputType="string">Promoting the output data sets to the PUBLIC caslib will make them available for use in Visual Analytics.</Option>
+			<Option name="chkVA" defaultValue="0" inputType="checkbox">Promote to VA</Option>
+		</Options>
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="DATAGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+				<RoleItem role="TARGET"/>
+				<RoleItem role="INTVARS"/>
+				<RoleItem role="NOMVARS"/>
+				<RoleItem role="COPYVARS"/>
+			</Group>
+		</Container>		
+		<Container option="OPTIONSTAB">
+			<Group option="GROUPNUMSTEPPER" open="true">
+				<OptionItem option="labelNumStepperEXAMPLE1"/>
+				<OptionItem option="runFIRST"/>
+				<OptionItem option="runLAST"/>
+			</Group>
+			<Group option="GROUPSEEDS" open="true">
+				<OptionItem option="clusteringSEED"/>
+				<OptionItem option="forestSEED"/>
+				<OptionItem option="sampleSEED"/>
+			</Group>
+			
+			<Group option="GROUPVA" open="true">
+				<OptionItem option="labelVA"/>
+				<OptionItem option="chkVA"/>
+			</Group>
+		</Container>		
+	</UI>
+	
+    <Requirements>
+        <Requirement condition="($runLAST &gt; $runFIRST)">
+            <Message nlsKey="firstlastRunRequirementKey">The last run cannot be less than the first run.</Message>
+        </Requirement>>
+    </Requirements>	
+	
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+data casuser.ID;	
+	length uniqueID $20.;
+	set $DATASOURCE;
+	uniqueID = put(_threadid_,8.) || '_' || Put(_n_,8.);
+run;
+data casuser.clusters;
+	length uniqueID $20.;
+	uniqueID = "";
+run;
+data casuser.clustertall;
+	length uniqueID $20.;
+	uniqueID = "";
+run;
+data casuser.sample;
+	length uniqueID $20.;
+	uniqueID = "";
+run;
+data casuser.varimportance;
+	run_id = .;
+run;
+data casuser.forestclus;
+	length uniqueID $20.;
+	uniqueID = "";
+run;
+data casuser.forestvars;
+	length uniqueID $20.;
+	uniqueID = "";
+run;
+
+%macro clustertree(num);
+	proc kclus data=CASUSER.ID distance=euclidean distancenom=binary 
+		 maxclusters=&num seed=$clusteringSEED nthreads=1;
+		input #foreach( $item in $INTVARS ) $item #end / level=interval;
+		input #foreach( $item in $NOMVARS ) $item #end / level=nominal;
+		score out=CASUSER.clusters&num copyvars=(#foreach( $item in $INTVARS ) $item #end #foreach( $item in $NOMVARS ) $item #end uniqueID  #foreach ($item in $TARGET) $item #end #foreach ($item in $COPYVARS) $item #end  );
+	run;
+	data casuser.clustertall&num;
+		set casuser.clusters&num;
+	run;
+	
+	data casuser.clusters&num;
+		set casuser.clusters&num;
+		seed=$clusteringSEED;
+		if _cluster_id_ = . then delete;
+		run_&num._id = trim(put(_cluster_id_, 2.));
+		rename _DISTANCE_ 	= distance_&num;
+		label _DISTANCE_ = "Distance &num";
+		label run_&num._id = "&num Clusters";
+		drop _cluster_id_;
+	run;
+	
+	data casuser.clustertall&num;
+		set casuser.clustertall&num;
+		if _cluster_id_ = . then delete;
+		cluster_id = trim(put(_cluster_id_, 2.));
+		seed = $clusteringSEED;
+		run_num= "&num Clusters";
+		label cluster_id = "Cluster ID";
+		label _distance_ = "Distance";
+		drop _cluster_id_;
+	run;
+
+	proc treesplit data=casuser.clusters&num;
+		target run_&num._id / level=nominal;
+		input #foreach( $item in $INTVARS ) $item #end / level=interval;
+		input #foreach( $item in $NOMVARS ) $item #end / level=nominal;
+		grow igr;
+		prune none;
+		ods output VariableImportance=casuser.varimportance&num;
+	run;
+	
+	data casuser.varimportance&num;
+		set casuser.varimportance&num;
+		run_id = &num;
+		if run_id = . then delete;
+	run;
+	
+	data casuser.clusters;
+		merge casuser.clusters casuser.clusters&num;
+		by uniqueID;
+		if uniqueID = "" then delete;
+		label run_&num._id = "&num Clusters";
+	run;
+	
+	proc forest data=CASUSER.clusters&num seed=$forestSEED;
+		target #foreach ($item in $TARGET) $item #end / level=interval;
+		input run_&num._id / level=nominal;
+		score out=CASUSER.forestclus&num copyvars=(uniqueID #foreach ($item in $TARGET) $item #end run_&num._id);
+	run;
+	
+	
+	%let pred_orig = %sysfunc(cats(P_,#foreach ($item in $TARGET) $item #end));
+	%let pred_num = %sysfunc(cats(P_,#foreach ($item in $TARGET) $item #end,_,&num));
+	
+	
+	data casuser.forestclus&num;
+		set casuser.forestclus&num;
+		rename 	&pred_orig 		= &pred_num
+				_RF_PredStd_	= _RF_PredStd_&num
+				_Residual_		= _Residual_&num
+				_Votemin_		= _Votemin_&num
+				_votemax_		= _votemax_&num
+		;
+	run;
+
+	proc forest data=CASUSER.clusters&num seed=$forestSEED;
+		target #foreach ($item in $TARGET) $item #end / level=interval;
+		input #foreach( $item in $INTVARS ) $item #end / level=interval;
+		input #foreach( $item in $NOMVARS ) $item #end / level=nominal;
+		score out=CASUSER.forestvars copyvars=(uniqueID #foreach ($item in $TARGET) $item #end  #foreach( $item in $INTVARS ) $item #end #foreach( $item in $NOMVARS ) $item #end);
+	run;
+
+
+	data casuser.varimportance;
+		set casuser.varimportance casuser.varimportance&num;
+		if run_id = . then delete;
+	run;
+	
+	data casuser.forestclus;
+		merge casuser.forestclus casuser.forestclus&num;
+		by uniqueID;
+		if uniqueID="" then delete;
+	run;
+	
+	data casuser.clustertall;
+		set casuser.clustertall casuser.clustertall&num;
+		if uniqueID="" then delete;
+	run;
+	
+	proc means data=casuser.clustertall&num noprint;
+		var _distance_;
+		class cluster_id;
+		output out=casuser.means p20=p20 p40=p40 p60=p60 p80=p80;
+	run;
+	
+	data casuser.clustertall&num;
+		merge casuser.clustertall&num casuser.means;
+		by cluster_id;
+		drop _type_ _freq_;
+	run;
+	
+	data casuser.clustertall&num;
+		set casuser.clustertall&num;
+		if _distance_ =< p20 then distance_quintile = 1;
+		if _distance_ > p20 and _distance_ =< p40 then distance_quintile = 2;
+		if _distance_ > p40 and _distance_ =< p60 then distance_quintile = 3;
+		if _distance_ > p60 and _distance_ =< p80 then distance_quintile = 4;
+		if _distance_ > p80 then distance_quintile = 5;
+		drop p20 p40 p60 p80;
+		label distance_quintile = "Distance Quintile";
+	run;
+	
+/* Take 1000 sample from each run for circle packing graph */
+	proc surveyselect data=casuser.clustertall&num
+		method=srs n=1000 out=casuser.sample&num seed=$sampleSEED;
+	run;
+
+	data casuser.sample;
+		set casuser.sample casuser.sample&num;
+		if uniqueID="" then delete;
+	run;
+%mend clustertree;
+
+%macro call();
+	%do i=$runFIRST %to $runLAST;
+		%clustertree(&i);
+		proc delete data= 	casuser.varimportance&i
+							casuser.clusters&i
+							casuser.clustertall&i 
+							casuser.forestclus&i
+							casuser.sample&i
+							casuser.means
+						;
+		run;
+	%end;
+%mend call;
+%call;
+
+#if ($chkVA == 1)
+proc datasets lib=public; delete sample; run;
+data public.sample (promote=yes);
+	set casuser.sample;
+run;
+proc datasets lib=public; delete clusterwide; run;
+data public.clusterwide (promote=yes);
+	set casuser.clusters;
+run;
+proc datasets lib=public; delete clustertall; run;
+data public.clustertall (promote=yes);
+	set casuser.clustertall;
+run;
+proc datasets lib=public; delete varimportance; run;
+data public.varimportance (promote=yes);
+	set casuser.varimportance;
+run;
+proc datasets lib=public; delete forestclus; run;
+data public.forestclus (promote=yes);
+	set casuser.forestclus;
+run;
+proc datasets lib=public; delete forestvars; run;
+data public.forestvars (promote=yes);
+	set casuser.forestvars;
+run;
+#end
+		]]>
+	</CodeTemplate>
+</Task>
