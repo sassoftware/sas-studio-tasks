@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="6.4" runNLS="never">
+	<Registration>
+	<Name>Segmentation Modeling Data Save</Name>
+	<Description></Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>TBD</Procedures>
+	<Version>4.4</Version>
+	<Links>
+		<Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+			<Option name="SAVEGROUP" inputType="string">SAVE</Option>
+			<Option defaultValue="CASUSER.clusterwide" indent="1" inputType="outputdata" name="cluswName" required="true">Cluster Wide Data Set Name: </Option>
+			<Option name="chkclusw" defaultValue="0" inputType="checkbox" indent="2">Export as CSV</Option>
+			<Option name="fileclusw" inputType="sasserverpath"  defaultName="ClusterWide" pathType="file" defaultExtension="csv" indent="2">Select a new or existing file:</Option>
+			<Option defaultValue="CASUSER.clustertall" indent="1" inputType="outputdata" name="clustName" required="true">Cluster Tall Data Set Name: </Option>
+			<Option name="chkclust" defaultValue="0" inputType="checkbox" indent="2">Export as CSV</Option>
+			<Option name="fileclust" inputType="sasserverpath"  defaultName="ClusterTall" pathType="file" defaultExtension="csv" indent="2">Select a new or existing file:</Option>
+			<Option defaultValue="CASUSER.forestclus" indent="1" inputType="outputdata" name="fclusName" required="true">Forest using Clusters Data Set Name: </Option>
+			<Option name="chkfclus" defaultValue="0" inputType="checkbox" indent="2">Export as CSV</Option>
+			<Option name="filefclus" inputType="sasserverpath"  defaultName="ForestClus" pathType="file" defaultExtension="csv" indent="2">Select a new or existing file:</Option>
+			<Option defaultValue="CASUSER.forestvars" indent="1" inputType="outputdata" name="fvarsName" required="true">Forest using Input Variables Data Set Name: </Option>
+			<Option name="chkfvars" defaultValue="0" inputType="checkbox" indent="2">Export as CSV</Option>
+			<Option name="filefvars" inputType="sasserverpath"  defaultName="ForestVars" pathType="file" defaultExtension="csv" indent="2">Select a new or existing file:</Option>
+			<Option defaultValue="CASUSER.sample" indent="1" inputType="outputdata" name="sampName" required="true">Cluster Sample Data Set Name: </Option>
+			<Option name="chksamp" defaultValue="0" inputType="checkbox" indent="2">Export as CSV</Option>
+			<Option name="filesamp" inputType="sasserverpath"  defaultName="Sample" pathType="file" defaultExtension="csv" indent="2">Select a new or existing file:</Option>
+			<Option defaultValue="CASUSER.varimportance" indent="1" inputType="outputdata" name="varimpName" required="true">Variable Importance Data Set Name: </Option>
+			<Option name="chkvarimp" defaultValue="0" inputType="checkbox" indent="2">Export as CSV</Option>
+			<Option name="filevarimp" inputType="sasserverpath"  defaultName="VarImportance" pathType="file" defaultExtension="csv" indent="2">Select a new or existing file:</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="SAVEGROUP" open="true">
+				<OptionItem option="cluswName"/>
+				<OptionItem option="chkclusw"/>
+				<OptionItem option="fileclusw"/>
+				<OptionItem option="clustName"/>
+				<OptionItem option="chkclust"/>
+				<OptionItem option="fileclust"/>
+				<OptionItem option="fclusName"/>
+				<OptionItem option="chkfclus"/>
+				<OptionItem option="filefclus"/>
+				<OptionItem option="fvarsName"/>
+				<OptionItem option="chkfvars"/>
+				<OptionItem option="filefvars"/>
+				<OptionItem option="sampName"/>
+				<OptionItem option="chksamp"/>
+				<OptionItem option="filesamp"/>
+				<OptionItem option="varimpName"/>
+				<OptionItem option="chkvarimp"/>
+				<OptionItem option="filevarimp"/>
+			</Group>
+		</Container>
+	</UI>
+	
+	
+	<Dependencies>
+	
+		<Dependency condition="($chkclusw == '1')">
+			<Target option="fileclusw" conditionResult="true"  action="show"/>
+			<Target option="fileclusw" conditionResult="false" action="hide"/>
+		</Dependency>	
+		
+		<Dependency condition="($chkclust == '1')">
+			<Target option="fileclust" conditionResult="true"  action="show"/>
+			<Target option="fileclust" conditionResult="false" action="hide"/>
+		</Dependency>	
+		
+		<Dependency condition="($chkfclus == '1')">
+			<Target option="filefclus" conditionResult="true"  action="show"/>
+			<Target option="filefclus" conditionResult="false" action="hide"/>
+		</Dependency>			
+
+		<Dependency condition="($chkfvars == '1')">
+			<Target option="filefvars" conditionResult="true"  action="show"/>
+			<Target option="filefvars" conditionResult="false" action="hide"/>
+		</Dependency>	
+	
+		<Dependency condition="($chksamp == '1')">
+			<Target option="filesamp" conditionResult="true"  action="show"/>
+			<Target option="filesamp" conditionResult="false" action="hide"/>
+		</Dependency>
+		
+		<Dependency condition="($chkvarimp == '1')">
+			<Target option="filevarimp" conditionResult="true"  action="show"/>
+			<Target option="filevarimp" conditionResult="false" action="hide"/>
+		</Dependency>	
+	</Dependencies>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+data $cluswName;
+	set casuser.clusters;
+run;
+
+#if ($chkclusw == '1')
+proc export data=casuser.clusters
+	outfile="$fileclusw.fullPath" 
+	dbms=csv;
+run;
+#end
+
+data $clustName;
+	set casuser.clustertall;
+run;
+
+#if ($chkclust == '1')
+proc export data=casuser.clustertall
+	outfile="$fileclust.fullPath" 
+	dbms=csv;
+run;
+#end
+
+data $fclusName;
+	set casuser.forestclus;
+run;
+
+#if ($chkfclus == '1')
+proc export data=casuser.forestclus
+	outfile="$filefclus.fullPath" 
+	dbms=csv;
+run;
+#end
+
+data $fvarsName;
+	set casuser.forestvars;
+run;
+
+#if ($chkfvars == '1')
+proc export data=casuser.forestvars
+	outfile="$filefvars.fullPath" 
+	dbms=csv;
+run;
+#end
+
+data $sampName;
+	set casuser.sample;
+run;
+
+#if ($chksamp == '1')
+proc export data=casuser.sample
+	outfile="$filesamp.fullPath" 
+	dbms=csv;
+run;
+#end
+
+data $varimpName;
+	set casuser.varimportance;
+run;
+
+#if ($chkvarimp == '1')
+proc export data=casuser.varimportance
+	outfile="$filevarimp.fullPath" 
+	dbms=csv;
+run;
+#end
+		]]>
+	</CodeTemplate>
+</Task>
