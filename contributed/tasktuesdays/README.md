@@ -22,6 +22,9 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [Saving Model Output Data](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Saving-Model-Output-Data/ta-p/551206)
+This task (called Segmentation Modeling Data Save) is an optional "step 2" to the previous "Segmentation Modeling" task. It allows the user to save their model output as permanent SAS data sets or even export as CSV once their desired modeling result has been achieved. 
+
 ### [Segmentation Modeling (All-in-One Analytic Task)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Segmentation-Modeling-All-in-One-Analytic/ta-p/549362)
 This task is an example of an all-in-one analytic modeling task. If you have a set of analytic processes that you want to run over and over on the same dataset, you can combine them all into one task and only make data and variable selections once. 
 
