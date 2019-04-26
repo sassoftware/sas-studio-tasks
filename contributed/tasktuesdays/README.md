@@ -22,6 +22,11 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
+### [Ultimate Custom Task Cheat Sheet](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Download-the-Ultimate-Custom-Task-Cheat/ta-p/552910)
+Download the full PDF of this cheat sheet! It's everything a task author has ever wanted!
+![alt tag](https://communities.sas.com/t5/image/serverpage/image-id/28887iF147FD70431B5AC4/image-dimensions/674x522?v=1.0)
+![alt tag](https://communities.sas.com/t5/image/serverpage/image-id/28888iEA927B353336111C/image-dimensions/674x522?v=1.0)
+
 ### [Saving Model Output Data](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Saving-Model-Output-Data/ta-p/551206)
 This task (called Segmentation Modeling Data Save) is an optional "step 2" to the previous "Segmentation Modeling" task. It allows the user to save their model output as permanent SAS data sets or even export as CSV once their desired modeling result has been achieved. 
 
