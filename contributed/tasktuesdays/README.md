@@ -7,6 +7,10 @@ Descriptions of each task are located below, beginning with the most recent. Cli
 Tasks in this series include easy examples as well as more complex ones, so you'll be able to find something on your level whether you are just getting started or already know what you're doing. 
 
 ### Additional Resources for writing SAS Studio Custom Tasks can be found here:
+* #### [Ultimate Custom Task Cheat Sheet](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Download-the-Ultimate-Custom-Task-Cheat/ta-p/552910)
+Download the full PDF of this cheat sheet! It's everything a task author has ever wanted!
+![alt tag](https://communities.sas.com/t5/image/serverpage/image-id/28887iF147FD70431B5AC4/image-dimensions/674x522?v=1.0)
+![alt tag](https://communities.sas.com/t5/image/serverpage/image-id/28888iEA927B353336111C/image-dimensions/674x522?v=1.0)
 * [SAS Studio 3.8: Developers Guide to Writing Custom Tasks](https://go.documentation.sas.com/?docsetId=webeditordg&docsetTarget=titlepage.htm&docsetVersion=3.8&locale=en)
 * [SAS Tech Talk: SAS Studio Demonstration](https://www.youtube.com/watch?v=xa6CGmbwPic)
 * [SAS Studio 3.8: User's Guide](https://go.documentation.sas.com/?docsetId=webeditorug&docsetTarget=titlepage.htm&docsetVersion=3.8&locale=en)
@@ -14,10 +18,8 @@ Tasks in this series include easy examples as well as more complex ones, so you'
 
 ## Task Tuesday Example List
 
-### [Ultimate Custom Task Cheat Sheet](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Download-the-Ultimate-Custom-Task-Cheat/ta-p/552910)
-Download the full PDF of this cheat sheet! It's everything a task author has ever wanted!
-![alt tag](https://communities.sas.com/t5/image/serverpage/image-id/28887iF147FD70431B5AC4/image-dimensions/674x522?v=1.0)
-![alt tag](https://communities.sas.com/t5/image/serverpage/image-id/28888iEA927B353336111C/image-dimensions/674x522?v=1.0)
+### [Clinical Grouped Bar Chart (Injection Site Reaction)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Grouped-Bar-Chart/ta-p/557566)
+This task for creating and customizing this clinical grouped SGPLOT bar chart (on injection site reaction). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
 
 ### [Saving Model Output Data](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Saving-Model-Output-Data/ta-p/551206)
 This task (called Segmentation Modeling Data Save) is an optional "step 2" to the previous "Segmentation Modeling" task. It allows the user to save their model output as permanent SAS data sets or even export as CSV once their desired modeling result has been achieved. 
