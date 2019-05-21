@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.3" runNLS="never">
+	<Registration>
+	<Name>Injection Site Reaction</Name>
+	<Description>This task creates a cluster grouped bar chart showing incidence of reaction by time and cohort.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.71</Version>
+	<Links>
+		<Link href="https://blogs.sas.com/content/graphicallyspeaking/2014/11/15/clinical-graphs/">Graphically Speaking Blog Post: Injection Site Reaction Graph</Link>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.71&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="C" maxVars="1" order="true" minVars="1" name="TIMEVAR">Time variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="RESPVAR">Response variable:</Role>
+					<Role type="C" maxVars="1" order="true" minVars="1" name="GROUPVAR" exclude="TIMEVAR">Group variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option name="GRAPHTAB" inputType="string">GRAPH</Option>
+			<Option name="DATAGROUP" inputType="string">DATA</Option>
+			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
+			
+			<Option name="GROUPGRAPH" inputType="string">GRAPH OPTIONS</Option>
+			<Option name="textTITLE1" defaultValue="Incidence of Injection-site Reaction by Time and Cohort - Erythema" inputType="inputtext"
+				required="true"
+				promptMessage="Enter a title"
+				missingMessage="Missing text.">Title 1:</Option>
+			<Option name="textTITLE2" defaultValue="ATT Population" inputType="inputtext"
+				required="true"
+				promptMessage="Enter a second title"
+				missingMessage="Missing text.">Title 2:</Option>
+			<Option name="comboTHEME" defaultValue="inspire" inputType="combobox">Color Theme:</Option>
+			<Option name="inspire" inputType="string">SAS Inspire</Option>
+			<Option name="illuminate" inputType="string">SAS Illuminate</Option>
+			<Option name="grayscale" inputType="string">Grayscale</Option>
+			<Option name="pastel" inputType="string">Pastel</Option>
+			<Option name="bright" inputType="string">Bright</Option>
+			<Option name="dark" inputType="string">Dark</Option>
+			<Option name="default" inputType="string">Default (no colors specified)</Option>
+			<Option name="comboLEGENDPOS" defaultValue="topright" inputType="combobox">Legend Position:</Option>
+			<Option name="bottom" inputType="string">Bottom</Option>
+			<Option name="bottomleft" inputType="string">Bottom Left</Option>
+			<Option name="bottomright" inputType="string">Bottom Right</Option>
+			<Option name="left" inputType="string">Left</Option>
+			<Option name="right" inputType="string">Right</Option>
+			<Option name="top" inputType="string">Top</Option>
+			<Option name="topleft" inputType="string">Top Left</Option>
+			<Option name="topright" inputType="string">Top Right</Option>
+			<Option name="comboLEGENDLOC" defaultValue="inside" inputType="combobox">Legend Location:</Option>
+			<Option name="inside" inputType="string">Inside</Option>
+			<Option name="outside" inputType="string">Outside</Option>
+			<Option name="labelORIENTATION" inputType="string">Legend Orientation:</Option>
+			<Option name="radioAuto" variable="radioORIENTATION" defaultValue="1" inputType="radio">Automatic</Option>
+			<Option name="radioHorizontal" variable="radioORIENTATION" inputType="radio">Horizontal</Option>
+			<Option name="radioVertical" variable="radioORIENTATION" inputType="radio">Vertical</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="GRAPHTAB">
+			<Group option="DATAGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+				<RoleItem role="TIMEVAR"/>
+				<RoleItem role="RESPVAR"/>
+				<RoleItem role="GROUPVAR"/>
+			</Group>
+			<Group option="GROUPGRAPH" open="true">
+				<OptionItem option="textTITLE1"/>
+				<OptionItem option="textTITLE2"/>
+				<OptionChoice option="comboTHEME">
+					<OptionItem option="inspire"/>
+					<OptionItem option="illuminate"/>
+					<OptionItem option="grayscale"/>
+					<OptionItem option="pastel"/>
+					<OptionItem option="bright"/>
+					<OptionItem option="dark"/>
+					<OptionItem option="default"/>
+				</OptionChoice>
+				<OptionChoice option="comboLEGENDLOC">
+					<OptionItem option="inside"/>
+					<OptionItem option="outside"/>
+				</OptionChoice>
+				<OptionChoice option="comboLEGENDPOS">
+					<OptionItem option="bottom"/>
+					<OptionItem option="bottomleft"/>
+					<OptionItem option="bottomright"/>
+					<OptionItem option="left"/>
+					<OptionItem option="right"/>
+					<OptionItem option="top"/>
+					<OptionItem option="topleft"/>
+					<OptionItem option="topright"/>
+				</OptionChoice>
+				<OptionItem option="labelORIENTATION"/>
+				<OptionItem option="radioAuto"/>
+				<OptionItem option="radioHorizontal"/>
+				<OptionItem option="radioVertical"/>
+			</Group>
+		</Container>
+	</UI>
+		`
+  	<CodeTemplate>
+		<![CDATA[
+#if ($comboTHEME == 'inspire')
+%let fillcolors= cx21b9b7 cx4141e0 cx7db71a cx8e2f8a cxd38506 cx0abf85 cx2f90ec;
+#end
+#if ($comboTHEME == 'illuminate')
+%let fillcolors= cx00929f cxf08000 cx90b328 cx3d5aae cxffca39 cxa6427c cx9c2910 cx736519;
+#end
+#if ($comboTHEME == 'grayscale')
+%let fillcolors= cx585858 cxa2a2a2 cx1e1e1e cx707070 cxbbbbbb cx3b3b3b cxd0d0d0;
+#end
+#if ($comboTHEME == 'pastel')
+%let fillcolors= cxb3e2cd cxfdcdac cxcbd5e8 cxf4cae4 cxe6f5c9 cxfff2ae cxf1e2cc cxcccccc;
+#end
+#if ($comboTHEME == 'bright')
+%let fillcolors= cx3190D0 cxFF991A cx3EBB3B cxF23E39 cxAF7ED9 cxA77063 cxFF8EDD cxD6D91A;
+#end
+#if ($comboTHEME == 'dark')
+%let fillcolors= cx1b9e77 cxd95f02 cx7570b3 cxe7298a cx66a61e cxe6ab02 cxa6761d cx666666;
+#end
+
+title '$textTITLE1';
+title2 '$textTITLE2';
+proc sgplot data=$DATASOURCE nowall noborder;
+#if ($comboTHEME != 'default')
+  styleattrs datacolors=(&fillcolors) datacontrastcolors=(black);
+  #end
+  vbar #foreach ($item in $TIMEVAR) $item #end / #foreach ($item in $RESPVAR) response=$item #end #foreach ($item in $GROUPVAR) group=$item #end groupdisplay=cluster baselineattrs=(thickness=0);
+  xaxis discreteorder=data;
+  yaxis offsetmax=0.2;
+  keylegend / title='' location=$comboLEGENDLOC position=$comboLEGENDPOS border autoitemsize valueattrs=(size=8) #if($radioORIENTATION == 'radioHorizontal') down=1 #end #if($radioORIENTATION == 'radioVertical') across=1 #end;
+run;
+title;
+
+		]]>
+	</CodeTemplate>
+</Task>
