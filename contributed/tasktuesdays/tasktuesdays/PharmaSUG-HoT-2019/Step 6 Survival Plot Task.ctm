@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.4">
+<Registration>
+	<Name>Step 4 Survival Plot Task</Name>
+	<Description>This is task generates a survival plot using PROC SGPLOT.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.8</Version>
+	<Links>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	<Category>Survival Analysis</Category>
+   </Registration>
+
+	
+	<Metadata>
+		
+		<DataSources>
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="DFTIME">Disease-free time variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="SURVIVAL" exclude="DFTIME">Survival variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="CENSORED" exclude="DFTIME,SURVIVAL">Censored variable:</Role>
+					<Role type="C" maxVars="1" order="true" minVars="1" name="STRATUM">Stratum variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="ATRISK" exclude="DFTIME,SURVIVAL,CENSORED">At risk variable</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="TATRISK" exclude="DFTIME,SURVIVAL,CENSORED,ATRISK">t At Risk variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="DATAGROUP">DATA</Option>
+			<Option inputType="string" name="APPEARTAB">APPEARANCE</Option>
+			<Option inputType="string" name="ROLESGROUP">ROLES</Option>
+			<Option name="GROUPOPTIONS" inputType="string">GRAPH OPTIONS</Option>
+			<Option name="textTITLE1" defaultValue="Title goes here" inputType="inputtext" 
+			required="true" promptMessage="Enter a title." missingMessage="Missing title.">Title 1:</Option>
+			<Option name="textTITLE2" defaultValue="Title goes here" inputType="inputtext" 
+			required="true" promptMessage="Enter a title." missingMessage="Missing title.">Title 2:</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+				<RoleItem role="DFTIME"/>
+				<RoleItem role="SURVIVAL"/>
+				<RoleItem role="CENSORED"/>
+				<RoleItem role="STRATUM"/>
+				<RoleItem role="ATRISK"/>
+				<RoleItem role="TATRISK"/>
+			</Group>
+		</Container>
+		<Container option="APPEARTAB">
+			<Group option="GROUPOPTIONS" open="true">
+				<OptionItem option="textTITLE1"/>
+				<OptionItem option="textTITLE2"/>
+			</Group>
+		</Container>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+proc print data=sashelp.cars;run;
+
+		]]>
+	</CodeTemplate>
+</Task>
