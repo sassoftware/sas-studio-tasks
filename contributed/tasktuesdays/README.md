@@ -18,8 +18,11 @@ Download the full PDF of this cheat sheet! It's everything a task author has eve
 
 ## Task Tuesday Example List
 
+### [Clinical Profile Graph with Discrete Axes](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Profile-Graph-with-Discrete-Axes/ta-p/558368)
+This task allows the user to create and customize a clinical profile graph with discrete axes (on lipids). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
+
 ### [Clinical Grouped Bar Chart (Injection Site Reaction)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Grouped-Bar-Chart/ta-p/557566)
-This task for creating and customizing this clinical grouped SGPLOT bar chart (on injection site reaction). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
+This task is for creating and customizing this clinical grouped SGPLOT bar chart (on injection site reaction). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
 
 ### [Saving Model Output Data](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Saving-Model-Output-Data/ta-p/551206)
 This task (called Segmentation Modeling Data Save) is an optional "step 2" to the previous "Segmentation Modeling" task. It allows the user to save their model output as permanent SAS data sets or even export as CSV once their desired modeling result has been achieved. 
