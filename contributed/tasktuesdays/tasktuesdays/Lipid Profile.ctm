@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.3" runNLS="never">
+	<Registration>
+	<Name>Lipid Profile</Name>
+	<Description>This task creates a plot of median lipid profile values for different treatment groups with confidence limits and a discrete X axis. </Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.71</Version>
+	<Links>
+		<Link href="https://blogs.sas.com/content/graphicallyspeaking/2011/11/12/graphs-with-axis-aligned-statistics-tables/">Graphically Speaking Blog Post: Lipid Profile Graph</Link>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.71&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="C" maxVars="1" order="true" minVars="1" name="GROUPVAR">Treatment variable:</Role>
+					<Role type="C" maxVars="1" order="true" minVars="1" name="DAYVAR" exclude="GROUPVAR">Day variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="MEDIANVAR">Median variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="LCLVAR" exclude="MEDIANVAR">LCL variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="UCLVAR" exclude="MEDIANVAR,LCLVAR">UCL variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+			<Option name="APPEARANCETAB" inputType="string">APPEARANCE</Option>
+			<Option name="DATAGROUP" inputType="string">DATA</Option>
+			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
+		
+			<Option name="GROUPGRAPH" inputType="string">GRAPH OPTIONS</Option>
+			<Option name="textTITLE1" defaultValue="Median of Lipid Profile by Visit and Treatment" inputType="inputtext"
+				required="true"
+				promptMessage="Enter a title"
+				missingMessage="Missing text.">Title:</Option>
+			<Option name="comboTHEME" defaultValue="inspire" inputType="combobox">Color Theme:</Option>
+			<Option name="inspire" inputType="string">SAS Inspire</Option>
+			<Option name="illuminate" inputType="string">SAS Illuminate</Option>
+			<Option name="grayscale" inputType="string">Grayscale</Option>
+			<Option name="pastel" inputType="string">Pastel</Option>
+			<Option name="bright" inputType="string">Bright</Option>
+			<Option name="dark" inputType="string">Dark</Option>
+			<Option name="default" inputType="string">Default (no colors specified)</Option>
+			<Option name="comboLEGENDPOS" defaultValue="topright" inputType="combobox">Legend Position:</Option>
+			<Option name="bottom" inputType="string">Bottom</Option>
+			<Option name="bottomleft" inputType="string">Bottom Left</Option>
+			<Option name="bottomright" inputType="string">Bottom Right</Option>
+			<Option name="left" inputType="string">Left</Option>
+			<Option name="right" inputType="string">Right</Option>
+			<Option name="top" inputType="string">Top</Option>
+			<Option name="topleft" inputType="string">Top Left</Option>
+			<Option name="topright" inputType="string">Top Right</Option>
+			<Option name="comboLEGENDLOC" defaultValue="inside" inputType="combobox">Legend Location:</Option>
+			<Option name="inside" inputType="string">Inside</Option>
+			<Option name="outside" inputType="string">Outside</Option>
+			<Option name="labelORIENTATION" inputType="string">Legend Orientation:</Option>
+			<Option name="radioAuto" variable="radioORIENTATION" inputType="radio">Automatic</Option>
+			<Option name="radioHorizontal" variable="radioORIENTATION" inputType="radio">Horizontal</Option>
+			<Option name="radioVertical" variable="radioORIENTATION" defaultValue="1" inputType="radio">Vertical</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="DATAGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+				<RoleItem role="GROUPVAR"/>
+				<RoleItem role="DAYVAR"/>
+				<RoleItem role="MEDIANVAR"/>
+				<RoleItem role="LCLVAR"/>
+				<RoleItem role="UCLVAR"/>
+			</Group>
+		</Container>
+		<Container option="APPEARANCETAB">
+			<Group option="GROUPGRAPH" open="true">
+				<OptionItem option="textTITLE1"/>
+				<OptionChoice option="comboTHEME">
+					<OptionItem option="inspire"/>
+					<OptionItem option="illuminate"/>
+					<OptionItem option="grayscale"/>
+					<OptionItem option="pastel"/>
+					<OptionItem option="bright"/>
+					<OptionItem option="dark"/>
+					<OptionItem option="default"/>
+				</OptionChoice>
+				<OptionChoice option="comboLEGENDLOC">
+					<OptionItem option="inside"/>
+					<OptionItem option="outside"/>
+				</OptionChoice>
+				<OptionChoice option="comboLEGENDPOS">
+					<OptionItem option="bottom"/>
+					<OptionItem option="bottomleft"/>
+					<OptionItem option="bottomright"/>
+					<OptionItem option="left"/>
+					<OptionItem option="right"/>
+					<OptionItem option="top"/>
+					<OptionItem option="topleft"/>
+					<OptionItem option="topright"/>
+				</OptionChoice>
+				<OptionItem option="labelORIENTATION"/>
+				<OptionItem option="radioAuto"/>
+				<OptionItem option="radioHorizontal"/>
+				<OptionItem option="radioVertical"/>
+			</Group>
+		</Container>
+	</UI>
+  	<CodeTemplate>
+		<![CDATA[
+#if ($comboTHEME == 'inspire')
+%let linecolors= cx1d9992 cx2222bc cx6a9617 cx69256d cxba7006 cx0a9e69 cxa50a2f;
+#end
+#if ($comboTHEME == 'illuminate')
+%let linecolors= cx007380 cxd16100 cx719409 cx1e3b8f cxe0ab1a cx87235d cx7d0a00 cx544600;
+#end
+#if ($comboTHEME == 'grayscale')
+%let linecolors= cx585858 cxa2a2a2 cx1e1e1e cx707070 cxbbbbbb cx3b3b3b cxd0d0d0;
+#end
+#if ($comboTHEME == 'pastel')
+%let linecolors= cx80AF9A cxCA9A79 cx98A2B5 cxC197B1 cxB3C296 cxCCBF7B cxBEAF99 cx999999;
+#end
+#if ($comboTHEME == 'bright')
+%let linecolors= cx1776b6 cxff7f00 cx24a121 cxd8241f cx9564bf cx8d5649 cxe574c3 cxbcbf00;
+#end
+#if ($comboTHEME == 'dark')
+%let linecolors= cx1b9e77 cxd95f02 cx7570b3 cxe7298a cx66a61e cxe6ab02 cxa6761d cx666666;
+#end
+
+
+title '$textTITLE1';
+proc sgplot data=$DATASOURCE;
+#if ($comboTHEME != 'default')
+	styleattrs datacontrastcolors=(&linecolors);
+	#end
+  series  #foreach($item in $DAYVAR)x=$item #end #foreach($item in $MEDIANVAR)y=$item #end / #foreach($item in $GROUPVAR)group=$item #end groupdisplay=cluster clusterwidth=0.5 
+          lineattrs=(thickness=2) name='s';
+  scatter #foreach($item in $DAYVAR)x=$item #end #foreach($item in $MEDIANVAR)y=$item #end / #foreach($item in $LCLVAR)yerrorlower=$item #end #foreach($item in $UCLVAR)yerrorupper=$item #end #foreach($item in $GROUPVAR)group=$item #end  
+          groupdisplay=cluster clusterwidth=0.5 markerattrs=(symbol=circlefilled size=11)
+          errorbarattrs=(thickness=2);
+  yaxis label='Median with 95% CL' grid;
+  xaxis display=(nolabel);
+  keylegend 's' / title='Treatment' location=$comboLEGENDLOC position=$comboLEGENDPOS #if($radioORIENTATION == 'radioHorizontal') down=1 #end #if($radioORIENTATION == 'radioVertical') across=1 #end;
+run;
+		]]>
+	</CodeTemplate>
+</Task>
