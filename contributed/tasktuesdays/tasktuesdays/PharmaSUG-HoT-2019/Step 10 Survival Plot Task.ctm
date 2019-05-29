@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.4">
+<Registration>
+	<Name>Step 10 Survival Plot Task</Name>
+	<Description>This is task generates a survival plot using PROC SGPLOT.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.8</Version>
+	<Links>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	<Category>Survival Analysis</Category>
+   </Registration>
+
+	
+	<Metadata>
+		
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="DFTIME">Disease-free time variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="SURVIVAL" exclude="DFTIME">Survival variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="1" name="CENSORED" exclude="DFTIME,SURVIVAL">Censored variable:</Role>
+					<Role type="C" maxVars="1" order="true" minVars="1" name="STRATUM">Stratum variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+			<Option name="DATAGROUP" inputType="string">DATA</Option>
+			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
+			<Option name="OPTIONSGROUP" inputType="string">GRAPH OPTIONS</Option>
+			<Option name="textTITLE1" defaultValue="Title goes here" inputType="inputtext" 
+				required="true" promptMessage="Enter a title." missingMessage="Missing title.">Title 1:</Option>
+			<Option name="labelRADIO" inputType="string">Scatter Symbol:</Option>
+			<Option name="plus" variable="radioSCATTER" defaultValue="1" inputType="radio">Plus</Option>
+			<Option name="circlefilled" variable="radioSCATTER" inputType="radio">Circle</Option>
+			<Option name="asterisk" variable="radioSCATTER" inputType="radio">Asterisk</Option>
+			<Option name="comboSCHEME" defaultValue="inspire" inputType="combobox">Color Scheme:</Option>
+			<Option name="inspire" inputType="string">SAS Inspire</Option>
+			<Option name="illuminate" inputType="string">SAS Illuminate</Option>
+			<Option name="grayscale" inputType="string">Gray scale</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="DATAGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+				<RoleItem role="DFTIME"/>
+				<RoleItem role="SURVIVAL"/>
+				<RoleItem role="CENSORED"/>
+				<RoleItem role="STRATUM"/>
+				<RoleItem role="ATRISK"/>
+				<RoleItem role="TATRISK"/>
+			</Group>
+			<Group option="OPTIONSGROUP" open="true">
+				<OptionItem option="textTITLE1"/>
+				<OptionItem option="labelRADIO"/>
+				<OptionItem option="plus"/>
+				<OptionItem option="circlefilled"/>
+				<OptionItem option="asterisk"/>
+				<OptionChoice option="comboSCHEME">
+					<OptionItem option="inspire"/>
+					<OptionItem option="illuminate"/>
+					<OptionItem option="grayscale"/>
+				</OptionChoice>
+			</Group>
+		</Container>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+*inspire;
+%let linecolors= cx1d9992 cx2222bc cx6a9617 cx69256d cxba7006 cx0a9e69 cxa50a2f;
+/* *illuminate; */
+/* %let linecolors= cx007380 cxd16100 cx719409 cx1e3b8f cxe0ab1a cx87235d cx7d0a00 cx544600; */
+/* *grayscale; */
+/* %let linecolors= cx585858 cxa2a2a2 cx1e1e1e cx707070 cxbbbbbb cx3b3b3b cxd0d0d0; */
+
+title 'Product-Limit Survival Estimates';
+
+proc sgplot data=WORK.SURVIVALPLOTDATA;
+	styleattrs datacontrastcolors=(&linecolors);
+	legenditem type=marker name='c' / markerattrs=(symbol=plus color=black) 
+		label='Censored';
+	step x=time y=survival / group=stratum name='s';
+	scatter x=time y=censored / markerattrs=(symbol=plus) GROUP=stratum;
+	keylegend 'c' / location=inside position=topright;
+	keylegend 's' / location=outside position=bottom;
+run;
+
+		]]>
+	</CodeTemplate>
+</Task>
