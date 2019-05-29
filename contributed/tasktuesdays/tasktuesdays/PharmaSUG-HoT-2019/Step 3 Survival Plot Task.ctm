@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.4">
+<Registration>
+	<Name>Step 3 Survival Plot Task</Name>
+	<Description>This is task generates a survival plot using PROC SGPLOT.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.8</Version>
+	<Links>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	<Category>Survival Analysis</Category>
+   </Registration>
+
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+			<Option name="DATAGROUP" inputType="string">DATA</Option>
+			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
+			<Option name="OPTIONSGROUP" inputType="string">GRAPH OPTIONS</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="DATAGROUP" open="true">
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+			</Group>
+			<Group option="OPTIONSGROUP" open="true">
+			</Group>
+		</Container>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+proc print data=sashelp.cars;run;
+
+		]]>
+	</CodeTemplate>
+</Task>
