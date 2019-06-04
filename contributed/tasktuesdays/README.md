@@ -18,7 +18,10 @@ Download the full PDF of this cheat sheet! It's everything a task author has eve
 
 ## Task Tuesday Example List
 
-### [Clinical Profile Graph with Discrete Axes](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Profile-Graph-with-Discrete-Axes/ta-p/558368)
+### [Clinical Waterfall Chart (Change in Tumor Size)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Waterfall-Graph/ta-p/563269)
+This task allows the user to create and customize a clinical waterfall chart (for change in tumor size). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
+
+### [Clinical Profile Graph with Discrete Axes (Lipid Profile)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Profile-Graph-with-Discrete-Axes/ta-p/558368)
 This task allows the user to create and customize a clinical profile graph with discrete axes (on lipids). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
 
 ### [Clinical Grouped Bar Chart (Injection Site Reaction)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Grouped-Bar-Chart/ta-p/557566)
