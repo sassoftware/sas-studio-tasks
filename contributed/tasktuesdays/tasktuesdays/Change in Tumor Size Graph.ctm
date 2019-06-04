@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.3">
+	<Registration>
+	<Name>Change in Tumor Size Graph</Name>
+	<Description>This task creates a waterfall graph that shows the change in tumor size in a study by treatment group. </Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.71</Version>
+	<Links>
+		<Link href="https://blogs.sas.com/content/graphicallyspeaking/2014/11/15/clinical-graphs/">Graphically Speaking Blog Post: Change in Tumor Size Graph</Link>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.71&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role maxVars="1" minVars="1" name="CIDVAR" order="true" type="C">Character ID variable:</Role>
+					<Role maxVars="1" minVars="1" name="CHANGEVAR" order="true" type="N">Change variable:</Role>
+					<Role exclude="CIDVAR" maxVars="1" minVars="1" name="GROUPVAR" order="true" type="C">Group variable:</Role>
+					<Role exclude="GROUPVAR,CIDVAR" maxVars="1" minVars="1" name="LABELVAR" order="true" type="C">Label variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="APPEARANCETAB">APPEARANCE</Option>
+			<Option inputType="string" name="DATAGROUP">DATA</Option>
+			<Option inputType="string" name="ROLESGROUP">ROLES</Option>
+			<Option inputType="string" name="GROUPTITLE">TITLE</Option>
+			<Option defaultValue="Change in Tumor Size" inputType="inputtext" missingMessage="Missing text." name="textTITLE1" promptMessage="Enter a title" required="true">Title 1:</Option>
+			<Option defaultValue="ITT Population" inputType="inputtext" missingMessage="Missing text." name="textTITLE2" promptMessage="Enter a second title" required="true">Title 2:</Option>
+			<Option inputType="string" name="GROUPLEGEND">LEGEND</Option>
+			<Option defaultValue="topright" inputType="combobox" name="comboLEGENDPOS">Legend Position:</Option>
+			<Option inputType="string" name="bottom">Bottom</Option>
+			<Option inputType="string" name="bottomleft">Bottom Left</Option>
+			<Option inputType="string" name="bottomright">Bottom Right</Option>
+			<Option inputType="string" name="left">Left</Option>
+			<Option inputType="string" name="right">Right</Option>
+			<Option inputType="string" name="top">Top</Option>
+			<Option inputType="string" name="topleft">Top Left</Option>
+			<Option inputType="string" name="topright">Top Right</Option>
+			<Option defaultValue="inside" inputType="combobox" name="comboLEGENDLOC">Legend Location:</Option>
+			<Option inputType="string" name="inside">Inside</Option>
+			<Option inputType="string" name="outside">Outside</Option>
+			<Option name="labelORIENTATION" inputType="string">Legend Orientation:</Option>
+			<Option name="radioAuto" variable="radioORIENTATION" defaultValue="1" inputType="radio">Automatic</Option>
+			<Option name="radioHorizontal" variable="radioORIENTATION" inputType="radio">Horizontal</Option>
+			<Option name="radioVertical" variable="radioORIENTATION" inputType="radio">Vertical</Option>
+			<Option inputType="string" name="GROUPYAXIS">Y AXIS VALUES</Option>
+			<Option defaultValue="-100" inputType="numbertext" invalidMessage="Invalid value. Enter a number between 0 and 100." maxValue="100" minValue="-100" missingMessage="Enter a number between 0 and 100." name="minYAXIS" promptMessage="Enter a number between 0 and 100." rangeMessage="This number is out of range.  Enter a number between 0 and 100.">Minimum:</Option>
+			<Option defaultValue="60" inputType="numbertext" invalidMessage="Invalid value. Enter a number between 0 and 100." maxValue="100" minValue="-100" missingMessage="Enter a number between 0 and 100." name="maxYAXIS" promptMessage="Enter a number between 0 and 100." rangeMessage="This number is out of range.  Enter a number between 0 and 100.">Maximum:</Option>
+			<Option defaultValue="20" inputType="numbertext" invalidMessage="Invalid value. Enter a number between 0 and 100." maxValue="100" minValue="-100" missingMessage="Enter a number between 0 and 100." name="incrementYAXIS" promptMessage="Enter a number between 0 and 100." rangeMessage="This number is out of range.  Enter a number between 0 and 100.">Increment:</Option>
+			<Option inputType="string" name="GROUPCOLORS">COLORS</Option>
+			<Option defaultValue="inspire" inputType="combobox" name="comboTHEME">Color Theme:</Option>
+			<Option inputType="string" name="inspire">SAS Inspire</Option>
+			<Option inputType="string" name="illuminate">SAS Illuminate</Option>
+			<Option inputType="string" name="grayscale">Grayscale</Option>
+			<Option inputType="string" name="pastel">Pastel</Option>
+			<Option inputType="string" name="bright">Bright</Option>
+			<Option inputType="string" name="dark">Dark</Option>
+			<Option inputType="string" name="default">Default (no colors specified)</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group open="true" option="ROLESGROUP">
+				<RoleItem role="CIDVAR"/>
+				<RoleItem role="CHANGEVAR"/>
+				<RoleItem role="GROUPVAR"/>
+				<RoleItem role="LABELVAR"/>
+			</Group>
+		</Container>
+		<Container option="APPEARANCETAB">
+				<Group open="true" option="GROUPTITLE">
+				<OptionItem option="textTITLE1"/>
+				<OptionItem option="textTITLE2"/>
+				</Group>
+				<Group open="true" option="GROUPCOLORS">
+				<OptionChoice option="comboTHEME">
+					<OptionItem option="inspire"/>
+					<OptionItem option="illuminate"/>
+					<OptionItem option="grayscale"/>
+					<OptionItem option="pastel"/>
+					<OptionItem option="bright"/>
+					<OptionItem option="dark"/>
+					<OptionItem option="default"/>
+				</OptionChoice>
+				</Group>
+				<Group open="true" option="GROUPLEGEND">
+					<OptionChoice option="comboLEGENDLOC">
+					<OptionItem option="inside"/>
+					<OptionItem option="outside"/>
+					</OptionChoice>
+					<OptionChoice option="comboLEGENDPOS">
+					<OptionItem option="bottom"/>
+					<OptionItem option="bottomleft"/>
+					<OptionItem option="bottomright"/>
+					<OptionItem option="left"/>
+					<OptionItem option="right"/>
+					<OptionItem option="top"/>
+					<OptionItem option="topleft"/>
+					<OptionItem option="topright"/>
+					</OptionChoice>
+				<OptionItem option="labelORIENTATION"/>
+				<OptionItem option="radioAuto"/>
+				<OptionItem option="radioHorizontal"/>
+				<OptionItem option="radioVertical"/>
+				</Group>
+				<Group open="true" option="GROUPYAXIS">
+					<OptionItem option="minYAXIS"/>				
+					<OptionItem option="maxYAXIS"/>				
+					<OptionItem option="incrementYAXIS"/>
+				</Group>
+		</Container>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+#if ($comboTHEME == 'inspire')
+%let fillcolors= cx21b9b7 cx4141e0 cx7db71a cx8e2f8a cxd38506 cx0abf85 cx2f90ec;
+#end
+#if ($comboTHEME == 'illuminate')
+%let fillcolors= cx00929f cxf08000 cx90b328 cx3d5aae cxffca39 cxa6427c cx9c2910 cx736519;
+#end
+#if ($comboTHEME == 'grayscale')
+%let fillcolors= cx585858 cxa2a2a2 cx1e1e1e cx707070 cxbbbbbb cx3b3b3b cxd0d0d0;
+#end
+#if ($comboTHEME == 'pastel')
+%let fillcolors= cxb3e2cd cxfdcdac cxcbd5e8 cxf4cae4 cxe6f5c9 cxfff2ae cxf1e2cc cxcccccc;
+#end
+#if ($comboTHEME == 'bright')
+%let fillcolors= cx3190D0 cxFF991A cx3EBB3B cxF23E39 cxAF7ED9 cxA77063 cxFF8EDD cxD6D91A;
+#end
+#if ($comboTHEME == 'dark')
+%let fillcolors= cx1b9e77 cxd95f02 cx7570b3 cxe7298a cx66a61e cxe6ab02 cxa6761d cx666666;
+#end
+
+title '$textTITLE1';
+title2 '$textTITLE2';
+proc sgplot data=$DATASOURCE nowall noborder;
+	#if ($comboTHEME != 'default')
+	styleattrs datacolors=(&fillcolors) datacontrastcolors=(black);
+	#end
+		vbar #foreach($item in $CIDVAR) $item #end / #foreach($item in $CHANGEVAR) response=$item #end #foreach($item in $GROUPVAR) group=$item #end categoryorder=respdesc 
+		#foreach($item in $LABELVAR)datalabel=$item #end datalabelattrs=(size=5 weight=bold) 
+		groupdisplay=cluster clusterwidth=1;
+	refline 20 -30/ lineattrs=(pattern=shortdash);
+	xaxis display=none;
+	yaxis values=($minYAXIS to $maxYAXIS by $incrementYAXIS);
+  	inset ("C="="CR" "R="="PR" "S="="SD" "P="="PD" "N="="NE") / title='BCR' 
+        position=bottomleft border textattrs=(size=6 weight=bold);
+	keylegend / title='' location=$comboLEGENDLOC position=$comboLEGENDPOS  border #if($radioORIENTATION == 'radioHorizontal') down=1 #end #if($radioORIENTATION == 'radioVertical') across=1 #end;
+run;
+
+		]]>
+	</CodeTemplate>
+</Task>
