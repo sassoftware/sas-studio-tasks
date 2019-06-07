@@ -44,8 +44,6 @@
 				<RoleItem role="SURVIVAL"/>
 				<RoleItem role="CENSORED"/>
 				<RoleItem role="STRATUM"/>
-				<RoleItem role="ATRISK"/>
-				<RoleItem role="TATRISK"/>
 			</Group>
 			<Group option="OPTIONSGROUP" open="true">
 			</Group>

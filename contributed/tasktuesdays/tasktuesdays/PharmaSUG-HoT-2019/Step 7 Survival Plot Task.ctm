@@ -30,7 +30,7 @@
 			<Option name="DATAGROUP" inputType="string">DATA</Option>
 			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
 			<Option name="OPTIONSGROUP" inputType="string">GRAPH OPTIONS</Option>
-			<Option name="textTITLE1" defaultValue="Title goes here" inputType="inputtext" 
+			<Option name="textTITLE" defaultValue="Title goes here" inputType="inputtext" 
 				required="true" promptMessage="Enter a title." missingMessage="Missing title.">Title 1:</Option>
 		</Options>
 		
@@ -46,11 +46,9 @@
 				<RoleItem role="SURVIVAL"/>
 				<RoleItem role="CENSORED"/>
 				<RoleItem role="STRATUM"/>
-				<RoleItem role="ATRISK"/>
-				<RoleItem role="TATRISK"/>
 			</Group>
 			<Group option="OPTIONSGROUP" open="true">
-				<OptionItem option="textTITLE1"/>
+				<OptionItem option="textTITLE"/>
 			</Group>
 		</Container>
 	</UI>
