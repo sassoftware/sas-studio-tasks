@@ -18,6 +18,9 @@ Download the full PDF of this cheat sheet! It's everything a task author has eve
 
 ## Task Tuesday Example List
 
+### [Survival Analysis Plot (2 different ways)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Survival-Plot/ta-p/565025)
+This post shows two different ways to create a task for a customized survival plot: creating a new task from scratch that generates the plot, or altering the built-in Survival Analysis task (new in SAS Studio 3.8!) to include the customized survival plot in the output (both tasks are available in the GitHub). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
+
 ### [Clinical Waterfall Chart (Change in Tumor Size)](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Clinical-Waterfall-Graph/ta-p/563269)
 This task allows the user to create and customize a clinical waterfall chart (for change in tumor size). This task is part of a series leading up to PharmaSUG 2019- each task in the series allows users to customize a different clinical graph from Sanjay Matange’s posts on Graphically Speaking.
 
