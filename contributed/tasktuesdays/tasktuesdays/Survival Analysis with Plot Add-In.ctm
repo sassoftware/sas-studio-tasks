@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="UTF-8"?><Task schemaVersion="5.4">
+    <Registration>
+        <Name>Nonparametric Survival Analysis</Name> 
+        <Description>The Nonparametric Survival Analysis task computes nonparametric estimates of the survival distribution function and compares survival functions of two or more groups.</Description> 
+        <GUID>e1b6e07c-b469-42c6-84a2-ddad59321aa6</GUID>
+        <Procedures>LIFETEST ICLIFETEST</Procedures>
+        <Version>3.8</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/#/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=3.8_15.1&amp;softwareContextId=proc_lifetest&amp;requestor=inapp">The LIFETEST Procedure</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=3.8_15.1&amp;softwareContextId=proc_iclifetest&amp;requestor=inapp">The ICLIFETEST Procedure</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=3.8_15.1&amp;softwareContextId=proc_kaplan&amp;requestor=inapp">Customizing the Kaplan-Meier Survival Plot</Link>
+            <Link href=""> </Link>
+            <Link href=""> </Link>
+            <Link href="http://support.sas.com/training/studio">SAS Tutorials</Link>
+        </Links>
+    <Category>Survival Analysis</Category>
+   </Registration>
+    
+    <Metadata>
+        <DataSources>
+            <DataSource name="dataset" where="true">
+            <Roles>
+            <Role exclude="lowerSurvivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,strataVariable,groupVariable,freqVariable,weightVariable,byVariables" maxVars="1" minVars="1" name="survivalTimeVariable" type="N">Survival time:</Role>
+            <Role exclude="survivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,strataVariable,groupVariable,freqVariable,weightVariable,byVariables" maxVars="1" minVars="1" name="lowerSurvivalTimeVariable" type="N">Lower interval bound:</Role>
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,censoringVariable,strataVariable,groupVariable,freqVariable,weightVariable,byVariables" maxVars="1" minVars="1" name="upperSurvivalTimeVariable" type="N">Upper interval bound:</Role>
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,upperSurvivalTimeVariable,strataVariable,groupVariable,freqVariable,weightVariable,byVariables" maxVars="1" minVars="1" name="censoringVariable" type="N">Status variable:</Role>
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,groupVariable,freqVariable,weightVariable,byVariables" indent="1" maxVars="1" minVars="0" name="strataVariable" type="A">Stratify by:</Role>           
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,strataVariable,freqVariable,weightVariable,byVariables" maxVars="1" minVars="0" name="groupVariable" order="true" type="A">Group variable:</Role>
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,strataVariable,groupVariable,weightVariable,byVariables" maxVars="1" minVars="0" name="freqVariable" type="N">Frequency count:</Role>
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,strataVariable,groupVariable,freqVariable,byVariables" maxVars="1" minVars="0" name="weightVariable" type="N">Weight variable:</Role>
+            <Role exclude="survivalTimeVariable,lowerSurvivalTimeVariable,upperSurvivalTimeVariable,censoringVariable,strataVariable,groupVariable,freqVariable,weightVariable" maxVars="0" minVars="0" name="byVariables" order="true" type="A">Group analysis by:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+
+        <Options>
+            <Option inputType="string" name="dataTab">DATA</Option> 
+            <Option inputType="string" name="optionsTab">OPTIONS</Option> 
+            <Option inputType="string" name="dataGroup">DATA</Option> 
+                      
+
+
+            <Option inputType="string" name="rolesGroup">ROLES</Option> 
+            <Option inputType="string" name="survivalTimeGroup">Survival Time</Option> <!--  (or Time-to-event Variable) -->
+            <!-- Censoring type combobox (standard data format (SDF)) -->
+            <Option defaultValue="SDFcensoringTypeComboRight" indent="0" inputType="combobox" name="SDFcensoringTypeCombo">Censoring type:</Option>
+            <Option inputType="string" name="SDFcensoringTypeComboRight">Right censoring</Option>
+            <Option inputType="string" name="SDFcensoringTypeComboInterval">Interval censoring</Option>
+            <Option inputType="string" name="SDFcensoringTypeComboNone">No censoring</Option>
+
+<!--            <Option name="censoringValue" inputType="numbertext" defaultValue="" 
+                nlsKey="censoringValueKey" indent="1"
+                minValue="-999999999" maxValue="999999999" decimalPlaces="0,15"
+                promptMessageKey="censoringValueMessageKey"
+                invalidMessageKey="censoringValueMessageKey"
+                missingMessageKey="censoringValueMessageKey"
+                rangeMessageKey="censoringValueMessageKey"
+                promptMessage="Specify the value of the censoring variable that indicates the event to be censored."
+                invalidMessage="Specify the value of the censoring variable that indicates the event to be censored."
+                missingMessage="Specify the value of the censoring variable that indicates the event to be censored."
+                rangeMessage="Specify the value of the censoring variable that indicates the event to be censored."
+                width="100px">Censored value: </Option> -->
+            <OptionTable addRemoveRowTools="true" indent="1" initialNumberOfRows="1" label="Censoring values:" maximumRows="5" minimumRequiredRows="1" name="censorValuesTable" noIncompleteRows="true" showColumnHeadings="false">
+                <Columns>
+                    <Column label="Censoring values" name="censoringValues">
+                        <Option decimalPlaces="0,15" inputType="numbertext" invalidMessage="Specify the value of the censoring variable that indicates an event to be censored." maxValue="999999999" minValue="-999999999" missingMessage="Specify the value of the censoring variable that indicates an event to be censored." promptMessage="Specify the value of the censoring variable that indicates an event to be censored." rangeMessage="Specify the value of the censoring variable that indicates an event to be censored." required="false"/>
+                    </Column>
+                 </Columns>
+            </OptionTable>
+
+            <Option defaultValue="0" indent="1" inputType="checkbox" name="competingRisksCheck">Competing risks analysis</Option>
+            <Option defaultValue="1" indent="2" inputType="radio" name="competingRisksEventSpecify" variable="competingRisksEvent">Specify event of interest</Option> 
+            <Option indent="3" inputType="distinct" name="competingRisksEventSpecifySelect" required="true" selectMessage="Select an event" source="censoringVariable">Event of interest:</Option>
+            <Option indent="2" inputType="radio" name="competingRisksEventEach" variable="competingRisksEvent">Analyze each event separately</Option> 
+
+            <Option inputType="string" name="explanatoryGroup">Explanatory Variables</Option>           
+            <Option inputType="string" name="otherRolesGroup">ADDITIONAL ROLES</Option> 
+            <Option indent="1" inputType="string" name="weightVarCompetingRisksNote">Note: A weight variable is unavailable for a competing risks analysis.</Option>
+
+
+<!-- OPTIONS tab -->
+            <Option inputType="string" name="methodsGroup">METHODS</Option> 
+    <!-- Estimation Method (Lifetest)-->
+            <Option defaultValue="kmMethod" inputType="combobox" name="method">Survival function estimation method:</Option>
+            <Option inputType="string" name="breslowMethod">Breslow</Option>
+            <Option inputType="string" name="fhMethod">Fleming-Harrington</Option>
+            <Option inputType="string" name="kmMethod">Kaplan-Meier (product-limit) (default)</Option>
+            <Option inputType="string" name="lifeTableMethod">Life table (actuarial)</Option>
+
+
+            <Option indent="1" inputType="string" name="methodWeightVarNote">Note: Only the Kaplan-Meier survival function estimation method can be used with a weight variable.</Option>
+
+
+
+            <Option inputType="string" name="restrictedMeanGroup">Restricted Mean Options</Option>
+            <Option defaultValue="0" indent="0" inputType="checkbox" name="restrictedMeanCheck">Restricted mean analysis</Option>
+            <Option indent="1" inputType="string" name="restrictedMeanCheckWeightVarNote">Note: Restricted mean analysis is unavailable with the use of a weight variable.</Option>
+            <Option defaultValue="1" indent="0" inputType="checkbox" name="includeRmstCheck">Restricted mean survival time (RMST)</Option>
+            <Option indent="1" inputType="string" name="rmstTauLabel">Time point of interest (tau):</Option>
+            <Option defaultValue="1" indent="2" inputType="radio" name="rmstTauRadioDefault" variable="rmstTauRadio">Largest observed time</Option> 
+            <Option indent="2" inputType="radio" name="rmstTauRadioSpecify" variable="rmstTauRadio">Specify value</Option> 
+            <Option decimalPlaces="0,15" defaultValue="" indent="3" inputType="numbertext" invalidMessage="Enter a number greater than zero and less than the maximum observed time for the RMST tau" maxValue="99999999999" minValue="0.00000000001" missingMessage="Enter a number greater than zero and less than the maximum observed time for the RMST tau" name="rmstTauValue" promptMessage="Enter a number greater than zero and less than the maximum observed time for the RMST tau" rangeMessage="Enter a number greater than zero and less than the maximum observed time for the RMST tau" required="true" width="75px">Tau:</Option>
+            <Option indent="3" inputType="string" name="rmstTauValueNote">Note: Tau must be less than or equal to the maximum observed time.</Option>
+
+            <Option defaultValue="0" indent="0" inputType="checkbox" name="includeRmtlCheck">Restricted mean time lost (RMTL)</Option>
+            <Option indent="1" inputType="string" name="rmtlTauLabel">Time point of interest (tau):</Option>
+            <Option defaultValue="1" indent="2" inputType="radio" name="rmtlTauRadioDefault" variable="rmtlTauRadio">Largest observed time</Option> 
+            <Option indent="2" inputType="radio" name="rmtlTauRadioSpecify" variable="rmtlTauRadio">Specify value</Option> 
+            <Option decimalPlaces="0,15" defaultValue="" indent="3" inputType="numbertext" invalidMessage="Enter a number greater than zero and less than the maximum observed time for the tau for RMTL" maxValue="99999999999" minValue="0.00000000001" missingMessage="Enter a number greater than zero and less than the maximum observed time for the tau for RMTL" name="rmtlTauValue" promptMessage="Enter a number greater than zero and less than the maximum observed time for the tau for RMTL" rangeMessage="Enter a number greater than zero and less than the maximum observed time for the tau for RMTL" required="true" width="75px">Tau:</Option>
+            <Option indent="3" inputType="string" name="rmtlTauValueNote">Note: Tau must be less than or equal to the maximum observed time.</Option> 
+
+
+            <Option defaultValue="emicmMethod" inputType="combobox" name="methodIC">Survival function estimation method:</Option>
+            <Option inputType="string" name="emicmMethod">EMICM (default)</Option>
+            <Option inputType="string" name="icmMethod">ICM</Option>
+            <Option inputType="string" name="turnbullMethod">Turnbull (EM)</Option>
+
+
+    <!-- Confidence Intervals -->
+            <Option inputType="string" name="ciGroup">Confidence Intervals</Option>
+        <!-- Pointwise CI transformations -->
+            <Option defaultValue="loglogChoice" inputType="combobox" name="conftype">Confidence interval transformation:</Option>
+            <Option inputType="string" name="asinsqrtChoice">Arcsine-square root transformation</Option>
+            <Option inputType="string" name="loglogChoice">Log-log transformation (default)</Option>
+            <Option inputType="string" name="linearChoice">Linear transformation</Option>
+            <Option inputType="string" name="logChoice">Log transformation</Option>
+            <Option inputType="string" name="logitChoice">Logit transformation</Option>
+        <!-- Confidence level -->
+            <Option defaultValue="confidence95" inputType="combobox" name="confidence">Confidence level:</Option>
+            <Option inputType="string" name="confidence90">90%</Option>
+            <Option inputType="string" name="confidence95">95%</Option>
+            <Option inputType="string" name="confidence99">99%</Option>
+            <Option inputType="string" name="confidenceSpecify">Use custom value</Option>
+            <Option decimalPlaces="0,15" defaultValue="95" indent="1" inputType="numbertext" invalidMessage="Enter a number greater than zero and less than 100 for the confidence level" maxValue="99.999999999" minValue="0.00000000001" missingMessage="Enter a number greater than zero and less than 100 for the confidence level" name="confidenceValue" promptMessage="Enter a number greater than zero and less than 100 for the confidence level" rangeMessage="Enter a number greater than zero and less than 100 for the confidence level" required="true" width="75px">Custom confidence level:</Option>
+          
+    <!-- Tests -->
+            <Option inputType="string" name="testsGroup">Tests</Option>
+
+            <Option indent="0" inputType="checkbox" name="trendTest">Trend test (one-sided test)</Option>
+            <Option indent="1" inputType="string" name="trendTestNote">Note: At least one survival function test must be selected to specify a trend test.</Option>
+            <Option indent="1" inputType="string" name="trendTestNoteIC">Note: A weight function must be selected to specify a trend test.</Option>
+
+            <Option defaultValue="1" inputType="checkbox" name="grayTest">Gray's test</Option>
+
+        <!-- Tests Combo Box (LIFETEST) -->
+            <Option defaultValue="defaultTestsChoice" inputType="combobox" name="testsCombo">Survival function tests:</Option>
+            <Option inputType="string" name="defaultTestsChoice">Default tests</Option>
+            <Option inputType="string" name="selectedTestsChoice">Selected tests</Option>
+            <Option inputType="string" name="noTestsChoice">None</Option>
+            
+            <Option indent="1" inputType="checkbox" name="flemingTest">Fleming-Harrington</Option>
+            <Option defaultValue="1" indent="1" inputType="checkbox" name="logrankTest">Log-rank</Option>
+            <Option defaultValue="1" indent="1" inputType="checkbox" name="lrTest">Likelihood ratio</Option>
+            <Option indent="1" inputType="checkbox" name="modPetoTest">Modified Peto-Peto</Option>
+            <Option indent="1" inputType="checkbox" name="petoTest">Peto-Peto</Option>
+            <Option defaultValue="1" indent="1" inputType="checkbox" name="wilcoxonTest">Wilcoxon</Option>
+            <Option indent="1" inputType="checkbox" name="taroneTest">Tarone-Ware</Option>
+          
+  
+            <Option decimalPlaces="0,15" defaultValue="1" indent="2" inputType="numbertext" invalidMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" minValue="0" missingMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" name="flemingp1" promptMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" rangeMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" required="true" width="75px">p1:</Option>
+            <Option decimalPlaces="0,15" defaultValue="0" indent="2" inputType="numbertext" invalidMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" minValue="0" missingMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" name="flemingp2" promptMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" rangeMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" required="true" width="75px">p2:</Option>
+
+        <!-- Tests Combo Box (ICLIFETEST) -->
+            <Option defaultValue="sunWeightsChoice" inputType="combobox" name="weightFunctionsCombo">Weight function:</Option>
+            <Option inputType="string" name="fayWeightsChoice">Fay</Option>
+            <Option inputType="string" name="finkelsteinWeightsChoice">Finkelstein</Option>
+            <Option inputType="string" name="flemingWeightsChoice">Fleming-Harrington</Option>
+            <Option inputType="string" name="sunWeightsChoice">Sun (default)</Option>
+            <Option inputType="string" name="noneWeightsChoice">None</Option>
+
+            <Option decimalPlaces="0,15" defaultValue="1" indent="1" inputType="numbertext" invalidMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" minValue="0" missingMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" name="flemingp1IC" promptMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" rangeMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p1" required="true" width="75px">p1:</Option>
+            <Option decimalPlaces="0,15" defaultValue="0" indent="1" inputType="numbertext" invalidMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" minValue="0" missingMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" name="flemingp2IC" promptMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" rangeMessage="Enter a number greater than or equal to zero for the Fleming-Harrington p2" required="true" width="75px">p2:</Option>
+
+
+        <!-- Multiple Comparisons -->
+            <Option defaultValue="noCompChoice" inputType="combobox" name="multCompareMethod">Multiple comparisons:</Option>
+            <Option inputType="string" name="bonferroni">Bonferroni</Option>
+            <Option inputType="string" name="scheffe">Scheffe</Option>
+            <Option inputType="string" name="sidak">Sidak</Option>
+            <Option inputType="string" name="smm">Studentized maximum modulus</Option>
+            <Option inputType="string" name="tukey">Tukey</Option>
+            <Option inputType="string" name="noCompChoice">None</Option>
+
+            <Option indent="1" inputType="string" name="multCompareMethodNote">Note: At least one survival function test must be selected to specify a multiple-comparison adjustment.</Option>
+            <Option indent="1" inputType="string" name="multCompareMethodNoteIC">Note: A weight function must be selected to specify a multiple-comparison adjustment.</Option>
+
+            
+            <Option inputType="string" name="statsGroup">STATISTICS</Option>
+            
+            <Option defaultValue="defaultStatsChoice" inputType="combobox" name="statisticsCombo">Statistics to display:</Option>
+            <Option inputType="string" name="selectedStatsChoice">Default and selected statistics</Option>
+            <Option inputType="string" name="defaultStatsChoice">Default statistics</Option> 
+                
+            <Option defaultValue="1" inputType="checkbox" name="survivalEstimatesTable">Survival function estimates</Option>
+            <!-- LIFETEST -->
+            <Option indent="1" inputType="checkbox" name="atrisk">Include number of units at risk</Option>
+            <Option indent="1" inputType="checkbox" name="nelson">Include Nelson-Aalen estimates</Option>
+
+            <Option inputType="string" name="rmstStatsLabel">Restricted mean survival time</Option> 
+            <Option indent="1" inputType="checkbox" name="rmstStatsCL">Include pointwise confidence limits</Option>
+            <Option inputType="string" name="rmtlStatsLabel">Restricted mean time lost</Option> 
+            <Option indent="1" inputType="checkbox" name="rmtlStatsCL">Include pointwise confidence limits</Option>
+
+            <!-- Competing risks only -->
+            <Option defaultValue="1" indent="0" inputType="checkbox" name="cifStats">Cumulative incidence function estimates</Option>
+            <!-- ICLIFETEST -->
+            <Option defaultValue="0" indent="0" inputType="checkbox" name="turnbullStats">Estimates at Turnbull intervals</Option>
+
+
+ 
+
+            <Option inputType="string" name="plotsGroup">PLOTS</Option>
+            <Option defaultValue="defaultPlotChoice" inputType="combobox" name="plotsCombo">Plots to display:</Option>
+            <Option inputType="string" name="defaultPlotChoice">Default plots</Option>
+            <Option inputType="string" name="customPlotChoice">Selected plots</Option>
+            <Option inputType="string" name="noPlotsChoice">None</Option>
+
+            <Option defaultValue="1" indent="1" inputType="checkbox" name="survivalPlot">Survival function</Option>
+            <Option indent="2" inputType="checkbox" name="failurePlot">Display as failure function</Option>
+            <Option defaultValue="1" indent="2" inputType="checkbox" name="censoredPlot">Include censored times</Option>
+            <Option indent="2" inputType="checkbox" name="atriskPlot">Include number of units at risk</Option>
+            <Option indent="3" inputType="checkbox" name="atriskPlotOutside">Display at-risk table below plot</Option>
+            <Option indent="2" inputType="checkbox" name="incClPlot">Include pointwise confidence limits</Option>
+
+            <Option indent="2" inputType="checkbox" name="incConfBandsPlot">Include confidence bands</Option>
+            <Option defaultValue="incConfBandsPlotComboHall" indent="3" inputType="combobox" name="incConfBandsPlotCombo">Type of confidence band:</Option>
+            <Option inputType="string" name="incConfBandsPlotComboBoth">Hall-Wellner and equal-precision bands</Option>
+            <Option inputType="string" name="incConfBandsPlotComboEqual">Equal-precision bands</Option>
+            <Option inputType="string" name="incConfBandsPlotComboHall">Hall-Wellner bands (default)</Option>
+            
+            <Option defaultValue="1" indent="2" inputType="checkbox" name="incTurnbullPlot">Include interpolations for Turnbull intervals</Option>
+            <Option indent="2" inputType="checkbox" name="incPvaluePlot">Include homogeneity test p-value</Option>
+            
+
+            <Option indent="1" inputType="checkbox" name="logSurvivalPlot">Negative log of survival function</Option>
+            <Option indent="1" inputType="checkbox" name="logLogSurvivalPlot">Log of negative log of survival function</Option>
+            <Option indent="1" inputType="checkbox" name="hazardPlot">Hazard function</Option>
+            <Option indent="2" inputType="checkbox" name="incClHazardPlot">Include pointwise confidence limits</Option>
+            <Option indent="1" inputType="checkbox" name="pdfPlot">Probability density function</Option>
+            <Option indent="2" inputType="checkbox" name="incClPdfPlot">Include pointwise confidence limits</Option>
+
+
+
+
+            <Option indent="1" inputType="checkbox" name="rmstPlot">Restricted mean survival time</Option> 
+            <Option indent="2" inputType="checkbox" name="incClRmstPlot">Include pointwise confidence limits</Option>
+            <Option indent="1" inputType="checkbox" name="rmtlPlot">Restricted mean time lost</Option> 
+            <Option indent="2" inputType="checkbox" name="incClRmtlPlot">Include pointwise confidence limits</Option>
+
+
+
+            <Option defaultValue="1" indent="0" inputType="checkbox" name="cifPlot">Cumulative incidence function</Option>
+            <Option indent="1" inputType="checkbox" name="incClCifPlot">Include pointwise confidence limits</Option>
+            <Option indent="1" inputType="checkbox" name="incPvalueCifPlot">Include homogeneity test p-value</Option>
+            
+<!-- OUTPUT tab -->
+            <Option inputType="string" name="outputTab">OUTPUT</Option>
+            <Option inputType="string" name="outputGroup">OUTPUT DATA</Option>
+            <Option inputType="checkbox" name="outsurvDS">Save survival function estimates</Option>
+            <Option defaultValue="work.Survival_est" indent="1" inputType="outputdata" libraryEngineInclude="v9" name="outsurvDSName" required="true" unique="true">Data set name:</Option>
+
+
+            <Option defaultValue="0" indent="2" inputType="checkbox" name="outsurvStderr">Standard errors</Option>
+
+            <Option indent="2" inputType="checkbox" name="outsurvConfBands">Confidence bands</Option>
+            <Option defaultValue="outsurvConfBandComboHall" indent="3" inputType="combobox" name="outsurvConfBandCombo">Type of confidence bands:</Option>
+            <!-- nlsKeys are purposefully reused -->
+            <Option inputType="string" name="outsurvConfBandComboBoth">Hall-Wellner and equal-precision bands</Option>
+            <Option inputType="string" name="outsurvConfBandComboEqual">Equal-precision bands</Option>
+            <Option inputType="string" name="outsurvConfBandComboHall">Hall-Wellner bands (default)</Option>
+
+            
+            <Option inputType="checkbox" name="outcifDS">Save cumulative incidence function estimates</Option>
+            <Option defaultValue="work.Cif_est" indent="1" inputType="outputdata" libraryEngineInclude="v9" name="outcifDSName" required="true" unique="true">Data set name:</Option>
+
+
+			<Option name="APPEARANCETAB" inputType="string">APPEARANCE</Option>
+			<Option name="GROUPPLOT" inputType="string">GRAPH OPTIONS</Option>
+			<Option name="textTITLE1" defaultValue="Product-Limit Survival Estimates" inputType="inputtext"
+				required="true"
+				promptMessage="Enter a title"
+				missingMessage="Missing text.">Title 1:</Option>
+			<Option name="textTITLE2" defaultValue="with Number of AML Subjects at Risk" inputType="inputtext"
+				required="true"
+				promptMessage="Enter a second title"
+				missingMessage="Missing text.">Title 2:</Option>
+			<Option name="comboSYMBOL" defaultValue="plus" inputType="combobox">Scatter Symbol:</Option>
+			<Option name="plus" inputType="string">Plus</Option>
+			<Option name="circlefilled" inputType="string">Filled Circle</Option>
+			<Option name="diamondfilled" inputType="string">Filled Diamond</Option>
+			<Option name="asterisk" inputType="string">Asterisk</Option>
+			<Option name="comboTHEME" defaultValue="inspire" inputType="combobox">Color Theme:</Option>
+			<Option name="inspire" inputType="string">SAS Inspire</Option>
+			<Option name="illuminate" inputType="string">SAS Illuminate</Option>
+			<Option name="grayscale" inputType="string">Grayscale</Option>
+			<Option name="pastel" inputType="string">Pastel</Option>
+			<Option name="bright" inputType="string">Bright</Option>
+			<Option name="dark" inputType="string">Dark</Option>
+			<Option name="default" inputType="string">Default (no colors specified)</Option>
+
+
+        </Options>
+    </Metadata>
+
+    <UI>
+        <Container option="dataTab">
+            <Group open="true" option="dataGroup">
+                <DataItem data="dataset"/>
+            </Group>
+            <Group open="true" option="rolesGroup">
+                <Group open="true" option="survivalTimeGroup">
+                    <OptionChoice option="SDFcensoringTypeCombo">
+                        <OptionItem option="SDFcensoringTypeComboRight"/>
+                        <OptionItem option="SDFcensoringTypeComboInterval"/>
+                        <OptionItem option="SDFcensoringTypeComboNone"/>
+                     </OptionChoice>
+
+                    <RoleItem role="survivalTimeVariable"/>
+                    <RoleItem role="lowerSurvivalTimeVariable"/>
+                    <RoleItem role="upperSurvivalTimeVariable"/>
+                    <RoleItem role="censoringVariable"/>
+                    <OptionItem option="censorValuesTable"/>
+                    <OptionItem option="competingRisksCheck"/>
+                    <OptionItem option="competingRisksEventSpecify"/>
+                    <OptionChoice option="competingRisksEventSpecifySelect"/>
+                    <OptionItem option="competingRisksEventEach"/>
+                </Group>
+                <Group open="true" option="explanatoryGroup">
+                    <RoleItem role="groupVariable"/>
+                    <RoleItem role="strataVariable"/>
+                </Group>
+            </Group>
+            <Group option="otherRolesGroup">
+                <RoleItem role="freqVariable"/>
+                <RoleItem role="weightVariable"/>
+                    <OptionItem option="weightVarCompetingRisksNote"/>
+                <RoleItem role="byVariables"/>
+            </Group>
+        </Container>
+
+
+
+        <Container option="optionsTab"> 
+            <Group open="true" option="methodsGroup">
+                <OptionChoice option="method">
+                    <OptionItem option="breslowMethod"/>
+                    <OptionItem option="fhMethod"/>
+                    <OptionItem option="kmMethod"/>
+                    <OptionItem option="lifeTableMethod"/>
+                </OptionChoice>
+                <OptionItem option="methodWeightVarNote"/>
+                <OptionItem option="restrictedMeanCheck"/>
+                <OptionItem option="restrictedMeanCheckWeightVarNote"/>
+                <Group open="true" option="restrictedMeanGroup">
+                    <OptionItem option="includeRmstCheck"/>
+                        <OptionItem option="rmstTauLabel"/>
+                        <OptionItem option="rmstTauRadioDefault"/>
+                        <OptionItem option="rmstTauRadioSpecify"/>
+                        <OptionItem option="rmstTauValue"/>    
+                        <OptionItem option="rmstTauValueNote"/>                          
+                    <OptionItem option="includeRmtlCheck"/>
+                        <OptionItem option="rmtlTauLabel"/>
+                        <OptionItem option="rmtlTauRadioDefault"/>
+                        <OptionItem option="rmtlTauRadioSpecify"/>
+                        <OptionItem option="rmtlTauValue"/>
+                        <OptionItem option="rmtlTauValueNote"/> 
+                </Group>
+                <OptionChoice option="methodIC">
+                    <OptionItem option="emicmMethod"/>
+                    <OptionItem option="icmMethod"/>
+                    <OptionItem option="turnbullMethod"/>
+                </OptionChoice>
+
+
+                <Group open="true" option="ciGroup">
+                <OptionChoice option="conftype">
+                    <OptionItem option="asinsqrtChoice"/>
+                    <OptionItem option="loglogChoice"/>
+                    <OptionItem option="linearChoice"/>
+                    <OptionItem option="logChoice"/>
+                    <OptionItem option="logitChoice"/>
+               </OptionChoice>
+                <OptionChoice option="confidence">
+                    <OptionItem option="confidence90"/>
+                    <OptionItem option="confidence95"/>
+                    <OptionItem option="confidence99"/>
+                    <OptionItem option="confidenceSpecify"/>
+                </OptionChoice>
+                <OptionItem option="confidenceValue"/>
+            </Group>
+
+                <Group open="true" option="testsGroup">
+                    <OptionItem option="trendTest"/>
+                    <OptionItem option="trendTestNote"/>
+                    <OptionItem option="trendTestNoteIC"/>
+                    <OptionItem option="grayTest"/>
+
+                    <!-- LIFETEST tests -->
+                    <OptionChoice option="testsCombo">
+                        <OptionItem option="defaultTestsChoice"/>
+                        <OptionItem option="selectedTestsChoice"/>
+                        <!-- <OptionItem option="allTestsChoice"/> -->
+                        <OptionItem option="noTestsChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="flemingTest"/>
+                    <OptionItem option="flemingp1"/>
+                    <OptionItem option="flemingp2"/>
+                    <OptionItem option="logrankTest"/>
+                    <OptionItem option="lrTest"/>
+                    <OptionItem option="modPetoTest"/>
+                    <OptionItem option="petoTest"/>
+                    <OptionItem option="wilcoxonTest"/>
+                    <OptionItem option="taroneTest"/>
+                    
+                <!-- ICLIFETEST tests -->
+                    <OptionChoice option="weightFunctionsCombo">
+                        <OptionItem option="fayWeightsChoice"/>
+                        <OptionItem option="finkelsteinWeightsChoice"/>
+                        <OptionItem option="flemingWeightsChoice"/>
+                        <OptionItem option="sunWeightsChoice"/>
+                        <OptionItem option="noneWeightsChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="flemingp1IC"/>
+                    <OptionItem option="flemingp2IC"/>
+
+                    <OptionChoice option="multCompareMethod"> 
+                        <OptionItem option="bonferroni"/>
+                        <OptionItem option="scheffe"/>          
+                        <OptionItem option="sidak"/>
+                        <OptionItem option="smm"/>
+                        <OptionItem option="tukey"/>
+                        <OptionItem option="noCompChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="multCompareMethodNote"/>
+                    <OptionItem option="multCompareMethodNoteIC"/>
+                </Group>
+            </Group>
+
+
+        
+            <Group open="true" option="statsGroup">
+                <OptionItem option="survivalEstimatesTable"/>
+                <OptionItem option="atrisk"/>
+                <OptionItem option="nelson"/>
+                <OptionItem option="rmstStatsLabel"/>
+                <OptionItem option="rmstStatsCL"/>
+                <OptionItem option="rmtlStatsLabel"/>
+                <OptionItem option="rmtlStatsCL"/>
+                <OptionItem option="cifStats"/>
+                <OptionItem option="turnbullStats"/>
+            </Group>
+        
+            <Group open="true" option="plotsGroup">
+                <OptionChoice option="plotsCombo">
+                    <OptionItem option="defaultPlotChoice"/>
+                    <OptionItem option="customPlotChoice"/>
+                    <OptionItem option="noPlotsChoice"/>
+                </OptionChoice>
+                <OptionItem option="survivalPlot"/>
+                <OptionItem option="failurePlot"/>
+                <OptionItem option="censoredPlot"/>
+                <OptionItem option="atriskPlot"/>
+                <OptionItem option="atriskPlotOutside"/>
+                <OptionItem option="incClPlot"/>
+                <OptionItem option="incConfBandsPlot"/>
+                    <OptionChoice option="incConfBandsPlotCombo">
+                        <OptionItem option="incConfBandsPlotComboEqual"/>
+                        <OptionItem option="incConfBandsPlotComboHall"/>
+                        <OptionItem option="incConfBandsPlotComboBoth"/>                       
+                    </OptionChoice>
+                <OptionItem option="incTurnbullPlot"/>
+                <OptionItem option="incPvaluePlot"/>
+                <OptionItem option="logSurvivalPlot"/>
+                <OptionItem option="logLogSurvivalPlot"/>
+                <OptionItem option="hazardPlot"/>
+                <OptionItem option="incClHazardPlot"/>
+                <OptionItem option="pdfPlot"/>
+                <OptionItem option="incClPdfPlot"/>
+                <OptionItem option="rmstPlot"/>
+                <OptionItem option="incClRmstPlot"/>
+                <OptionItem option="rmtlPlot"/>
+                <OptionItem option="incClRmtlPlot"/>
+                <OptionItem option="cifPlot"/>
+                <OptionItem option="incClCifPlot"/>
+                <OptionItem option="incPvalueCifPlot"/>
+            </Group>
+        </Container>
+
+
+
+        <Container option="outputTab">  
+            <Group open="true" option="outputGroup">
+                <OptionItem option="outsurvDS"/>
+                <OptionItem option="outsurvDSName"/>
+                <OptionItem option="outsurvStderr"/>
+                <OptionItem option="outsurvConfBands"/>
+                <OptionChoice option="outsurvConfBandCombo">
+                    <OptionItem option="outsurvConfBandComboEqual"/>
+                    <OptionItem option="outsurvConfBandComboHall"/>
+                    <OptionItem option="outsurvConfBandComboBoth"/>
+                </OptionChoice>
+                <OptionItem option="outcifDS"/>
+                <OptionItem option="outcifDSName"/>
+            </Group>
+
+
+        </Container>
+        <Container option="APPEARANCETAB">
+			<Group option="GROUPPLOT" open="true">
+				<OptionItem option="textTITLE1"/>
+				<OptionItem option="textTITLE2"/>
+				<OptionChoice option="comboSYMBOL">
+					<OptionItem option="plus"/>
+					<OptionItem option="circlefilled"/>
+					<OptionItem option="asterisk"/>
+					<OptionItem option="diamondfilled"/>
+				</OptionChoice>
+				<OptionChoice option="comboTHEME">
+					<OptionItem option="inspire"/>
+					<OptionItem option="illuminate"/>
+					<OptionItem option="grayscale"/>
+					<OptionItem option="pastel"/>
+					<OptionItem option="bright"/>
+					<OptionItem option="dark"/>
+					<OptionItem option="default"/>
+				</OptionChoice>
+			</Group>
+		</Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone')">
+            <Target action="show" conditionResult="true" option="survivalTimeVariable"/>
+            <Target action="hide" conditionResult="false" option="survivalTimeVariable"/>
+            <Target action="hide" conditionResult="true" option="lowerSurvivalTimeVariable"/>
+            <Target action="show" conditionResult="false" option="lowerSurvivalTimeVariable"/>
+            <Target action="hide" conditionResult="true" option="upperSurvivalTimeVariable"/>
+            <Target action="show" conditionResult="false" option="upperSurvivalTimeVariable"/>           
+        </Dependency>
+        <Dependency condition="($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight')">
+            <Target action="show" conditionResult="true" option="censoringVariable"/>
+            <Target action="hide" conditionResult="false" option="censoringVariable"/>
+<!--             <Target option="censoringValue" conditionResult="true"  action="show"/>
+            <Target option="censoringValue" conditionResult="false" action="hide"/> -->
+            <Target action="show" conditionResult="true" option="censorValuesTable"/>
+            <Target action="hide" conditionResult="false" option="censorValuesTable"/>
+            <Target action="show" conditionResult="true" option="competingRisksCheck"/>
+            <Target action="hide" conditionResult="false" option="competingRisksCheck"/>   
+            <Target action="set" conditionResult="false" option="competingRisksCheck" property="value" value="0"/>            
+        </Dependency>
+<!-- Competing-risks options -->
+        <Dependency condition="($competingRisksCheck == '1')">
+            <Target action="show" conditionResult="true" option="competingRisksEventSpecify"/>
+            <Target action="hide" conditionResult="false" option="competingRisksEventSpecify"/>
+            <Target action="show" conditionResult="true" option="competingRisksEventEach"/>
+            <Target action="hide" conditionResult="false" option="competingRisksEventEach"/>
+            <Target action="show" conditionResult="true" option="cifStats"/>
+            <Target action="hide" conditionResult="false" option="cifStats"/>
+            <Target action="disable" conditionResult="true" option="weightVariable"/>
+            <Target action="enable" conditionResult="false" option="weightVariable"/>
+            <Target action="show" conditionResult="true" option="weightVarCompetingRisksNote"/>
+            <Target action="hide" conditionResult="false" option="weightVarCompetingRisksNote"/>
+        </Dependency>
+        <Dependency condition="($competingRisksCheck == '1'  &amp;&amp; $competingRisksEvent == 'competingRisksEventSpecify')">
+            <Target action="show" conditionResult="true" option="competingRisksEventSpecifySelect"/>
+            <Target action="hide" conditionResult="false" option="competingRisksEventSpecifySelect"/>
+        </Dependency>
+
+    <!-- Stratify by role is available only if a group variable is selected -->
+        <Dependency condition="($groupVariable.size() &gt; 0)">
+            <Target action="enable" conditionResult="true" option="strataVariable"/>
+            <Target action="disable" conditionResult="false" option="strataVariable"/>
+        </Dependency>
+
+
+<!-- ICLIFETEST-specific options -->
+        <Dependency condition="($SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval')">
+            <Target action="hide" conditionResult="true" option="weightVariable"/>
+            <Target action="show" conditionResult="false" option="weightVariable"/>
+<!--             <Target option="continuousVariables" conditionResult="true"  action="hide"/>
+            <Target option="continuousVariables" conditionResult="false" action="show"/>   --> 
+            <Target action="show" conditionResult="true" option="methodIC"/>
+            <Target action="hide" conditionResult="false" option="methodIC"/> 
+            <Target action="show" conditionResult="true" option="turnbullStats"/>
+            <Target action="hide" conditionResult="false" option="turnbullStats"/>                              
+        </Dependency>
+
+<!-- Options Tab -->
+        <Dependency condition="($SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval' || $competingRisksCheck == '1')">
+            <Target action="hide" conditionResult="true" option="method"/>
+            <Target action="show" conditionResult="false" option="method"/>   
+            <Target action="hide" conditionResult="true" option="restrictedMeanCheck"/>
+            <Target action="show" conditionResult="false" option="restrictedMeanCheck"/> 
+            <Target action="set" conditionResult="true" option="restrictedMeanCheck" property="value" value="0"/>  
+        </Dependency>       
+
+
+        <Dependency condition="(($SDFcensoringTypeCombo == 'SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone') &amp;&amp;                                  $competingRisksCheck != '1' &amp;&amp; $weightVariable.size() &gt; 0)">
+            <Target action="show" conditionResult="true" option="methodWeightVarNote"/>
+            <Target action="hide" conditionResult="false" option="methodWeightVarNote"/> 
+            <Target action="disable" conditionResult="true" option="method"/>
+            <Target action="enable" conditionResult="false" option="method"/>
+            <Target action="set" conditionResult="true" option="method" property="value" value="kmMethod"/>   
+            <Target action="disable" conditionResult="true" option="restrictedMeanCheck"/>
+            <Target action="enable" conditionResult="false" option="restrictedMeanCheck"/>   
+            <Target action="set" conditionResult="true" option="restrictedMeanCheck" property="value" value="0"/> 
+            <Target action="show" conditionResult="true" option="restrictedMeanCheckWeightVarNote"/>
+            <Target action="hide" conditionResult="false" option="restrictedMeanCheckWeightVarNote"/>                     
+        </Dependency>  
+
+        <Dependency condition="($restrictedMeanCheck == '1')">
+            <Target action="show" conditionResult="true" option="restrictedMeanGroup"/>
+            <Target action="hide" conditionResult="false" option="restrictedMeanGroup"/>              
+            <Target action="show" conditionResult="true" option="includeRmstCheck"/>
+            <Target action="hide" conditionResult="false" option="includeRmstCheck"/>   
+            <Target action="show" conditionResult="true" option="includeRmtlCheck"/>
+            <Target action="hide" conditionResult="false" option="includeRmtlCheck"/>            
+        </Dependency>    
+
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $includeRmstCheck == '1')">
+            <Target action="show" conditionResult="true" option="rmstTauLabel"/>
+            <Target action="hide" conditionResult="false" option="rmstTauLabel"/>   
+            <Target action="show" conditionResult="true" option="rmstTauRadioDefault"/>
+            <Target action="hide" conditionResult="false" option="rmstTauRadioDefault"/>    
+            <Target action="show" conditionResult="true" option="rmstTauRadioSpecify"/>
+            <Target action="hide" conditionResult="false" option="rmstTauRadioSpecify"/>     
+        </Dependency>   
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $includeRmstCheck == '1' &amp;&amp;                                  $rmstTauRadio == 'rmstTauRadioSpecify')">
+            <Target action="show" conditionResult="true" option="rmstTauValue"/>
+            <Target action="hide" conditionResult="false" option="rmstTauValue"/>  
+            <Target action="show" conditionResult="true" option="rmstTauValueNote"/>
+            <Target action="hide" conditionResult="false" option="rmstTauValueNote"/>                         
+        </Dependency>      
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $includeRmtlCheck == '1')">
+            <Target action="show" conditionResult="true" option="rmtlTauLabel"/>
+            <Target action="hide" conditionResult="false" option="rmtlTauLabel"/>   
+            <Target action="show" conditionResult="true" option="rmtlTauRadioDefault"/>
+            <Target action="hide" conditionResult="false" option="rmtlTauRadioDefault"/>    
+            <Target action="show" conditionResult="true" option="rmtlTauRadioSpecify"/>
+            <Target action="hide" conditionResult="false" option="rmtlTauRadioSpecify"/>     
+        </Dependency>   
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $includeRmtlCheck == '1' &amp;&amp;                                  $rmtlTauRadio == 'rmtlTauRadioSpecify')">
+            <Target action="show" conditionResult="true" option="rmtlTauValue"/>
+            <Target action="hide" conditionResult="false" option="rmtlTauValue"/>      
+            <Target action="show" conditionResult="true" option="rmtlTauValueNote"/>
+            <Target action="hide" conditionResult="false" option="rmtlTauValueNote"/>                    
+        </Dependency>      
+
+        <Dependency condition="($confidence == 'confidenceSpecify')">
+            <Target action="show" conditionResult="true" option="confidenceValue"/>
+            <Target action="hide" conditionResult="false" option="confidenceValue"/>
+        </Dependency>
+
+        <Dependency condition="($groupVariable.size() &gt; 0)">
+            <Target action="show" conditionResult="true" option="testsGroup"/>
+            <Target action="hide" conditionResult="false" option="testsGroup"/>
+        </Dependency>
+
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp; $competingRisksCheck == '1')">
+            <Target action="show" conditionResult="true" option="grayTest"/>
+            <Target action="hide" conditionResult="false" option="grayTest"/>
+            <Target action="hide" conditionResult="true" option="trendTest"/>
+            <Target action="show" conditionResult="false" option="trendTest"/>   
+            <Target action="hide" conditionResult="true" option="multCompareMethod"/>
+            <Target action="show" conditionResult="false" option="multCompareMethod"/>     
+        </Dependency>
+
+    <!-- LIFETEST test's combobox -->
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboNone' ||                                  ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' &amp;&amp; $competingRisksCheck != '1')))">
+            <Target action="show" conditionResult="true" option="testsCombo"/>
+            <Target action="hide" conditionResult="false" option="testsCombo"/>    
+        </Dependency>
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboNone' ||                                  ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' &amp;&amp; $competingRisksCheck != '1')) &amp;&amp;                              $testsCombo == 'selectedTestsChoice')">
+            <Target action="show" conditionResult="true" option="flemingTest"/>
+            <Target action="hide" conditionResult="false" option="flemingTest"/>        
+            <Target action="show" conditionResult="true" option="logrankTest"/>
+            <Target action="hide" conditionResult="false" option="logrankTest"/>
+            <Target action="show" conditionResult="true" option="modPetoTest"/>
+            <Target action="hide" conditionResult="false" option="modPetoTest"/>
+            <Target action="show" conditionResult="true" option="petoTest"/>
+            <Target action="hide" conditionResult="false" option="petoTest"/>
+            <Target action="show" conditionResult="true" option="wilcoxonTest"/>
+            <Target action="hide" conditionResult="false" option="wilcoxonTest"/>
+            <Target action="show" conditionResult="true" option="taroneTest"/>
+            <Target action="hide" conditionResult="false" option="taroneTest"/>
+        </Dependency>
+    <!-- LR test is unavailable with trend or stratified tests -->
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboNone' ||                                  ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' &amp;&amp; $competingRisksCheck != '1')) &amp;&amp;                              $testsCombo == 'selectedTestsChoice' &amp;&amp; !($strataVariable.size() &gt; 0 || $trendTest == '1'))">
+            <Target action="show" conditionResult="true" option="lrTest"/>
+            <Target action="hide" conditionResult="false" option="lrTest"/>
+        </Dependency>
+
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboNone' ||                                  ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' &amp;&amp; $competingRisksCheck != '1')) &amp;&amp;                              $testsCombo == 'selectedTestsChoice' &amp;&amp;                              $flemingTest == 1)">
+            <Target action="show" conditionResult="true" option="flemingp1"/>
+            <Target action="hide" conditionResult="false" option="flemingp1"/>
+            <Target action="show" conditionResult="true" option="flemingp2"/>
+            <Target action="hide" conditionResult="false" option="flemingp2"/>
+        </Dependency>
+    <!-- ICLIFETEST test's combobox -->
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp; $SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval')">
+            <Target action="show" conditionResult="true" option="weightFunctionsCombo"/>
+            <Target action="hide" conditionResult="false" option="weightFunctionsCombo"/>    
+        </Dependency>
+        <Dependency condition="($groupVariable.size() &gt; 0 &amp;&amp; $SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval' &amp;&amp;                              $weightFunctionsCombo == 'flemingWeightsChoice')">
+            <Target action="show" conditionResult="true" option="flemingp1IC"/>
+            <Target action="hide" conditionResult="false" option="flemingp1IC"/>
+            <Target action="show" conditionResult="true" option="flemingp2IC"/>
+            <Target action="hide" conditionResult="false" option="flemingp2IC"/>  
+        </Dependency>
+
+        <Dependency condition="($weightFunctionsCombo == 'noneWeightsChoice' || $testsCombo == 'noTestsChoice' ||                                  ($testsCombo == 'selectedTestsChoice' &amp;&amp; $flemingTest != '1' &amp;&amp; $logrankTest != '1'  &amp;&amp; $lrTest != '1' &amp;&amp; $modPetoTest != '1' &amp;&amp;                                 $petoTest != '1' &amp;&amp; $wilcoxonTest != '1' &amp;&amp; $taroneTest != '1'))">
+            <Target action="disable" conditionResult="true" option="trendTest"/>
+            <Target action="enable" conditionResult="false" option="trendTest"/>  
+            <Target action="set" conditionResult="true" option="trendTest" property="value" value="0"/>
+        </Dependency>
+
+        <Dependency condition="($weightFunctionsCombo == 'noneWeightsChoice' || ($restrictedMeanCheck != '1' &amp;&amp; ($testsCombo == 'noTestsChoice' ||                                  ($testsCombo == 'selectedTestsChoice' &amp;&amp; $flemingTest != '1' &amp;&amp; $logrankTest != '1'  &amp;&amp; $lrTest != '1' &amp;&amp; $modPetoTest != '1' &amp;&amp;                                 $petoTest != '1' &amp;&amp; $wilcoxonTest != '1' &amp;&amp; $taroneTest != '1'))))">
+            <Target action="disable" conditionResult="true" option="multCompareMethod"/>
+            <Target action="enable" conditionResult="false" option="multCompareMethod"/>  
+            <Target action="set" conditionResult="true" option="multCompareMethod" property="value" value="noCompChoice"/>
+        </Dependency>
+
+        <Dependency condition="($weightFunctionsCombo == 'noneWeightsChoice' &amp;&amp; $SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval')">
+            <Target action="show" conditionResult="true" option="trendTestNoteIC"/>
+            <Target action="hide" conditionResult="false" option="trendTestNoteIC"/>   
+            <Target action="show" conditionResult="true" option="multCompareMethodNoteIC"/>
+            <Target action="hide" conditionResult="false" option="multCompareMethodNoteIC"/>   
+        </Dependency>
+
+        <Dependency condition="(($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp; ($testsCombo == 'noTestsChoice' ||                                  ($testsCombo == 'selectedTestsChoice' &amp;&amp; $flemingTest != '1' &amp;&amp; $logrankTest != '1' &amp;&amp; $lrTest != '1' &amp;&amp; $modPetoTest != '1' &amp;&amp;                                 $petoTest != '1' &amp;&amp; $wilcoxonTest != '1' &amp;&amp; $taroneTest != '1')))">
+            <Target action="show" conditionResult="true" option="trendTestNote"/>
+            <Target action="hide" conditionResult="false" option="trendTestNote"/>   
+        </Dependency>
+
+        <Dependency condition="(($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp; $restrictedMeanCheck != '1' &amp;&amp; ($testsCombo == 'noTestsChoice' ||                                  ($testsCombo == 'selectedTestsChoice' &amp;&amp; $flemingTest != '1' &amp;&amp; $logrankTest != '1' &amp;&amp; $lrTest != '1' &amp;&amp; $modPetoTest != '1' &amp;&amp;                                 $petoTest != '1' &amp;&amp; $wilcoxonTest != '1' &amp;&amp; $taroneTest != '1')))">
+            <Target action="show" conditionResult="true" option="multCompareMethodNote"/>
+            <Target action="hide" conditionResult="false" option="multCompareMethodNote"/>   
+        </Dependency>
+
+
+    <!-- Statistcs Group -->
+        <!-- Lifetest options -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone'))">
+            <Target action="show" conditionResult="true" option="survivalEstimatesTable"/>
+            <Target action="hide" conditionResult="false" option="survivalEstimatesTable"/>           
+        </Dependency>
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                             $survivalEstimatesTable == '1'  &amp;&amp; $method != 'lifeTableMethod')">
+            <Target action="show" conditionResult="true" option="atrisk"/>
+            <Target action="hide" conditionResult="false" option="atrisk"/>
+            <Target action="show" conditionResult="true" option="nelson"/>
+            <Target action="hide" conditionResult="false" option="nelson"/>               
+        </Dependency>
+
+
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $includeRmstCheck == '1')">
+            <Target action="show" conditionResult="true" option="rmstStatsLabel"/>
+            <Target action="hide" conditionResult="false" option="rmstStatsLabel"/>   
+            <Target action="show" conditionResult="true" option="rmstStatsCL"/>
+            <Target action="hide" conditionResult="false" option="rmstStatsCL"/>         
+        </Dependency>  
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $includeRmtlCheck == '1')">
+            <Target action="show" conditionResult="true" option="rmtlStatsLabel"/>
+            <Target action="hide" conditionResult="false" option="rmtlStatsLabel"/>   
+            <Target action="show" conditionResult="true" option="rmtlStatsCL"/>
+            <Target action="hide" conditionResult="false" option="rmtlStatsCL"/>         
+        </Dependency>  
+
+        
+<!-- Plots Group -->
+        <Dependency condition="($competingRisksCheck != '1')">
+            <Target action="show" conditionResult="true" option="plotsCombo"/>
+            <Target action="hide" conditionResult="false" option="plotsCombo"/>           
+        </Dependency>
+    <!-- LIFETEST & ICLIFETEST plots -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice')">
+            <Target action="show" conditionResult="true" option="survivalPlot"/>
+            <Target action="hide" conditionResult="false" option="survivalPlot"/>  
+            <Target action="show" conditionResult="true" option="logSurvivalPlot"/>
+            <Target action="hide" conditionResult="false" option="logSurvivalPlot"/> 
+            <Target action="show" conditionResult="true" option="logLogSurvivalPlot"/>
+            <Target action="hide" conditionResult="false" option="logLogSurvivalPlot"/> 
+            <Target action="show" conditionResult="true" option="hazardPlot"/>
+            <Target action="hide" conditionResult="false" option="hazardPlot"/> 
+        </Dependency>
+    <!-- LIFETEST & ICLIFETEST survival plot options for all methods -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                              $survivalPlot == '1')">
+            <Target action="show" conditionResult="true" option="failurePlot"/>
+            <Target action="hide" conditionResult="false" option="failurePlot"/>  
+            <Target action="show" conditionResult="true" option="incClPlot"/>
+            <Target action="hide" conditionResult="false" option="incClPlot"/>   
+        </Dependency>
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                              $survivalPlot == '1' &amp;&amp; $groupVariable.size() &gt; 0 &amp;&amp; $strataVariable.size() == 0 &amp;&amp;                              ((($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp; $testsCombo != 'noTestsChoice') ||                             ($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' &amp;&amp; $weightFunctionsCombo != 'noneWeightsChoice')))">
+            <Target action="show" conditionResult="true" option="incPvaluePlot"/>
+            <Target action="hide" conditionResult="false" option="incPvaluePlot"/>  
+        </Dependency>
+    <!-- LIFETEST survival plot options (excluding lifetable method) -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp; $survivalPlot == '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                             $method != 'lifeTableMethod')">
+            <Target action="show" conditionResult="true" option="censoredPlot"/>
+            <Target action="hide" conditionResult="false" option="censoredPlot"/> 
+            <Target action="show" conditionResult="true" option="atriskPlot"/>
+            <Target action="hide" conditionResult="false" option="atriskPlot"/>     
+            <Target action="show" conditionResult="true" option="incConfBandsPlot"/>
+            <Target action="hide" conditionResult="false" option="incConfBandsPlot"/> 
+        </Dependency>
+    <!-- LIFETEST survival plot options (excluding lifetable method) -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp; $survivalPlot == '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                             $method != 'lifeTableMethod' &amp;&amp; $atriskPlot == '1')">
+            <Target action="show" conditionResult="true" option="atriskPlotOutside"/>
+            <Target action="hide" conditionResult="false" option="atriskPlotOutside"/>     
+          </Dependency>
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;  $survivalPlot == '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                               $method != 'lifeTableMethod' &amp;&amp; $incConfBandsPlot == '1')"> 
+            <Target action="show" conditionResult="true" option="incConfBandsPlotCombo"/>
+            <Target action="hide" conditionResult="false" option="incConfBandsPlotCombo"/> 
+        </Dependency>
+    <!-- LIFETEST: life table method plots -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                             $method == 'lifeTableMethod')">
+            <Target action="show" conditionResult="true" option="pdfPlot"/>
+            <Target action="hide" conditionResult="false" option="pdfPlot"/> 
+        </Dependency>
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                             $method == 'lifeTableMethod' &amp;&amp; $pdfPlot == '1')">
+            <Target action="show" conditionResult="true" option="incClPdfPlot"/>
+            <Target action="hide" conditionResult="false" option="incClPdfPlot"/> 
+        </Dependency>
+    <!-- LIFETEST: restricted mean time plots -->
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                                  $includeRmstCheck == '1')">
+            <Target action="show" conditionResult="true" option="rmstPlot"/>
+            <Target action="hide" conditionResult="false" option="rmstPlot"/>   
+        </Dependency> 
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                                  $includeRmstCheck == '1' &amp;&amp; $rmstPlot == '1')">
+            <Target action="show" conditionResult="true" option="incClRmstPlot"/>
+            <Target action="hide" conditionResult="false" option="incClRmstPlot"/>   
+        </Dependency> 
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                                  $includeRmtlCheck == '1')">
+            <Target action="show" conditionResult="true" option="rmtlPlot"/>
+            <Target action="hide" conditionResult="false" option="rmtlPlot"/>   
+        </Dependency> 
+        <Dependency condition="($restrictedMeanCheck == '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                                  $includeRmtlCheck == '1' &amp;&amp; $rmtlPlot == '1')">
+            <Target action="show" conditionResult="true" option="incClRmtlPlot"/>
+            <Target action="hide" conditionResult="false" option="incClRmtlPlot"/>   
+        </Dependency> 
+
+    <!-- LIFETEST: hazard plot confidence limits -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                             $hazardPlot == '1' )">
+            <Target action="show" conditionResult="true" option="incClHazardPlot"/>
+            <Target action="hide" conditionResult="false" option="incClHazardPlot"/> 
+        </Dependency>
+    <!-- ICLIFETEST: Turnbull interval interpolations -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp; $survivalPlot == '1' &amp;&amp;                             $SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval')">
+            <Target action="show" conditionResult="true" option="incTurnbullPlot"/>
+            <Target action="hide" conditionResult="false" option="incTurnbullPlot"/> 
+        </Dependency>
+
+    <!-- Competing risks plots -->
+        <Dependency condition="($competingRisksCheck == '1')">
+            <Target action="show" conditionResult="true" option="cifPlot"/>
+            <Target action="hide" conditionResult="false" option="cifPlot"/>           
+        </Dependency>
+        <Dependency condition="($competingRisksCheck == '1' &amp;&amp; $cifPlot == '1')">
+            <Target action="show" conditionResult="true" option="incClCifPlot"/>
+            <Target action="hide" conditionResult="false" option="incClCifPlot"/>           
+        </Dependency>
+        <!-- This works for both k-sample and stratified tests -->
+        <Dependency condition="($competingRisksCheck == '1' &amp;&amp; $cifPlot == '1' &amp;&amp; $groupVariable.size() &gt; 0)">
+            <Target action="show" conditionResult="true" option="incPvalueCifPlot"/>
+            <Target action="hide" conditionResult="false" option="incPvalueCifPlot"/> 
+        </Dependency>
+
+<!-- OUTPUT tab -->
+    <!-- Toggle competing risks output data -->
+        <Dependency condition="($competingRisksCheck == '1')">
+            <Target action="hide" conditionResult="true" option="outsurvDS"/>
+            <Target action="show" conditionResult="false" option="outsurvDS"/> 
+            <Target action="hide" conditionResult="true" option="outsurvDSName"/>
+            <Target action="show" conditionResult="false" option="outsurvDSName"/> 
+            <Target action="show" conditionResult="true" option="outcifDS"/>
+            <Target action="hide" conditionResult="false" option="outcifDS"/> 
+            <Target action="show" conditionResult="true" option="outcifDSName"/>
+            <Target action="hide" conditionResult="false" option="outcifDSName"/>                
+        </Dependency>
+
+    <!-- LIFETEST and ICLIFETEST: output data -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $outsurvDS == '1')">
+            <Target action="enable" conditionResult="true" option="outsurvDSName"/>
+            <Target action="disable" conditionResult="false" option="outsurvDSName"/>   
+        </Dependency>
+    <!-- LIFETEST output data options (for all methods) -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $outsurvDS == '1' &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone'))">
+            <Target action="show" conditionResult="true" option="outsurvStderr"/>
+            <Target action="hide" conditionResult="false" option="outsurvStderr"/> 
+        </Dependency>
+    <!-- LIFETEST output data options (for methods other than life table) -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $outsurvDS == '1' &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                               $method != 'lifeTableMethod')">
+            <Target action="show" conditionResult="true" option="outsurvConfBands"/>
+            <Target action="hide" conditionResult="false" option="outsurvConfBands"/>   
+        </Dependency>
+
+        <!-- Change output confidence bands combo to match selection from plots tab, but only if output CB combo hasn't surfaced yet -->
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;  $survivalPlot == '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                               $method != 'lifeTableMethod' &amp;&amp; $incConfBandsPlot == '1' &amp;&amp; $outsurvConfBands != '1'                               &amp;&amp; $incConfBandsPlotCombo == 'incConfBandsPlotComboEqual')"> 
+            <Target action="set" conditionResult="true" option="outsurvConfBandCombo" property="value" value="outsurvConfBandComboEqual"/>
+        </Dependency>
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;  $survivalPlot == '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                               $method != 'lifeTableMethod' &amp;&amp; $incConfBandsPlot == '1' &amp;&amp; $outsurvConfBands != '1'                               &amp;&amp; $incConfBandsPlotCombo == 'incConfBandsPlotComboHall')"> 
+            <Target action="set" conditionResult="true" option="outsurvConfBandCombo" property="value" value="outsurvConfBandComboHall"/>
+        </Dependency>
+          <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $plotsCombo == 'customPlotChoice' &amp;&amp;  $survivalPlot == '1' &amp;&amp;                             ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                               $method != 'lifeTableMethod' &amp;&amp; $incConfBandsPlot == '1' &amp;&amp; $outsurvConfBands != '1'                               &amp;&amp; $incConfBandsPlotCombo == 'incConfBandsPlotComboBoth')"> 
+            <Target action="set" conditionResult="true" option="outsurvConfBandCombo" property="value" value="outsurvConfBandComboBoth"/>
+        </Dependency>      
+        <Dependency condition="($competingRisksCheck != '1' &amp;&amp; $outsurvDS == '1' &amp;&amp;                              ($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone') &amp;&amp;                               $method != 'lifeTableMethod' &amp;&amp; $outsurvConfBands == '1')">
+            <Target action="show" conditionResult="true" option="outsurvConfBandCombo"/>
+            <Target action="hide" conditionResult="false" option="outsurvConfBandCombo"/>   
+        </Dependency>
+    <!-- Competing risks output data -->
+        <Dependency condition="($competingRisksCheck == '1' &amp;&amp; $outcifDS == '1')">
+            <Target action="enable" conditionResult="true" option="outcifDSName"/>
+            <Target action="disable" conditionResult="false" option="outcifDSName"/>               
+        </Dependency>
+    </Dependencies>
+
+
+    <Requirements> 
+         <!-- Require the censoring values to differ from the competing risks event of interest -->
+        <Requirement condition="($competingRisksCheck != '1' || ($competingRisksCheck == '1' &amp;&amp; $censorValuesTable.rows.values[0].censoringValues != $competingRisksEventSpecifySelect))">
+            <Message nlsKey="censoringValueCompetingRisksCollision1Key">The event of interest and the first censoring value must be different.</Message>
+        </Requirement>
+        <Requirement condition="($competingRisksCheck != '1' || $censorValuesTable.columns.censoringValues.values.size() &lt; 2 || ($competingRisksCheck == '1' &amp;&amp; $censorValuesTable.rows.values[1].censoringValues != $competingRisksEventSpecifySelect))">
+            <Message nlsKey="censoringValueCompetingRisksCollision2Key">The event of interest and the second censoring value must be different.</Message>
+        </Requirement>
+         <Requirement condition="($competingRisksCheck != '1' || $censorValuesTable.columns.censoringValues.values.size() &lt; 3 || ($competingRisksCheck == '1' &amp;&amp; $censorValuesTable.rows.values[2].censoringValues != $competingRisksEventSpecifySelect))">
+            <Message nlsKey="censoringValueCompetingRisksCollision3Key">The event of interest and the third censoring value must be different.</Message>
+        </Requirement>   
+         <Requirement condition="($competingRisksCheck != '1' || $censorValuesTable.columns.censoringValues.values.size() &lt; 4 || ($competingRisksCheck == '1' &amp;&amp; $censorValuesTable.rows.values[3].censoringValues != $competingRisksEventSpecifySelect))">
+            <Message nlsKey="censoringValueCompetingRisksCollision4Key">The event of interest and the fourth censoring value must be different.</Message>
+        </Requirement>  
+         <Requirement condition="($competingRisksCheck != '1' || $censorValuesTable.columns.censoringValues.values.size() &lt; 5 || ($competingRisksCheck == '1' &amp;&amp; $censorValuesTable.rows.values[4].censoringValues != $competingRisksEventSpecifySelect))">
+            <Message nlsKey="censoringValueCompetingRisksCollision5Key">The event of interest and the fifth censoring value must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 2 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 2 &amp;&amp; (!$censorValuesTable.rows.values[0].censoringValues || !$censorValuesTable.rows.values[1].censoringValues || $censorValuesTable.rows.values[0].censoringValues != $censorValuesTable.rows.values[1].censoringValues)))">
+            <Message nlsKey="censoringValueCollision12Key">The first and second censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 3 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 3 &amp;&amp; (!$censorValuesTable.rows.values[0].censoringValues || !$censorValuesTable.rows.values[2].censoringValues || $censorValuesTable.rows.values[0].censoringValues != $censorValuesTable.rows.values[2].censoringValues)))">
+            <Message nlsKey="censoringValueCollision13Key">The first and third censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 3 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 3 &amp;&amp; (!$censorValuesTable.rows.values[1].censoringValues || !$censorValuesTable.rows.values[2].censoringValues || $censorValuesTable.rows.values[1].censoringValues != $censorValuesTable.rows.values[2].censoringValues)))">
+            <Message nlsKey="censoringValueCollision23Key">The second and third censoring values must be different.</Message>
+        </Requirement> 
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 4 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 4 &amp;&amp; (!$censorValuesTable.rows.values[0].censoringValues || !$censorValuesTable.rows.values[3].censoringValues || $censorValuesTable.rows.values[0].censoringValues != $censorValuesTable.rows.values[3].censoringValues)))">
+            <Message nlsKey="censoringValueCollision14Key">The first and fourth censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 4 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 4 &amp;&amp; (!$censorValuesTable.rows.values[1].censoringValues || !$censorValuesTable.rows.values[3].censoringValues || $censorValuesTable.rows.values[1].censoringValues != $censorValuesTable.rows.values[3].censoringValues)))">
+            <Message nlsKey="censoringValueCollision24Key">The second and fourth censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 4 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 4 &amp;&amp; (!$censorValuesTable.rows.values[2].censoringValues || !$censorValuesTable.rows.values[3].censoringValues || $censorValuesTable.rows.values[2].censoringValues != $censorValuesTable.rows.values[3].censoringValues)))">
+            <Message nlsKey="censoringValueCollision34Key">The third and fourth censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 5 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 5 &amp;&amp; (!$censorValuesTable.rows.values[0].censoringValues || !$censorValuesTable.rows.values[4].censoringValues || $censorValuesTable.rows.values[0].censoringValues != $censorValuesTable.rows.values[4].censoringValues)))">
+            <Message nlsKey="censoringValueCollision15Key">The first and fifth censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 5 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 5 &amp;&amp; (!$censorValuesTable.rows.values[1].censoringValues || !$censorValuesTable.rows.values[4].censoringValues || $censorValuesTable.rows.values[1].censoringValues != $censorValuesTable.rows.values[4].censoringValues)))">
+            <Message nlsKey="censoringValueCollision25Key">The second and fifth censoring values must be different.</Message>
+        </Requirement>
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 5 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 5 &amp;&amp; (!$censorValuesTable.rows.values[2].censoringValues || !$censorValuesTable.rows.values[4].censoringValues || $censorValuesTable.rows.values[2].censoringValues != $censorValuesTable.rows.values[4].censoringValues)))">
+            <Message nlsKey="censoringValueCollision35Key">The third and fifth censoring values must be different.</Message>
+        </Requirement>  
+        <Requirement condition="($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboNone' || $censorValuesTable.columns.censoringValues.values.size() &lt; 5 || ($censorValuesTable.columns.censoringValues.values.size() &gt;= 5 &amp;&amp; (!$censorValuesTable.rows.values[3].censoringValues || !$censorValuesTable.rows.values[4].censoringValues || $censorValuesTable.rows.values[3].censoringValues != $censorValuesTable.rows.values[4].censoringValues)))">
+            <Message nlsKey="censoringValueCollision45Key">The fourth and fifth censoring values must be different.</Message>
+        </Requirement> 
+        <Requirement condition="(!($restrictedMeanCheck == '1' &amp;&amp; $includeRmstCheck != '1' &amp;&amp; $includeRmtlCheck != '1'))">
+            <Message nlsKey="restrictedMeanRequirementKey">Select at least one restricted mean estimate.</Message>
+        </Requirement>         
+    </Requirements>
+    
+    <CodeTemplate>
+        <![CDATA[
+
+ods output Survivalplot=SurvivalPlotData;
+## Specify which format was used for the survival time variable (one column or two column)
+#if($SDFcensoringTypeCombo =='SDFcensoringTypeComboRight' || $SDFcensoringTypeCombo =='SDFcensoringTypeComboNone')
+    #set($_timeFmt = 'oneColumn')
+#else
+    #set($_timeFmt = 'twoColumn')
+#end
+
+
+#if($SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval')
+    #set($_proc = 'iclifetest')
+#else
+    #set($_proc = 'lifetest')
+#end
+
+## Create list of censoring values
+#set($_censoringValuesList = [])
+#foreach($item in $censorValuesTable.rows.values) 
+   #if ($item.censoringValues && ($item.censoringValues != ''))
+      #set($_dummy = $_censoringValuesList.add("$item.censoringValues"))
+   #end
+#end
+
+
+## Calculate alpha from confidence
+#if     ($confidence == "confidence95")#set( $alpha = 0.05 )
+#elseif ($confidence == "confidence99")#set( $alpha = 0.01 )
+#elseif ($confidence == "confidence90")#set( $alpha = 0.10 ) 
+#else#set( $alpha = "%sysevalf((100-$confidenceValue)/100)" )
+#end
+
+
+
+## Begin code generation ##
+ods noproctitle;
+ods graphics / imagemap=on;
+
+#if ($byVariables.size() > 0)
+proc sort data=$dataset out=Work._TempDataSorted_;
+   #if ($dataset.getWhereClause() != '')
+   where $dataset.getWhereClause();
+   #end
+   by #foreach( $item in $byVariables ) $item #end;
+run;
+
+proc $_proc data=Work._TempDataSorted_
+#else
+proc $_proc data=$dataset
+#end
+
+#if($competingRisksCheck != '1')
+    #if($SDFcensoringTypeCombo =='SDFcensoringTypeComboInterval')
+        #if($methodIC != 'emicmMethod')
+            method=#if($methodIC == 'icmMethod')icm
+            #elseif ($methodIC == "turnbullMethod")turnbull
+            #elseif ($methodIC == "emicmMethod")emicm
+            #end
+        #end        
+    #else
+        #if($method != 'kmMethod' && $weightVariable.size() == 0)
+            method=#if($method == 'breslowMethod')breslow
+            #elseif ($method == "fhMethod")fh
+            #elseif ($method == "kmMethod")km
+            #elseif ($method == "lifeTableMethod")life
+            #end
+        #end        
+    #end
+#end
+
+#if($restrictedMeanCheck == '1' && $includeRmstCheck == '1')
+    rmst#if($rmstTauRadio == 'rmstTauRadioSpecify' || $rmstStatsCL == '1')(
+        #if($rmstTauRadio == 'rmstTauRadioSpecify')tau=$rmstTauValue#end 
+        #if($rmstStatsCL == '1') cl#end    
+        )#end
+#end
+#if($restrictedMeanCheck == '1' && $includeRmtlCheck == '1')
+    rmtl#if($rmtlTauRadio == 'rmtlTauRadioSpecify' || $rmtlStatsCL == '1')(
+        #if($rmtlTauRadio == 'rmtlTauRadioSpecify')tau=$rmtlTauValue#end 
+        #if($rmtlStatsCL == '1') cl#end    
+        )#end
+#end
+
+
+#if (!($conftype== 'loglogChoice')) conftype=
+   #if     ($conftype== 'asinsqrtChoice')asinsqrt
+   #elseif ($conftype== 'linearChoice')linear
+   #elseif ($conftype== 'logChoice')log
+   #elseif ($conftype== 'logitChoice')logit
+   #end
+#end
+
+#if    (!($confidence == "confidence95"))
+alpha=$alpha
+#end
+
+#if($_proc == 'lifetest' && (($competingRisksCheck != '1' && $survivalEstimatesTable != '1') || ($competingRisksCheck == '1' && $cifStats != '1')))
+notable
+#end
+#if($_proc == 'lifetest' && $competingRisksCheck != '1' && $survivalEstimatesTable == '1' && $method != 'lifeTableMethod')
+    #if($atrisk == '1') atrisk#end
+    #if($nelson == '1') nelson#end
+#end
+#if($_proc == 'iclifetest' && $turnbullStats == '1') showti#end
+
+## Plots
+#if($competingRisksCheck != '1')
+    #if($plotsCombo == 'defaultPlotChoice')
+    #elseif($plotsCombo == 'customPlotChoice')
+                ## Suppress code if only the defaults are selected
+                #if($survivalPlot == '1' && $failurePlot != '1' && ($censoredPlot == '1' || $method == 'lifeTableMethod' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval') && $atriskPlot != '1' && $incClPlot != '1' && $incConfBandsPlot != '1' && $incPvaluePlot != '1' && $logSurvivalPlot != '1' && $logLogSurvivalPlot != '1' && $hazardPlot != '1' && $incClHazardPlot != '1' && $pdfPlot != '1' && ($incTurnbullPlot == '1' || $SDFcensoringTypeCombo != 'SDFcensoringTypeComboInterval') && ($rmstPlot != '1' || $restrictedMeanCheck != '1' || $includeRmstCheck != '1') && ($rmtlPlot != '1' || $restrictedMeanCheck != '1' || $includeRmtlCheck != '1'))
+
+                ## Use plots=all if the correct selections are made ##
+                #elseif($survivalPlot == '1' && $failurePlot != '1' && ($censoredPlot == '1' || $method == 'lifeTableMethod' || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval') && $atriskPlot != '1' && $incClPlot != '1' && $incConfBandsPlot != '1' && $incPvaluePlot != '1' && $logSurvivalPlot == '1' && $logLogSurvivalPlot == '1' && $incClHazardPlot != '1' && (($pdfPlot == '1' && $incClPdfPlot != '1') || ($method && $method != 'lifeTableMethod') || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval') && ($incTurnbullPlot == '1' || $SDFcensoringTypeCombo != 'SDFcensoringTypeComboInterval') && (($hazardPlot == '1' && (($method && $method == 'lifeTableMethod') || $SDFcensoringTypeCombo == 'SDFcensoringTypeComboInterval')) || ($hazardPlot != '1' && ($method && $method != 'lifeTableMethod'))) && (($rmstPlot == '1' && $incClRmstPlot != '1' && $rmtlPlot == '1' && $incClRmtlPlot != '1') || $restrictedMeanCheck != '1'))
+                    plots=all
+                ## Use plots=none if no plots are selected ##
+                #elseif($survivalPlot != '1' && $logSurvivalPlot != '1' && $logLogSurvivalPlot != '1' && $hazardPlot != '1' && $pdfPlot != '1' && 
+                $rmstPlot != '1' && $rmtlPlot != '1')
+                    plots=none
+                ## Otherwise specify selected plots and options ##
+                #else
+                    plots#if($survivalPlot != '1')(only)#end=(
+                        #if($survivalPlot == '1' && ($failurePlot == '1' || ($censoredPlot && $censoredPlot != '1') || $atriskPlot == '1' || $incClPlot == '1' || $incConfBandsPlot == '1' || $incPvaluePlot == '1' || ($incTurnbullPlot && $incTurnbullPlot != '1'))) s(
+                            #if($failurePlot == '1') f#end
+                            #if($censoredPlot && $censoredPlot != '1') nocensor#end
+                            #if($atriskPlot == '1') atrisk#if($atriskPlotOutside == '1')(outside)#end#end
+#if($incClPlot == '1') cl#end#if($incTurnbullPlot && $incTurnbullPlot != '1') nodash#end#if($incConfBandsPlot == '1') cb#if($incConfBandsPlotCombo == 'incConfBandsPlotComboBoth')=all#elseif($incConfBandsPlotCombo == 'incConfBandsPlotComboEqual')=ep#end#end#if($incPvaluePlot == '1') test#end)#end#if($logSurvivalPlot == '1') ls#end#if($logLogSurvivalPlot == '1') lls#end#if($hazardPlot == '1') h#if($incClHazardPlot == '1')(cl)#end#end#if($pdfPlot == '1') p#if($incClPdfPlot == '1')(cl)#end#end#if($rmstPlot == '1') rmst#if($incClRmstPlot == '1')(cl)#end#end#if($rmtlPlot == '1') rmtl#if($incClRmtlPlot == '1')(cl)#end#end)
+                #end
+    #elseif($plotsCombo == 'noPlotsChoice')
+        plots=none
+    #end
+## Competing risks plots
+#elseif($competingRisksCheck == '1')
+    #if($cifPlot == '1')
+        #if($incClCifPlot == '1' || $incPvalueCifPlot =='1')
+            plots=(cif(#if($incClCifPlot == '1')cl#end#if($incPvalueCifPlot == '1') test#end))
+        #end
+    #else
+        plots=none
+    #end
+#end
+
+## Output data
+#if($competingRisksCheck != '1')
+    #if($outsurvDS == '1') outsurv=$outsurvDSName
+        #if($outsurvStderr == '1') stderr#end
+        #if($outsurvConfBands == '1') confband#if($outsurvConfBandCombo == 'outsurvConfBandComboEqual')=ep#elseif($outsurvConfBandCombo == 'outsurvConfBandComboBoth')=all#end#end
+    #end
+#elseif($competingRisksCheck == '1')
+    #if($outcifDS == '1') outcif=$outcifDSName#end
+#end
+;
+
+#if ($byVariables.size() == 0 && $dataset.getWhereClause() != '')
+   where $dataset.getWhereClause();
+#end
+
+## Time statement 
+#if ($survivalTimeVariable.size() > 0 || ($lowerSurvivalTimeVariable.size() > 0 && $upperSurvivalTimeVariable.size() > 0)) 
+    time#if( $_timeFmt == 'oneColumn' )#foreach( $item in $survivalTimeVariable ) $item#end#else (#foreach( $item in $lowerSurvivalTimeVariable ) $item#end, #foreach( $item in $upperSurvivalTimeVariable ) $item#end)#end#if( $censoringVariable.size() > 0 )*#foreach( $item in $censoringVariable)$item#end#if( $_censoringValuesList.size() > 0 )(#foreach( $item in $_censoringValuesList )$item#if($foreach.count < $_censoringValuesList.size()),#end#end)#end#end
+
+#if($competingRisksCheck == '1')/ eventcode#if($competingRisksEvent == 'competingRisksEventSpecify')=$competingRisksEventSpecifySelect#end#end
+;
+#end
+## STRATA (LIFETEST) and TEST (ICLIFETEST only) statement
+#if( $groupVariable.size() > 0 )
+#if($_proc == 'lifetest')strata #if($strataVariable.size() == 0)#foreach( $item in $groupVariable ) $item #end#elseif($strataVariable.size() > 0)#foreach( $item in $strataVariable ) $item #end#end
+#elseif($_proc == 'iclifetest') #if($strataVariable.size() > 0) strata #foreach( $item in $strataVariable ) $item #end; test #foreach( $item in $groupVariable ) $item #end #elseif($strataVariable.size() == 0) 
+test #foreach( $item in $groupVariable ) $item #end #end #end
+ 
+
+#*  
+#if(($_proc == 'lifetest' && ($strataVariable.size() > 0 || ($competingRisksCheck != '1' && ($testsCombo != 'defaultTestsChoice' || $trendTest == '1' || $multCompareMethod != "noCompChoice")) || ($competingRisksCheck == '1' && $grayTest != '1'))) || ($_proc == 'iclifetest' && ($weightFunctionsCombo != 'sunWeightsChoice' || $trendTest == '1' || $multCompareMethod != "noCompChoice")))
+*#
+
+#if(($_proc == 'lifetest' && ($strataVariable.size() > 0 || ($competingRisksCheck != '1' && (($testsCombo == 'selectedTestsChoice' && !($flemingTest != '1' && $logrankTest == '1' && $lrTest == '1' && $modPetoTest != '1' && $petoTest != '1' && $wilcoxonTest == '1' && $taroneTest != '1')) || $testsCombo == 'noTestsChoice' || $trendTest == '1' || $multCompareMethod != "noCompChoice")) || ($competingRisksCheck == '1' && $grayTest != '1'))) || ($_proc == 'iclifetest' && ($weightFunctionsCombo != 'sunWeightsChoice' || $trendTest == '1' || $multCompareMethod != "noCompChoice")))
+/ 
+    #if($_proc == 'lifetest' && $strataVariable.size() > 0 && ($groupVariable.size() > 0))
+        group=#foreach( $item in $groupVariable )$item #end
+    #end
+    #if($competingRisksCheck != '1' && $trendTest == '1') trend#end
+ 
+    #if($testsCombo == 'noTestsChoice' || ($testsCombo == 'selectedTestsChoice' && $flemingTest != '1' && $logrankTest != '1' && ($lrTest != '1' || $trendTest == '1' || $strataVariable.size() > 0) && $modPetoTest != '1' && $petoTest != '1' && $wilcoxonTest != '1' && $taroneTest != '1'))
+        test=none
+    #elseif($testsCombo == 'defaultTestsChoice') 
+
+    #elseif($testsCombo == 'selectedTestsChoice')
+        ## Use all if all visible options are selected
+        #if($flemingTest == '1' && $flemingp1 == 1 && $flemingp2 == 0 && $logrankTest == '1' && ($lrTest == '1' || $trendTest == '1' || $strataVariable.size() > 0) && $modPetoTest == '1' && $petoTest == '1' && $wilcoxonTest == '1' && $taroneTest == '1') test=all
+
+        ## Hide code if defaults are selected
+        #elseif($flemingTest != '1' && $logrankTest == '1' && ($lrTest == '1' || $trendTest == '1' || $strataVariable.size() > 0) && $modPetoTest != '1' && $petoTest != '1' && $wilcoxonTest == '1' && $taroneTest != '1')
+
+        ## Otherwise generate code for selected options
+        #else
+            test=(#if($flemingTest == '1')fleming($flemingp1, $flemingp2) #end
+            #if($logrankTest == '1')logrank #end
+            #if($lrTest == '1')lr #end
+            #if($modPetoTest == '1')modpeto #end
+            #if($petoTest == '1')peto #end
+            #if($wilcoxonTest == '1')wilcoxon #end
+            #if($taroneTest == '1')tarone#end)
+        #end
+
+    #end ## end test options for lifetest
+
+
+    #if($_proc == 'iclifetest' && $weightFunctionsCombo != 'sunWeightsChoice')
+        weight=#if($weightFunctionsCombo == 'fayWeightsChoice')fay
+        #elseif($weightFunctionsCombo == 'finkelsteinWeightsChoice')finkelstein
+        #elseif($weightFunctionsCombo == 'flemingWeightsChoice')fleming($flemingp1IC, $flemingp2IC)
+        #elseif($weightFunctionsCombo == 'noneWeightsChoice')none
+        #end
+    #end
+
+
+
+#if($competingRisksCheck == '1' && $grayTest != '1') test=none#end
+
+#if ($multCompareMethod != "noCompChoice" && $competingRisksCheck != '1' && $testsCombo != 'noTestsChoice' && $weightFunctionsCombo != 'noneWeightsChoice' && !($testsCombo == 'selectedTestsChoice' && $flemingTest != '1' && $logrankTest != '1' && $lrTest != '1' && $modPetoTest != '1' && $petoTest != '1' && $wilcoxonTest != '1' && $taroneTest != '1'))
+ adjust=
+#if ($multCompareMethod == "bonferroni")bon
+#elseif ($multCompareMethod == "scheffe")scheffe           
+#elseif ($multCompareMethod == "sidak")sidak
+#elseif ($multCompareMethod == "smm")smm
+#elseif ($multCompareMethod == "tukey")tukey
+#end
+#end    ## end multCompareMethod
+
+
+#end ## end of options
+
+
+
+
+;#end  ## end of #if($groupVariable.size() > 0)
+
+#**
+#if( $continuousVariables.size() > 0 )
+   test #foreach( $item in $continuousVariables ) $item #end;
+#end  *#
+#if( $freqVariable.size() > 0 )
+   freq #foreach( $item in $freqVariable ) $item #end;
+#end
+#if( $weightVariable.size() > 0 && $_proc == 'lifetest' )
+   weight #foreach( $item in $weightVariable ) $item #end;
+#end
+#if( $byVariables.size() > 0 )
+   by #foreach( $item in $byVariables ) $item #end;
+#end
+run;
+
+
+
+#if ($byVariables.size() > 0)
+proc delete data=Work._TempDataSorted_;
+run;
+#end
+
+#if ($comboTHEME == 'inspire')
+%let linecolors= cx1d9992 cx2222bc cx6a9617 cx69256d cxba7006 cx0a9e69 cxa50a2f;
+#end
+#if ($comboTHEME == 'illuminate')
+%let linecolors= cx007380 cxd16100 cx719409 cx1e3b8f cxe0ab1a cx87235d cx7d0a00 cx544600;
+#end
+#if ($comboTHEME == 'grayscale')
+%let linecolors= cx585858 cxa2a2a2 cx1e1e1e cx707070 cxbbbbbb cx3b3b3b cxd0d0d0;
+#end
+#if ($comboTHEME == 'pastel')
+%let linecolors= cx80AF9A cxCA9A79 cx98A2B5 cxC197B1 cxB3C296 cxCCBF7B cxBEAF99 cx999999;
+#end
+#if ($comboTHEME == 'bright')
+%let linecolors= cx1776b6 cxff7f00 cx24a121 cxd8241f cx9564bf cx8d5649 cxe574c3 cxbcbf00;
+#end
+#if ($comboTHEME == 'dark')
+%let linecolors= cx1b9e77 cxd95f02 cx7570b3 cxe7298a cx66a61e cxe6ab02 cxa6761d cx666666;
+#end
+title '$textTITLE1';
+title2  h=0.8 '$textTITLE2';
+proc sgplot data=SurvivalPlotData;
+#if ($comboTHEME != 'default')
+	styleattrs datacontrastcolors=(&linecolors);
+	#end
+	legenditem type=marker name='c' / markerattrs=(symbol=$comboSYMBOL color=black) label='Censored';
+	step x=time y=survival / group=stratum name='s';
+	scatter x=time  y=censored / markerattrs=(symbol=$comboSYMBOL) GROUP=stratum;
+	xaxistable atrisk / x=tatrisk class=stratum colorgroup=stratum;
+	keylegend 'c' / location=inside position=topright;
+	keylegend 's' /  location=outside position=bottom;
+run;
+]]>
+    </CodeTemplate>
+</Task>

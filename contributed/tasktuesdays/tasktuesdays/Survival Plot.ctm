@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.3">
+	<Registration>
+	<Name>Product Limit Survival Estimates Plot</Name>
+	<Description>This task creates a product limit survival estimates plot. This is the same plot generated with PROC LIFETEST, but using SGPLOT allows users to customize plot attributes.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.8</Version>
+	<Links>
+		<Link href="https://blogs.sas.com/content/graphicallyspeaking/2018/02/19/survival-plot-twist-using-sgplot-procedure/">Graphically Speaking Blog Post: Product Limit Survival Estimates Plot</Link>
+		<Link href="https://blogs.sas.com/content/graphicallyspeaking/2017/10/27/legend-items/">Graphically Speaking Blog Post: Legend Items</Link>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.71&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		<DataSources>
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role maxVars="1" minVars="1" name="DFTIME" order="true" type="N">Disease-free time variable:</Role>
+					<Role exclude="DFTIME" maxVars="1" minVars="1" name="SURVIVAL" order="true" type="N">Survival variable:</Role>					
+					<Role exclude="DFTIME,SURVIVAL" maxVars="1" minVars="1" name="CENSORED" order="true" type="N">Censored variable:</Role>
+					<Role maxVars="1" minVars="1" name="STRATUM" order="true" type="C">Stratum variable:</Role>
+					<Role exclude="DFTIME,SURVIVAL,CENSORED" maxVars="1" minVars="1" name="ATRISK" order="true" type="N">At Risk variable:</Role>
+					<Role exclude="DFTIME,SURVIVAL,CENSORED,ATRISK" maxVars="1" minVars="1" name="TATRISK" order="true" type="N">t At Risk variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="APPEARANCETAB">APPEARANCE</Option>
+			<Option inputType="string" name="DATAGROUP">SURVIVAL DATA</Option>
+			<Option defaultValue="1" inputType="radio" name="radioButton1" variable="radioEXAMPLE">Use Standard Variable Names from Output of PROC LIFETEST</Option>
+			<Option inputType="radio" name="radioButton2" variable="radioEXAMPLE">Select My Own Variables</Option>
+			<Option inputType="string" name="ROLESGROUP">ROLES</Option>
+			<Option inputType="string" name="GROUPPLOT">GRAPH OPTIONS</Option>
+			<Option defaultValue="Product-Limit Survival Estimates" inputType="inputtext" missingMessage="Missing text." name="textTITLE1" promptMessage="Enter a title" required="true">Title 1:</Option>
+			<Option defaultValue="with Number of AML Subjects at Risk" inputType="inputtext" missingMessage="Missing text." name="textTITLE2" promptMessage="Enter a second title" required="true">Title 2:</Option>
+			<Option defaultValue="plus" inputType="combobox" name="comboSYMBOL">Scatter Symbol:</Option>
+			<Option inputType="string" name="plus">Plus</Option>
+			<Option inputType="string" name="circlefilled">Filled Circle</Option>
+			<Option inputType="string" name="diamondfilled">Filled Diamond</Option>
+			<Option inputType="string" name="asterisk">Asterisk</Option>
+			<Option defaultValue="inspire" inputType="combobox" name="comboTHEME">Color Theme:</Option>
+			<Option inputType="string" name="inspire">SAS Inspire</Option>
+			<Option inputType="string" name="illuminate">SAS Illuminate</Option>
+			<Option inputType="string" name="grayscale">Grayscale</Option>
+			<Option inputType="string" name="pastel">Pastel</Option>
+			<Option inputType="string" name="bright">Bright</Option>
+			<Option inputType="string" name="dark">Dark</Option>
+			<Option inputType="string" name="default">Default (no colors specified)</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group open="true" option="DATAGROUP">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group open="true" option="ROLESGROUP">
+				<OptionItem option="radioButton1"/>
+				<OptionItem option="radioButton2"/>
+				<RoleItem role="DFTIME"/>
+				<RoleItem role="SURVIVAL"/>
+				<RoleItem role="CENSORED"/>
+				<RoleItem role="STRATUM"/>
+				<RoleItem role="ATRISK"/>
+				<RoleItem role="TATRISK"/>
+			</Group>
+		</Container>
+		<Container option="APPEARANCETAB">
+			<Group open="true" option="GROUPPLOT">
+				<OptionItem option="textTITLE1"/>
+				<OptionItem option="textTITLE2"/>
+				<OptionChoice option="comboSYMBOL">
+					<OptionItem option="plus"/>
+					<OptionItem option="circlefilled"/>
+					<OptionItem option="asterisk"/>
+					<OptionItem option="diamondfilled"/>
+				</OptionChoice>
+				<OptionChoice option="comboTHEME">
+					<OptionItem option="inspire"/>
+					<OptionItem option="illuminate"/>
+					<OptionItem option="grayscale"/>
+					<OptionItem option="pastel"/>
+					<OptionItem option="bright"/>
+					<OptionItem option="dark"/>
+					<OptionItem option="default"/>
+				</OptionChoice>
+			</Group>
+		</Container>
+	</UI>
+		
+	<Dependencies>
+	
+		<Dependency condition="($radioEXAMPLE == 'radioButton1')">
+			<Target action="hide" conditionResult="true" option="DFTIME"/>
+			<Target action="show" conditionResult="false" option="DFTIME"/>
+			<Target action="hide" conditionResult="true" option="SURVIVAL"/>
+			<Target action="show" conditionResult="false" option="SURVIVAL"/>
+			<Target action="hide" conditionResult="true" option="CENSORED"/>
+			<Target action="show" conditionResult="false" option="CENSORED"/>
+			<Target action="hide" conditionResult="true" option="ATRISK"/>
+			<Target action="show" conditionResult="false" option="ATRISK"/>
+			<Target action="hide" conditionResult="true" option="TATRISK"/>
+			<Target action="show" conditionResult="false" option="TATRISK"/>
+			<Target action="hide" conditionResult="true" option="STRATUM"/>
+			<Target action="show" conditionResult="false" option="STRATUM"/>
+		</Dependency>	
+		
+	</Dependencies>
+	
+  	<CodeTemplate>
+		<![CDATA[
+#if ($comboTHEME == 'inspire')
+%let linecolors= cx1d9992 cx2222bc cx6a9617 cx69256d cxba7006 cx0a9e69 cxa50a2f;
+#end
+#if ($comboTHEME == 'illuminate')
+%let linecolors= cx007380 cxd16100 cx719409 cx1e3b8f cxe0ab1a cx87235d cx7d0a00 cx544600;
+#end
+#if ($comboTHEME == 'grayscale')
+%let linecolors= cx585858 cxa2a2a2 cx1e1e1e cx707070 cxbbbbbb cx3b3b3b cxd0d0d0;
+#end
+#if ($comboTHEME == 'pastel')
+%let linecolors= cx80AF9A cxCA9A79 cx98A2B5 cxC197B1 cxB3C296 cxCCBF7B cxBEAF99 cx999999;
+#end
+#if ($comboTHEME == 'bright')
+%let linecolors= cx1776b6 cxff7f00 cx24a121 cxd8241f cx9564bf cx8d5649 cxe574c3 cxbcbf00;
+#end
+#if ($comboTHEME == 'dark')
+%let linecolors= cx1b9e77 cxd95f02 cx7570b3 cxe7298a cx66a61e cxe6ab02 cxa6761d cx666666;
+#end
+
+#if ($radioEXAMPLE == 'radioButton1')
+title '$textTITLE1';
+title2  h=0.8 '$textTITLE2';
+proc sgplot data=$DATASOURCE;
+#if ($comboTHEME != 'default')
+	styleattrs datacontrastcolors=(&linecolors);
+	#end
+	legenditem type=marker name='c' / markerattrs=(symbol=$comboSYMBOL color=black) label='Censored';
+	step x=time y=survival / group=stratum name='s';
+	scatter x=time  y=censored / markerattrs=(symbol=$comboSYMBOL) GROUP=stratum;
+	xaxistable atrisk / x=tatrisk class=stratum colorgroup=stratum;
+	keylegend 'c' / location=inside position=topright;
+	keylegend 's' /  location=outside position=bottom;
+run;
+#end
+
+#if ($radioEXAMPLE == 'radioButton2')
+title '$textTITLE1';
+title2  h=0.8 '$textTITLE2';
+proc sgplot data=$DATASOURCE;
+#if ($comboTHEME != 'default')
+	styleattrs datacontrastcolors=(&linecolors);
+	#end
+	legenditem type=marker name='c' / markerattrs=(symbol=$comboSYMBOL color=black) label='Censored';
+	step #foreach($item in $DFTIME)x=$item #end #foreach($item in $SURVIVAL)y=$item #end / #foreach($item in $STRATUM) group=$item #end name='s';
+	scatter #foreach($item in $DFTIME)x=$item #end  #foreach($item in $CENSORED )y=$item #end / markerattrs=(symbol=$comboSYMBOL)  #foreach($item in $STRATUM)GROUP=$item #end;
+	xaxistable #foreach($item in $ATRISK) $item #end / #foreach($item in $TATRISK) x=$item #end #foreach($item in $STRATUM)class=$item colorgroup=$item #end;
+	keylegend 'c' / location=inside position=topright;
+	keylegend 's' / location=outside position=bottom;
+run;
+#end
+		]]>
+	</CodeTemplate>
+</Task>
