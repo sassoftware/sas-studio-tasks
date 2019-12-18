@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.4" runNLS="never">
+	<Registration>
+	<Name>Christmas Tree</Name>
+	<Description></Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>TBD</Procedures>
+	<Version>3.8</Version>
+	<Links>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option name="GROUPTEXT2" inputType="string">FILE LOCATION</Option>
+			<Option name="labelTEXTF" inputType="string">CSV File (data_christmas.csv) Location</Option>
+			<Option name="textFILE" defaultValue="C:\data_christmas.csv" inputType="inputtext"
+				required="true"
+				promptMessage="Enter some text."
+				missingMessage="Missing text.">Enter file location</Option>
+		<Option name="GROUPCOLOR" inputType="string">COLORS</Option>
+			<Option name="labelCOLOR1" inputType="string">Ornament Color 1</Option>
+			<Option name="color1" defaultValue="red" inputType="color">Choose a color</Option>
+			<Option name="labelCOLOR2" inputType="string">Ornament Color 2</Option>
+			<Option name="color2" defaultValue="purple" inputType="color">Choose a color</Option>
+			<Option name="labelCOLOR3" inputType="string">Ornament Color 3</Option>
+			<Option name="color3" defaultValue="blue" inputType="color">Choose a color</Option>
+			<Option name="labelCOLOR4" inputType="string">Ribbon Color</Option>
+			<Option name="color4" defaultValue="#d3d33c" inputType="color">Choose a color</Option>
+						<Option name="labelCOLOR5" inputType="string">Background Color</Option>
+			<Option name="color5" defaultValue="#75d175" inputType="color">Choose a color</Option>
+			<Option name="GROUPTEXT" inputType="string">TITLE</Option>
+			<Option name="labelTEXT" inputType="string">Christmas Tree Title</Option>
+			<Option name="textTITLE" defaultValue="My SAS Christmas Tree" inputType="inputtext"
+				required="true"
+				promptMessage="Enter some text."
+				missingMessage="Missing text.">Enter text</Option>
+			<Option name="GROUPCOMBO" inputType="string">SIZING</Option>
+			<Option name="labelCOMBO" inputType="string">Christmas Tree Sizing</Option>
+			<Option name="comboSIZE" defaultValue="medium" inputType="combobox">Select a size:</Option>
+			<Option name="short" inputType="string">Short and Fat</Option>
+			<Option name="tall" inputType="string">Tall and Skinny</Option>
+			<Option name="medium" inputType="string">In the Middle</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		 	<Group option="GROUPTEXT2" open="true">
+				<OptionItem option="labelTEXTF"/>
+				<OptionItem option="textFILE"/>
+			</Group>
+			<Group option="GROUPCOLOR" open="true">
+				<OptionItem option="labelCOLOR1"/>
+				<OptionItem option="color1"/>
+				<OptionItem option="labelCOLOR2"/>
+				<OptionItem option="color2"/>
+				<OptionItem option="labelCOLOR3"/>
+				<OptionItem option="color3"/>
+				<OptionItem option="labelCOLOR4"/>
+				<OptionItem option="color4"/>
+				<OptionItem option="labelCOLOR5"/>
+				<OptionItem option="color5"/>
+			</Group>
+			<Group option="GROUPTEXT" open="true">
+				<OptionItem option="labelTEXT"/>
+				<OptionItem option="textTITLE"/>
+			</Group>
+						<Group option="GROUPCOMBO" open="true">
+				<OptionItem option="labelCOMBO"/>
+				<OptionChoice option="comboSIZE">
+					<OptionItem option="short"/>
+					<OptionItem option="tall"/>
+					<OptionItem option="medium"/>
+				</OptionChoice>
+			</Group>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+FILENAME REFFILE '$textFILE';
+
+PROC IMPORT DATAFILE=REFFILE
+                DBMS=CSV
+                OUT=WORK.lauratree;
+                GETNAMES=YES;
+                guessingrows=500;
+RUN;
+
+data myattrmap;
+                length markercolor $ 9 markersymbol $ 14;
+                input ID $ value $ markercolor $ markersymbol $ MARKERSIZE;
+                datalines;
+myid tree green TriangleFilled 10
+myid trunk MOBR SquareFilled 10
+myid orn_1 $color1 CircleFilled 10
+myid orn_2 $color2 CircleFilled 10
+myid orn_3 $color3 CircleFilled 10
+myid star gold StarFilled 30
+myid ribbon $color4 CircleFilled 10
+;
+run;
+
+#if ($comboSIZE == "short")
+ods graphics / reset width=7in height=5in imagemap;
+#end
+#if ($comboSIZE == "medium")
+ods graphics / reset width=6in height=7.5in imagemap;
+#end
+#if ($comboSIZE == "tall")
+ods graphics / reset width=4in height=7.5in imagemap;
+#end
+
+title "$textTITLE";
+proc sgplot data=WORK.lauraTREE dattrmap=myattrmap;
+styleattrs wallcolor=$color5;
+                scatter x=x y=y / group=type attrid=myid;
+               
+run;
+
+ods graphics / reset;
+
+		]]>
+	</CodeTemplate>
+
+<TemplateValues version="3.8">
+<![CDATA[
+{"labelCOLOR2":"Ornament Color 2","labelCOLOR1":"Ornament Color 1","medium":"In the Middle","sasOS":"X64_10PRO WIN","color5":"#75d175","labelCOLOR5":"Background Color","GROUPTEXT":"TITLE","color3":"blue","labelCOLOR4":"Ribbon Color","textFILE":"C:\\data_christmas.csv","labelCOLOR3":"Ornament Color 3","color4":"#d3d33c","color1":"red","color2":"purple","comboSIZE":"medium","textTITLE":"My SAS Christmas Tree","GROUPCOLOR":"COLORS","GROUPTEXT2":"FILE LOCATION","tall":"Tall and Skinny","labelTEXT":"Christmas Tree Title","labelCOMBO":"Christmas Tree Sizing.","sasVersion":"9.46","short":"Short and Fat","labelTEXTF":"CSV File (data_christmas.csv) Location","GROUPCOMBO":"SIZING"}
+]]>
+</TemplateValues>
+</Task>
