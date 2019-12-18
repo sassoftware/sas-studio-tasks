@@ -88,7 +88,7 @@ FILENAME REFFILE '$textFILE';
 
 PROC IMPORT DATAFILE=REFFILE
                 DBMS=CSV
-                OUT=WORK.lauratree;
+                OUT=WORK.tree;
                 GETNAMES=YES;
                 guessingrows=500;
 RUN;
@@ -118,7 +118,7 @@ ods graphics / reset width=4in height=7.5in imagemap;
 #end
 
 title "$textTITLE";
-proc sgplot data=WORK.lauraTREE dattrmap=myattrmap;
+proc sgplot data=WORK.TREE dattrmap=myattrmap;
 styleattrs wallcolor=$color5;
                 scatter x=x y=y / group=type attrid=myid;
                
