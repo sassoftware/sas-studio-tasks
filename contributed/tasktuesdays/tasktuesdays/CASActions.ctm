@@ -28,7 +28,7 @@
             <Option defaultValue="0" inputType="checkbox" name="chkCOLUMN">Column Info</Option>
             <Option defaultValue="0" inputType="checkbox" name="chkSUMMARY">Summary Output Data Set</Option>
             <Option name="GROUPSELECTOR" inputType="string">SUMMARY OUTPUT DATA SET</Option>
-			<Option name="labelOutputData" inputType="string">An example of an output data selector.</Option>
+			<Option name="labelOutputData" inputType="string">Specify the output data set location and name.</Option>
 			<Option name="outputData" inputType="outputdata" unique="true" libraryEngineInclude="CAS" defaultValue="CASUSER.MYDATA" where="true">Data set name:</Option>
         </Options>
     </Metadata>
