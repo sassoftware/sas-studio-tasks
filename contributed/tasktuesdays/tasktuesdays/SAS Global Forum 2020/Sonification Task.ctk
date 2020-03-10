@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.4" runNLS="never">
+	<Registration>
+	<Name>Sonification Task</Name>
+	<Description>This task allows the user to select a data set and create a graph that is sonifiable and supported by the SAS Graphics Accelerator.</Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>SGPLOT</Procedures>
+	<Version>3.8</Version>
+	<Links>
+		<Link href="https://chrome.google.com/webstore/detail/sas-graphics-accelerator/ockmipfaiiahknplinepcaogdillgoko?hl=en">SAS Graphics Accelerator Chrome Extension</Link>
+		<Link href="http://support.sas.com/software/products/graphics-accelerator/">SAS Graphics Accelerator Product Page</Link>
+		<Link href="https://go.documentation.sas.com/?docsetId=odsacoutput&amp;docsetTarget=titlepage.htm&amp;docsetVersion=9.4&amp;locale=en">Creating Accessible SAS® 9.4 Output Using ODS and ODS Graphics</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		
+		<DataSources>	
+			<DataSource name="DATASOURCE">
+				<Roles>
+					<Role type="A" maxVars="1" order="true" minVars="0" name="VAR">Category variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="0" name="NVAR">Analysis variable:</Role>
+					<Role type="A" maxVars="1" order="true" minVars="0" name="XVAR">X variable:</Role>
+					<Role type="A" maxVars="1" order="true" minVars="0" name="YVAR">Y variable:</Role>
+					<Role type="N" maxVars="1" order="true" minVars="0" name="SIZEVAR">Size variable:</Role>
+				</Roles>
+			</DataSource>
+		</DataSources>
+
+		<Options>
+			<Option name="DATATAB" inputType="string">DATA</Option>
+			<Option name="DATAGROUP" inputType="string">DATA</Option>
+			<Option name="ROLESGROUP" inputType="string">ROLES</Option>
+			<Option name="GROUPCOMBO" inputType="string">CHART TYPE</Option>
+			<Option name="labelCOMBO" inputType="string">Choose a chart that is available for sonification.</Option>
+			<Option name="comboTYPE" defaultValue="vbar" inputType="combobox">Chart Type:</Option>
+			<Option name="vbar" inputType="string">Bar Chart</Option>
+			<Option name="vbox" inputType="string">Box Plot</Option>
+			<Option name="bubble" inputType="string">Bubble Plot</Option>
+			<Option name="heatmap" inputType="string">Heat Map</Option>
+			<Option name="histogram" inputType="string">Histogram</Option>
+			<Option name="hline" inputType="string">Line Chart</Option>
+			<Option name="pie" inputType="string">Pie Chart</Option>
+			<Option name="scatter" inputType="string">Scatter Plot</Option>
+			<Option name="GROUPDESC" inputType="string">SONIFICATION DESCRIPTION</Option>
+			<Option name="labelACC" inputType="string">The SAS Graphics Accelerator enables users with visual impairments or blindness to create, explore, and share data visualizations. It supports alternative presentations of data visualizations that include enhanced visual rendering, text descriptions, tabular data, and interactive sonification. Sonification uses non-speech audio to convey important information about the graph.</Option>
+			<Option name="GROUPINSTR" inputType="string">TASK INSTRUCTIONS</Option>
+			<Option name="labelEXT" inputType="string">To use this task, make sure you are using a Chrome browser and have downloaded the SAS Graphics Accelerator Chrome extension: https://chrome.google.com/webstore/detail/sas-graphics-accelerator/ockmipfaiiahknplinepcaogdillgoko?hl=en</Option>
+			<Option name="labelPREF" inputType="string">You can turn on the accessible graph option for all graphs by going to "Preferences">"Results">"Enable Accesible Graph Option". After doing this, you can use any of the built-in Graph tasks to create an accessible graph.</Option>
+			<Option name="labelTEXT" inputType="string">Add an optional title and description.</Option>
+			<Option name="textTITLE" defaultValue="" inputType="inputtext"
+				required="false"
+				promptMessage="Enter a title.">Title/Description:</Option>
+			<Option name="GROUPTEXT" inputType="string">TITLE</Option>
+		</Options>
+		
+	</Metadata>
+	
+	<UI>
+		<Container option="DATATAB">
+			<Group option="GROUPDESC">
+				<OptionItem option="labelACC"/>
+			</Group>
+			<Group option="DATAGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+			</Group>
+			<Group option="GROUPCOMBO" open="true">
+				<OptionItem option="labelCOMBO"/>
+				<OptionChoice option="comboTYPE">
+					<OptionItem option="vbar"/>
+					<OptionItem option="vbox"/>
+					<OptionItem option="bubble"/>
+					<OptionItem option="heatmap"/>
+					<OptionItem option="histogram"/>
+					<OptionItem option="hline"/>
+					<OptionItem option="pie"/>
+					<OptionItem option="scatter"/>
+				</OptionChoice>
+			</Group>
+			<Group option="ROLESGROUP" open="true">
+				<RoleItem role="VAR"/>
+				<RoleItem role="NVAR"/>
+				<RoleItem role="XVAR"/>
+				<RoleItem role="YVAR"/>
+				<RoleItem role="SIZEVAR"/>
+			</Group>
+			<Group option="GROUPTEXT" open="true">
+				<OptionItem option="labelTEXT"/>
+				<OptionItem option="textTITLE"/>
+			</Group>
+			<Group option="GROUPINSTR">
+				<OptionItem option="labelEXT"/>
+				<OptionItem option="labelPREF"/>
+			</Group>
+		</Container>
+	</UI>
+	
+	<Dependencies>
+		<Dependency condition="($comboTYPE == 'vbar' || $comboTYPE == 'hline' || $comboTYPE == 'pie')">
+			<Target option="VAR" conditionResult="true"  action="show"/>
+			<Target option="VAR" conditionResult="false" action="hide"/>
+		</Dependency>	
+		<Dependency condition="($comboTYPE == 'vbox' || $comboTYPE == 'histogram')">
+		
+			<Target option="NVAR" conditionResult="true"  action="show"/>
+			<Target option="NVAR" conditionResult="false" action="hide"/>
+		</Dependency>	
+		<Dependency condition="($comboTYPE == 'bubble' || $comboTYPE == 'heatmap' || $comboTYPE == 'scatter')">
+			<Target option="XVAR" conditionResult="true"  action="show"/>
+			<Target option="XVAR" conditionResult="false" action="hide"/>
+			<Target option="YVAR" conditionResult="true"  action="show"/>
+			<Target option="YVAR" conditionResult="false" action="hide"/>
+		</Dependency>
+		<Dependency condition="($comboTYPE == 'bubble')">
+			<Target option="SIZEVAR" conditionResult="true"  action="show"/>
+			<Target option="SIZEVAR" conditionResult="false" action="hide"/>
+		</Dependency>	
+	</Dependencies>
+	
+	<Requirements>
+        <Requirement condition="(!(($comboTYPE == 'vbar' || $comboTYPE == 'hline' || $comboTYPE == 'pie') &amp;&amp; ($VAR.size() == 0)))">
+            <Message nlsKey="varSelectionMsgKey">Select a category variable.</Message>
+        </Requirement>  
+        <Requirement condition="(!(($comboTYPE == 'vbox' || $comboTYPE == 'histogram') &amp;&amp; ($NVAR.size() == 0)))">
+            <Message nlsKey="nvarSelectionMsgKey">Select an analysis variable.</Message>
+        </Requirement>  
+        <Requirement condition="(!(($comboTYPE == 'bubble' || $comboTYPE == 'heatmap' || $comboTYPE == 'scatter') &amp;&amp; ($XVAR.size() == 0)))">
+            <Message nlsKey="xvarSelectionMsgKey">Select an X variable.</Message>
+        </Requirement>  
+        <Requirement condition="(!(($comboTYPE == 'bubble' || $comboTYPE == 'heatmap' || $comboTYPE == 'scatter') &amp;&amp; ($YVAR.size() == 0)))">
+            <Message nlsKey="yvarSelectionMsgKey">Select an Y variable.</Message>
+        </Requirement>
+        <Requirement condition="(!(($comboTYPE == 'bubble') &amp;&amp; ($SIZEVAR.size() == 0)))">
+            <Message nlsKey="sizevarSelectionMsgKey">Select a size variable.</Message>
+        </Requirement>
+    </Requirements>
+    
+  	<CodeTemplate>
+		<![CDATA[
+
+ods html5 (id=web) accessible_graph;
+data _null_;
+      file print;
+      put _page_;
+      put "This page contains sample graphs for the SAS Graphics Accelerator. Install the SAS Graphics Accelerator and load this page in your browser to view alternative presentations of these graphs.";
+run;
+
+title "$textTITLE";
+#if ($comboTYPE != 'pie')
+	proc sgplot data=$DATASOURCE description="$textTITLE"; $comboTYPE 
+#if (($comboTYPE == 'vbar' || $comboTYPE == 'hline') && ($VAR.size() > 0))
+	$VAR.get(0)
+#end
+#if (($comboTYPE == 'vbox' || $comboTYPE == 'histogram') && ($NVAR.size() > 0))
+	$NVAR.get(0)
+#end
+#if (($comboTYPE == 'bubble' || $comboTYPE == 'heatmap' || $comboTYPE == 'scatter') && ($XVAR.size() > 0 && $YVAR.size() > 0))
+	x = $XVAR.get(0)	y = $YVAR.get(0)
+#end
+#if (($comboTYPE == 'bubble' ) && ($SIZEVAR.size() > 0 ))
+	size = $SIZEVAR.get(0)
+#end
+	; 
+	run;
+#end
+title;
+
+#if ($comboTYPE == 'pie')
+	proc template;
+	define statgraph simplepie;
+	  begingraph;
+	    layout region;
+	      piechart category=
+#if ($VAR.size() > 0)
+	$VAR.get(0)
+#end;
+	    endlayout;
+	  endgraph;
+	end;
+	run;
+	proc sgrender data=$DATASOURCE 
+	              template=simplepie;
+	run;
+#end
+		]]>
+	</CodeTemplate>
+
+<TemplateValues version="3.8">
+<![CDATA[
+{"heatmap":"Heat Map","VAR":"","XVAR":"","GROUPDESC":"SONIFICATION DESCRIPTION","sasOS":"X64_10PRO WIN","pie":"Pie Chart","GROUPTEXT":"TITLE","textTITLE":"","labelPREF":"You can turn on the accessible graph option for all graphs by going to \"Preferences\">\"Results\">\"Enable Accesible Graph Option\". After doing this, you can use any of the built-in Graph tasks to create an accessible graph.","bubble":"Bubble Plot","comboTYPE":"vbar","scatter":"Scatter Plot","DATASOURCE":{"librarytable":"SASHELP.CLASS"},"DATATAB":"DATA","labelACC":"The SAS Graphics Accelerator enables users with visual impairments or blindness to create, explore, and share data visualizations. It supports alternative presentations of data visualizations that include enhanced visual rendering, text descriptions, tabular data, and interactive sonification. Sonification uses non-speech audio to convey important information about the graph.","NVAR":"","ROLESGROUP":"ROLES","vbox":"Box Plot","YVAR":"","labelTEXT":"Add an optional title and description.","labelCOMBO":"Choose a chart that is available for sonification.","GROUPINSTR":"TASK INSTRUCTIONS","DATAGROUP":"DATA","vbar":"Bar Chart","SIZEVAR":"","histogram":"Histogram","hline":"Line Chart","sasVersion":"9.46","labelEXT":"To use this task, make sure you are using a Chrome browser and have downloaded the SAS Graphics Accelerator Chrome extension: https://chrome.google.com/webstore/detail/sas-graphics-accelerator/ockmipfaiiahknplinepcaogdillgoko?hl=en","GROUPCOMBO":"CHART TYPE"}
+]]>
+</TemplateValues>
+</Task>
