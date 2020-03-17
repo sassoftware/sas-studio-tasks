@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-16"?><Task schemaVersion="7.2">
+
+	<!--- Define the registration properties for this task. -->
+	<Registration>
+		<Name>Step 1 - Retrieve Report Images</Name>
+		<Description></Description>
+		<Procedures> </Procedures>
+		<Version>5.2</Version>
+		<Links>
+			<Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+		</Links>
+	</Registration>
+	
+	<Metadata>
+	
+		<!--- Define the data and roles for this task. -->
+		<DataSources>	
+		</DataSources>
+		
+		<!--- Define the task options. -->
+		<Options>
+
+			<Option inputType="string" name="GROUPTEXT">VISUAL ANALYTICS REPORT URI</Option>
+			<Option inputType="string" name="GROUPMARKDOWN2">INSTRUCTIONS</Option>
+			<Option inputType="string" name="GROUPMARKDOWN3">INFORMATION</Option>
+			<Option inputType="string" name="labelTEXT">Enter the Report URI of the Visual Analytics Report to create images of the Report Tabs.</Option>
+			<Option defaultValue="/reports/reports/495b441f-5a08-45e1-bd08-77514a5992a7" inputType="inputtext" missingMessage="Missing text." width="100%" name="textURI" promptMessage="Enter a URI." required="true">ReportURI:</Option>
+<Option inputType="markdown" name="markdownText1">
+To use this task, the data used in the report must be loaded and you must know the **Report URI** for the Visual Analytics report you are trying to access. This can be found using the SAS Enivironment Manager. Navigate to the report you are interested in under "Content" and copy the Report URI as seen below.
+![INSTRUCTIONS](https://communities.sas.com/t5/image/serverpage/image-id/35558i00BCEA673B7223D3/image-size/large?v=1.0&amp;px=600)
+</Option>
+<Option inputType="markdown" name="markdownText2">
+The [SAS Viya Report Images Service](https://developer.sas.com/apis/rest/Visualization/#report-images) allows users to access static images of their SAS Visual Analytics Report. 
+
+This task uses [this code on Mike Drutar's GitHub](https://github.com/sascommunities/sas-global-forum-2019/blob/master/3156-2019-Drutar/ViyaAPI_SASCode/create_VA_svg_image.sas) with some slight modifications.
+</Option>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+		</Options>		
+		
+	</Metadata>
+
+	<UI>
+		<Container option="DATATAB">
+			<Group option="GROUPTEXT" open="true">
+				<OptionItem option="labelTEXT"/>
+				<OptionItem option="textURI"/>
+			</Group>
+			<Group option="GROUPMARKDOWN2">
+				<OptionItem option="markdownText1"/>
+			</Group>
+			<Group option="GROUPMARKDOWN3">
+				<OptionItem option="markdownText2"/>
+			</Group>
+		</Container>
+	</UI>
+	
+	<!--- Define the velocity code template. -->
+  	<CodeTemplate>
+		<![CDATA[
+
+/* Input desired image width and height */
+%let width=800;
+%let height=600;
+
+%macro create_VA_svg_image(report_uri);
+* Base URI for the service call;
+%let BASE_URI=%sysfunc(getoption(servicesbaseurl));
+
+/* -------------------------------------------------------------- */
+/*                  Step 1 - Create a job                         */
+/* -------------------------------------------------------------- */
+
+/* Create input for the job request */
+data create_params;
+	request_params = "'" || trim('{"reportUri" : "') || "&report_uri" || trim('","layoutType" : "entireSection","refresh":false,"selectionType" : "perSection","size" : "' || "&width" || 'x' || "&height" || '","version" : 1}' || "'");
+	call symput('request_params',request_params);
+run;
+
+/* create filenames to hold responses*/
+filename startjob temp;
+filename resp_hdr temp;
+
+/* Make request */
+proc http 
+	 method="POST"
+     oauth_bearer=sas_services
+	 url="&BASE_URI/reportImages/jobs"
+	 ct="application/vnd.sas.report.images.job.request+json"
+	 in=&request_params.
+	/* place response in filenames */
+	 	out=startjob 
+ 		headerout=resp_hdr
+ 		headerout_overwrite;
+
+run;
+
+/* Use JSON LIBNAME engine to read in response */
+libname startjob json;
+
+/* capture the job id for step 2 */
+data _NULL_;
+	set startjob.root;
+  	   call symputx('job_id',id);
+run;
+
+/* -------------------------------------------------------------- */
+/*      Step 2 - Retrieve job status & duration (In a Macro!)     */
+/* -------------------------------------------------------------- */
+
+%let status=0;
+%macro jobstatus;
+   %do %until (&status ne 0);
+		/* clear filenames and libname librefs */
+			filename res_hdr clear;
+			filename j_status clear;
+			libname j_status clear;
+		/* assign filenames */
+			filename j_status temp;
+			filename res_hdr temp;
+        /* Make request */
+			proc http 
+			 method="GET"
+                 oauth_bearer=sas_services
+	 		 url="&BASE_URI/reportImages/jobs/&job_id"
+			 out=j_status
+			 headerout=res_hdr
+ 	 		 headerout_overwrite;
+			run;
+		/* Read response */
+			libname j_status json;
+		/* Determine state and reset status */
+			data job_status;
+				set j_status.root;
+					if state = 'running' then status = 0;
+					else if state = 'completed' then status = 1;
+					call symputx('status',status);
+			run;
+			/* Wait one second */
+			data _NULL_;
+			   time_slept=sleep(1,1);
+			run;
+
+   %end;
+%mend jobstatus;
+/*call the macro*/
+%jobstatus;
+
+/* ---------------------------------------------------------------------- */
+/* Step 3 - Display the generated SVG image within the results window     */
+/* ---------------------------------------------------------------------- */
+
+/* retrieve image url */
+data out;
+set j_status.Images_links;
+where rel="image";
+tab = _n_;
+call symput('image_link',compress(href));
+run;
+
+/* create dataset to display image */
+data showImage; 
+set out;
+Url_Link = '<iframe src="'|| compress(href)||'" width="'|| compress("&width")||'" height="'|| compress("&height")||'"></iframe>'; 
+RUN; 
+
+/* Display the Image */
+title1 'An SVG image file of the requested report is below!';
+proc print data=WORK.showImage noobs split='*';
+var Url_Link;
+label Url_Link = '*';
+run;
+
+%mend create_VA_svg_image;
+
+/* -------------------------------------------------------------- */
+/*    				  Create and View SVG Image				      */
+/* -------------------------------------------------------------- */
+
+%create_VA_svg_image($textURI)
+		]]>
+	</CodeTemplate>
+	
+</Task>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-16"?><Task schemaVersion="7.2">
+
+	<!--- Define the registration properties for this task. -->
+	<Registration>
+		<Name>Step 2 - Download Report Image</Name>
+		<Description></Description>
+		<Procedures> </Procedures>
+		<Version>5.2</Version>
+		<Links>
+			<Link href="http://support.sas.com/software/products/sasstudio/index.html#s1=2">SAS Studio Documentation</Link>
+		</Links>
+	</Registration>
+	
+	<Metadata>
+	
+		<!--- Define the data and roles for this task. -->
+		<DataSources>
+			<DataSource name="DATASOURCE" defaultValue="WORK.OUT">
+				<Roles>
+					<Role maxVars="1" minVars="1" name="VAR" order="true" type="A" defaultValue="tab">Required variable:</Role>
+				</Roles>
+			</DataSource>	
+		</DataSources>
+		
+		<!--- Define the task options. -->
+		<Options>
+			<Option inputType="string" name="DATATAB">DATA</Option>
+			<Option inputType="string" name="HIDDENGROUP">HIDDEN</Option>
+			<Option inputType="string" name="GROUPTAB">TAB NUMBER</Option>
+			<Option inputType="string" name="GROUPFILE">FILE LOCATION</Option>
+			<Option inputType="distinct" name="distinctTAB" source="VAR">Select a tab number to download:</Option>
+			<Option name="fileSelector" inputType="sasserverpath" pathType="folder" defaultPath="">Select a folder location to save your report image:</Option>
+			<Option inputType="string" name="labelTEXT">Enter what you want the name of your file to be.</Option>
+			<Option defaultValue="MyReportImage" inputType="inputtext" missingMessage="Missing text." name="textEXAMPLE" promptMessage="Enter some text." required="true">File name:</Option>
+			
+		</Options>		
+		
+	</Metadata>
+
+	<!--- Define the UI for task options -->
+	<!--- The UI engine will determine the best representation. -->
+	<UI>
+		<Container option="DATATAB">
+			<Group option="HIDDENGROUP" open="true">
+				<DataItem data="DATASOURCE"/>
+				<RoleItem role="VAR"/>
+			</Group>
+			<Group option="GROUPTAB" open="true">
+				<OptionChoice option="distinctTAB"/>
+			</Group>
+			<Group option="GROUPFILE" open="true">
+				<OptionItem option="fileSelector"/>
+				<OptionItem option="labelTEXT"/>
+				<OptionItem option="textEXAMPLE"/>
+			</Group>
+		</Container>
+	</UI>
+
+	<Dependencies>
+
+		<Dependency condition="('1' == '1')">
+			<Target action="hide" conditionResult="true" option="HIDDENGROUP"/>
+			<Target action="hide" conditionResult="false" option="HIDDENGROUP"/>
+		</Dependency>
+
+	</Dependencies>
+
+	<Requirements>
+    <Requirement condition="!($fileSelector.pathLocation == 'sascontent')">
+            <Message nlsKey="fileLocationMessage">The file path for the parent directory containing the images cannot point to SAS Content.</Message>
+    </Requirement> 
+	</Requirements>
+
+	<!--- Define the velocity code template. -->
+  	<CodeTemplate>
+		<![CDATA[
+data _null_;
+	set WORK.OUT;
+	where tab = $distinctTAB;
+	call symput ('href', compress(href));
+run;
+
+%let file = ${fileSelector.path}/${textEXAMPLE}.svg;
+filename imgout "&file";
+
+* Base URI for the service call;
+%let BASE_URI=%sysfunc(getoption(servicesbaseurl));
+
+proc http method="GET" oauth_bearer=sas_services 
+url="&BASE_URI&href"
+out= imgout;
+run;
+		]]>
+	</CodeTemplate>
+	
+</Task>
