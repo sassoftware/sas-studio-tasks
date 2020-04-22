@@ -1,10 +1,8 @@
-# Custom Task Tuesday Examples
+# SAS Studio Custom Task Support
+![alt tag](https://media-exp1.licdn.com/dms/image/C5603AQGJgRp8MMPKAg/profile-displayphoto-shrink_200_200/0?e=1593043200&v=beta&t=lbSjKFp1YOxIVB-sK6Rv6uYvV8RrSzB4FfUJJn84c6o)
 ![alt tag](https://kntur85557.i.lithium.com/t5/image/serverpage/image-id/6482iADDEF4FC50E762AD/image-size/medium?v=1.0&px=400)
 
-The examples here are part of a SAS Communities article series called #CustomTaskTuesday. For more background on the series, Custom Tasks, or SAS Studio in general, check out the [post introducing the series](https://communities.sas.com/t5/SAS-Communities-Library/Always-looking-for-a-shortcut-Custom-Task-Tuesday-is-for-you/ta-p/320053) on the communities.
-
-Descriptions of each task are located below, beginning with the most recent. Clicking the titles will lead you to the blog post on that task which will have step-by-step instructions on creating the task yourself. 
-Tasks in this series include easy examples as well as more complex ones, so you'll be able to find something on your level whether you are just getting started or already know what you're doing. 
+This repository contains examples from a SAS Communities article series called #CustomTaskTuesday. For more background on the series, Custom Tasks, or SAS Studio in general, check out the [post introducing the series](https://communities.sas.com/t5/SAS-Communities-Library/Always-looking-for-a-shortcut-Custom-Task-Tuesday-is-for-you/ta-p/320053) on the communities.
 
 ### Additional Resources for writing SAS Studio Custom Tasks can be found here:
 * #### [Ultimate Custom Task Cheat Sheet](https://communities.sas.com/t5/SAS-Communities-Library/Custom-Task-Tuesday-Download-the-Ultimate-Custom-Task-Cheat/ta-p/552910)
