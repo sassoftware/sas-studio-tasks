@@ -1,3 +1,5 @@
+Descriptions of each task are located below, beginning with the most recent. Clicking the titles will lead you to the blog post on that task which will have step-by-step instructions on creating the task yourself. 
+Tasks in this series include easy examples as well as more complex ones, so you'll be able to find something on your level whether you are just getting started or already know what you're doing. 
 
 ## Task Tuesday Example List
 
