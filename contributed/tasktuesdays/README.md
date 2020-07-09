@@ -1,5 +1,4 @@
 # SAS Studio Custom Task Support
-![alt tag](https://media-exp1.licdn.com/dms/image/C5603AQGJgRp8MMPKAg/profile-displayphoto-shrink_200_200/0?e=1593043200&v=beta&t=lbSjKFp1YOxIVB-sK6Rv6uYvV8RrSzB4FfUJJn84c6o)
 ![alt tag](https://kntur85557.i.lithium.com/t5/image/serverpage/image-id/6482iADDEF4FC50E762AD/image-size/medium?v=1.0&px=400)
 
 This repository contains examples from a SAS Communities article series called #CustomTaskTuesday written by Olivia Wright. For more background on the series, Custom Tasks, or SAS Studio in general, check out the [post introducing the series](https://communities.sas.com/t5/SAS-Communities-Library/Always-looking-for-a-shortcut-Custom-Task-Tuesday-is-for-you/ta-p/320053) on the communities.
